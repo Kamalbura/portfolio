@@ -371,11 +371,17 @@
                 <span class="section-subtitle">My Work</span>
                 <h2 class="section-title">Featured <span>Projects</span></h2>
             </div>
-            <div class="category-filters" data-aos="fade-up" data-aos-delay="200">
-                <button class="category-btn active" data-filter="all">All</button>
-                <button class="category-btn" data-filter="iot">IoT</button>
-                <button class="category-btn" data-filter="software">Software</button>
-                <button class="category-btn" data-filter="ml">ML/DL</button>
+            <div class="project-filters-container" data-aos="fade-up" data-aos-delay="200">
+                <div class="search-container">
+                    <input type="text" id="project-search" placeholder="Search projects...">
+                    <i class="fas fa-search search-icon"></i>
+                </div>
+                <div class="category-filters">
+                    <button class="category-btn active" data-filter="all">All</button>
+                    <button class="category-btn" data-filter="iot">IoT</button>
+                    <button class="category-btn" data-filter="software">Software</button>
+                    <button class="category-btn" data-filter="ml">ML/DL</button>
+                </div>
             </div>
             <div class="projects-grid">
                 <!-- Projects will be loaded dynamically by projects-loader.js -->
