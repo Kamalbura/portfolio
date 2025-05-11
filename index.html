@@ -376,11 +376,19 @@
                     <input type="text" id="project-search" placeholder="Search projects...">
                     <i class="fas fa-search search-icon"></i>
                 </div>
+                <div class="sort-container">
+                    <select id="project-sort">
+                        <option value="featured">Featured First</option>
+                        <option value="newest">Newest First</option>
+                        <option value="name">Alphabetical</option>
+                    </select>
+                </div>
                 <div class="category-filters">
                     <button class="category-btn active" data-filter="all">All</button>
                     <button class="category-btn" data-filter="iot">IoT</button>
                     <button class="category-btn" data-filter="software">Software</button>
                     <button class="category-btn" data-filter="ml">ML/DL</button>
+                    <button class="category-btn" data-filter="embedded">Embedded</button>
                 </div>
             </div>
             <div class="projects-grid">

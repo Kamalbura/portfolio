@@ -33,7 +33,6 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Current project being edited/deleted
     let currentProjectId = null;
-    let isFeatured = false; // Add featured flag
     
     // Check authentication
     if (!isLoggedIn) {
@@ -54,7 +53,8 @@ document.addEventListener('DOMContentLoaded', function() {
             loginModal.classList.remove('active');
             loadProjects();
         } else {
-            loginError.style.display = 'block';
+            // FIXED: Use classList instead of inline style
+            loginError.classList.add('active');
         }
     });
     

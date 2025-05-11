@@ -309,20 +309,12 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Hero image styling fix
-    const heroImage = document.querySelector('.hero-image img');
-    if (heroImage) {
-        // Ensure the image is properly sized and positioned
-        heroImage.style.maxHeight = '90%';
-        heroImage.style.objectFit = 'contain';
-        
-        // Add shadow and improve contrast
-        heroImage.style.filter = 'drop-shadow(0 0 15px rgba(0, 243, 255, 0.5))';
-        
-        // Ensure the containing div has proper sizing
-        const heroImageContainer = document.querySelector('.hero-image');
-        heroImageContainer.style.display = 'flex';
-        heroImageContainer.style.justifyContent = 'center';
-        heroImageContainer.style.alignItems = 'center';
+    const heroImg = document.querySelector('.hero-image img');
+    if (heroImg) {
+        heroImg.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        heroImg.style.opacity = '0';
+        setTimeout(() => heroImg.style.opacity = '1', 200);
+        // remove tilt listeners if added previously
     }
     
     // Contact form handling
