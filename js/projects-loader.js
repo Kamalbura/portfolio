@@ -428,6 +428,72 @@ document.addEventListener('DOMContentLoaded', function() {
                 github: 'https://github.com/username/health-ml',
                 caseStudy: 'https://health-ml-demo.com/case-study',
                 date: '2022-11-20'
+            },
+            {
+                id: 'project_1',
+                name: 'Smart Environment Monitoring',
+                category: 'iot',
+                description: 'An IoT-based system using ESP32 and multiple sensors to monitor environmental conditions with real-time data visualization.',
+                image: '../img/projects/iot-monitoring.jpg',
+                technologies: ['ESP32', 'MQTT', 'Node.js'],
+                github: 'https://github.com/username/smart-monitoring',
+                live: 'https://smart-monitor-demo.com',
+                caseStudy: 'https://smart-monitor-demo.com/case-study',
+                featured: true
+            },
+            {
+                id: 'project_2',
+                name: 'Resource Management System',
+                category: 'software',
+                description: 'A full-stack application for resource allocation and management with user authentication and role-based access control.',
+                image: '../img/projects/management-system.jpg',
+                technologies: ['Java', 'Spring Boot', 'React'],
+                github: 'https://github.com/username/resource-management',
+                live: 'https://resource-mgmt-demo.com'
+            },
+            {
+                id: 'project_3',
+                name: 'Predictive Analytics Model',
+                category: 'ml',
+                description: 'A machine learning model that predicts future trends based on historical data.',
+                image: '../img/projects/prediction-model.jpg',
+                technologies: ['Python', 'TensorFlow', 'Pandas'],
+                github: 'https://github.com/username/predictive-analytics',
+                live: 'https://predictive-analytics-demo.com',
+                caseStudy: 'https://predictive-analytics-demo.com/case-study',
+                featured: true
+            },
+            {
+                id: 'project_4',
+                name: 'Home Automation System',
+                category: 'iot',
+                description: 'A smart home automation system that allows users to control home devices remotely.',
+                image: '../img/projects/home-automation.jpg',
+                technologies: ['Raspberry Pi', 'MQTT', 'Node-RED'],
+                github: 'https://github.com/username/home-automation',
+                live: 'https://home-automation-demo.com'
+            },
+            {
+                id: 'project_5',
+                name: 'RESTful API Service',
+                category: 'software',
+                description: 'A RESTful API service for managing user data and authentication.',
+                image: '../img/projects/api-service.jpg',
+                technologies: ['Node.js', 'Express', 'MongoDB'],
+                github: 'https://github.com/username/restful-api',
+                live: 'https://restful-api-demo.com'
+            },
+            {
+                id: 'project_6',
+                name: 'Image Recognition System',
+                category: 'ml',
+                description: 'An image recognition system that classifies images using deep learning models.',
+                image: '../img/projects/image-recognition.jpg',
+                technologies: ['Python', 'Keras', 'OpenCV'],
+                github: 'https://github.com/username/image-recognition',
+                live: 'https://image-recognition-demo.com',
+                caseStudy: 'https://image-recognition-demo.com/case-study',
+                featured: true
             }
         ];
         

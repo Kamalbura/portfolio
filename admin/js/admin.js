@@ -385,6 +385,50 @@ document.addEventListener('DOMContentLoaded', function() {
                     technologies: ['Java', 'Spring Boot', 'React'],
                     github: 'https://github.com/username/resource-management',
                     live: 'https://resource-mgmt-demo.com'
+                },
+                {
+                    id: 'project_3',
+                    name: 'Predictive Analytics Model',
+                    category: 'ml',
+                    description: 'A machine learning model that predicts future trends based on historical data.',
+                    image: '../img/projects/prediction-model.jpg',
+                    technologies: ['Python', 'TensorFlow', 'Pandas'],
+                    github: 'https://github.com/username/predictive-analytics',
+                    live: 'https://predictive-analytics-demo.com',
+                    caseStudy: 'https://predictive-analytics-demo.com/case-study',
+                    featured: true
+                },
+                {
+                    id: 'project_4',
+                    name: 'Home Automation System',
+                    category: 'iot',
+                    description: 'A smart home automation system that allows users to control home devices remotely.',
+                    image: '../img/projects/home-automation.jpg',
+                    technologies: ['Raspberry Pi', 'MQTT', 'Node-RED'],
+                    github: 'https://github.com/username/home-automation',
+                    live: 'https://home-automation-demo.com'
+                },
+                {
+                    id: 'project_5',
+                    name: 'RESTful API Service',
+                    category: 'software',
+                    description: 'A RESTful API service for managing user data and authentication.',
+                    image: '../img/projects/api-service.jpg',
+                    technologies: ['Node.js', 'Express', 'MongoDB'],
+                    github: 'https://github.com/username/restful-api',
+                    live: 'https://restful-api-demo.com'
+                },
+                {
+                    id: 'project_6',
+                    name: 'Image Recognition System',
+                    category: 'ml',
+                    description: 'An image recognition system that classifies images using deep learning models.',
+                    image: '../img/projects/image-recognition.jpg',
+                    technologies: ['Python', 'Keras', 'OpenCV'],
+                    github: 'https://github.com/username/image-recognition',
+                    live: 'https://image-recognition-demo.com',
+                    caseStudy: 'https://image-recognition-demo.com/case-study',
+                    featured: true
                 }
             ];
             
