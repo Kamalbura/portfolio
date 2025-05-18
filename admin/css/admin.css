@@ -144,11 +144,20 @@
     display: block;
 }
 
-.panel-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
+/* Panel section spacing */
+.admin-panel-section {
+    padding-top: 20px;
+}
+
+.skills-list,
+.testimonials-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px,1fr));
+    gap: 15px;
+}
+
+.settings-content {
+    max-width: 400px;
 }
 
 /* Project Cards */

@@ -34,11 +34,48 @@ document.addEventListener('DOMContentLoaded', function() {
     // Current project being edited/deleted
     let currentProjectId = null;
     
+    // --- NEW: Skills Management ---
+    const skillsList = document.querySelector('.skills-list');
+    const addSkillBtn = document.getElementById('add-skill-btn');
+    
+    // --- NEW: Testimonials Management ---
+    const testimonialsList = document.querySelector('.testimonials-list');
+    const addTestimonialBtn = document.getElementById('add-testimonial-btn');
+    
+    // --- NEW: Settings Management ---
+    const settingsForm = document.getElementById('settings-form');
+    const defaultLight = document.getElementById('setting-default-light');
+    
+    // --- Export Projects JSON ---
+    const exportProjectsBtn = document.getElementById('export-projects-btn');
+    const lastUpdatedSpan = document.getElementById('last-updated');
+    
+    function updateLastUpdated() {
+        const now = new Date();
+        lastUpdatedSpan.textContent = now.toLocaleString();
+        localStorage.setItem('portfolioLastUpdated', now.toISOString());
+    }
+    
+    if (exportProjectsBtn) {
+        exportProjectsBtn.addEventListener('click', function() {
+            let projects = JSON.parse(localStorage.getItem('portfolioProjects')) || [];
+            const file = new Blob([JSON.stringify(projects, null, 2)], {type: 'application/json'});
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(file);
+            a.download = 'projects.json';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            updateLastUpdated();
+            alert('Projects exported as projects.json!');
+        });
+    }
+    
     // Check authentication
     if (!isLoggedIn) {
         loginModal.classList.add('active');
     } else {
-        loadProjects();
+        initAdminPanels();
     }
     
     // Login form submission
@@ -96,9 +133,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const card = document.createElement('div');
         card.className = 'project-card-admin';
         if (project.featured) card.classList.add('featured');
-        
         const categoryName = getCategoryDisplayName(project.category);
-        
         card.innerHTML = `
             <div class="project-image-admin">
                 <img src="${project.image || '../img/projects/default-project.jpg'}" alt="${project.name}">
@@ -110,24 +145,42 @@ document.addEventListener('DOMContentLoaded', function() {
                     <button class="delete-btn" data-id="${project.id}" title="Delete Project">
                         <i class="fas fa-trash-alt"></i>
                     </button>
+                    <button class="save-btn" data-id="${project.id}" title="Save Changes">
+                        <i class="fas fa-save"></i>
+                    </button>
                 </div>
             </div>
             <div class="project-content-admin">
                 <span class="project-category-admin">${categoryName}</span>
-                <h3>${project.name}</h3>
-                <p>${project.description}</p>
+                <h3 contenteditable="true" class="editable-title">${project.name}</h3>
+                <p contenteditable="true" class="editable-desc">${project.description}</p>
                 <div class="project-tech-admin">
                     ${project.technologies.map(tech => `<span>${tech}</span>`).join('')}
                 </div>
             </div>
         `;
         
-        // Add event listeners for edit and delete buttons
+        // Add event listeners for edit, delete, and save buttons
         const editBtn = card.querySelector('.edit-btn');
         const deleteBtn = card.querySelector('.delete-btn');
+        const saveBtn = card.querySelector('.save-btn');
         
         editBtn.addEventListener('click', () => openEditProjectModal(project.id));
         deleteBtn.addEventListener('click', () => openDeleteConfirmation(project.id));
+        saveBtn.addEventListener('click', function() {
+            // Save contenteditable changes
+            const title = card.querySelector('.editable-title').innerText.trim();
+            const desc = card.querySelector('.editable-desc').innerText.trim();
+            let projects = JSON.parse(localStorage.getItem('portfolioProjects')) || [];
+            const idx = projects.findIndex(p => p.id === project.id);
+            if (idx !== -1) {
+                projects[idx].name = title;
+                projects[idx].description = desc;
+                localStorage.setItem('portfolioProjects', JSON.stringify(projects));
+                updateLastUpdated();
+                alert('Project updated!');
+            }
+        });
         
         return card;
     }
@@ -229,6 +282,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Close modal and reload projects
         projectModal.classList.remove('active');
         loadProjects();
+        updateLastUpdated();
     });
     
     // Open edit project modal
@@ -285,6 +339,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Close modal and reload projects
         confirmModal.classList.remove('active');
         loadProjects();
+        updateLastUpdated();
     });
     
     // Add tech tag
@@ -392,6 +447,79 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
+    // Load skills from localStorage
+    function loadSkills() {
+        const skills = JSON.parse(localStorage.getItem('portfolioSkills')) || [];
+        skillsList.innerHTML = '';
+        if (!skills.length) {
+            skillsList.innerHTML = '<div class="empty-message">No skills found.</div>';
+            return;
+        }
+        skills.forEach(skill => {
+            const card = document.createElement('div');
+            card.className = 'project-card-admin';
+            card.innerHTML = `
+                <div class="project-content-admin">
+                    <h3>${skill.name}</h3>
+                    <p>Proficiency: ${skill.level}%</p>
+                    <div class="project-actions">
+                        <button class="edit-skill-btn" data-id="${skill.id}"><i class="fas fa-edit"></i></button>
+                        <button class="delete-skill-btn" data-id="${skill.id}"><i class="fas fa-trash-alt"></i></button>
+                    </div>
+                </div>
+            `;
+            skillsList.appendChild(card);
+        });
+    }
+    
+    // Load testimonials from localStorage
+    function loadTestimonials() {
+        const list = JSON.parse(localStorage.getItem('portfolioTestimonials')) || [];
+        testimonialsList.innerHTML = '';
+        if (!list.length) {
+            testimonialsList.innerHTML = '<div class="empty-message">No testimonials found.</div>';
+            return;
+        }
+        list.forEach(item => {
+            const card = document.createElement('div');
+            card.className = 'project-card-admin';
+            card.innerHTML = `
+                <div class="project-content-admin">
+                    <h3>${item.author}</h3>
+                    <p>"${item.text}"</p>
+                    <div class="project-actions">
+                        <button class="edit-test-btn" data-id="${item.id}"><i class="fas fa-edit"></i></button>
+                        <button class="delete-test-btn" data-id="${item.id}"><i class="fas fa-trash-alt"></i></button>
+                    </div>
+                </div>
+            `;
+            testimonialsList.appendChild(card);
+        });
+    }
+    
+    // initialize toggle
+    defaultLight.checked = localStorage.getItem('theme')==='light';
+    
+    // Save settings
+    settingsForm.addEventListener('submit', e=>{
+        e.preventDefault();
+        localStorage.setItem('theme', defaultLight.checked?'light':'dark');
+        alert('Settings saved.');
+    });
+    
+    // initialize all
+    function initAdminPanels() {
+        loadProjects();
+        loadSkills();
+        loadTestimonials();
+    }
+    
     // Initialize sample data
     initializeSampleProjects();
+    
+    // On page load, show last updated if available
+    const last = localStorage.getItem('portfolioLastUpdated');
+    if (last && lastUpdatedSpan) {
+        lastUpdatedSpan.textContent = new Date(last).toLocaleString();
+    }
 });

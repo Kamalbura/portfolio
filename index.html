@@ -29,6 +29,17 @@
     
     <!-- AOS Animation Library -->
     <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+    
+    <!-- Fallback fonts for system fonts -->
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <!-- Preload critical assets -->
+    <link rel="preload" href="img/hero-illustration.png" as="image">
+    
+    <!-- Meta theme color for mobile browsers -->
+    <meta name="theme-color" content="#080818">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#080818">
 </head>
 <body>
     <!-- Preloader -->
@@ -76,7 +87,7 @@
             <div class="hero-content">
                 <div class="hero-intro" data-aos="fade-up" data-aos-duration="800">
                     <div class="presents-text">Hello, I'm</div>
-                    <h1 class="glitch-text" data-text="KAMAL BURA">KAMAL BURA</h1>
+                    <h1 class="glitch-text aura-text" data-text="KAMAL BURA">KAMAL BURA</h1>
                     <p class="tagline">IoT Developer & <span class="typed-text"></span></p>
                     <p class="hero-description">Building intelligent systems and innovative solutions for the connected world</p>
                     <div class="hero-buttons">
@@ -100,7 +111,7 @@
     </section>
 
     <!-- About Section -->
-    <section id="about" class="about-section">
+    <section id="about" class="about-section parallax-section">
         <div class="container">
             <div class="section-header" data-aos="fade-up">
                 <span class="section-subtitle">About Me</span>
@@ -399,10 +410,6 @@
                     <span>View More on GitHub</span>
                     <i class="fab fa-github"></i>
                 </a>
-                <a href="admin/index.html" class="btn btn-outline admin-link">
-                    <span>Manage Projects</span>
-                    <i class="fas fa-cog"></i>
-                </a>
             </div>
         </div>
     </section>
@@ -528,116 +535,125 @@
 
     <!-- Contact Section -->
     <section id="contact" class="contact-section">
-        <div class="container">
-            <div class="section-header" data-aos="fade-up">
-                <span class="section-subtitle">Get In Touch</span>
-                <h2 class="section-title">Contact <span>Me</span></h2>
-            </div>
-            <div class="contact-container">
-                <div class="contact-info" data-aos="fade-right" data-aos-duration="800">
-                    <div class="contact-intro">
-                        <h3>Let's talk about your project</h3>
-                        <p>Feel free to reach out if you're looking for a developer, have a question, or just want to connect.</p>
-                    </div>
-                    <div class="contact-item">
-                        <i class="fas fa-envelope"></i>
-                        <div>
-                            <h4>Email</h4>
-                            <p>kamal.bura@example.com</p>
-                        </div>
-                    </div>
-                    <div class="contact-item">
-                        <i class="fas fa-phone"></i>
-                        <div>
-                            <h4>Phone</h4>
-                            <p>+91 98765 43210</p>
-                        </div>
-                    </div>
-                    <div class="contact-item">
-                        <i class="fas fa-map-marker-alt"></i>
-                        <div>
-                            <h4>Location</h4>
-                            <p>Hyderabad, India</p>
-                        </div>
-                    </div>
-                    <div class="social-links">
-                        <a href="#" class="social-link" aria-label="GitHub"><i class="fab fa-github"></i></a>
-                        <a href="#" class="social-link" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
-                        <a href="#" class="social-link" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
-                        <a href="#" class="social-link" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-                    </div>
-                </div>
-                <div class="contact-form" data-aos="fade-left" data-aos-duration="800">
-                    <form id="contactForm">
-                        <div class="form-group">
-                            <label for="name">Name</label>
-                            <input type="text" id="name" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="email">Email</label>
-                            <input type="email" id="email" required>
-                        </div>
-                        <div class="form-group full-width">
-                            <label for="subject">Subject</label>
-                            <input type="text" id="subject" required>
-                        </div>
-                        <div class="form-group full-width">
-                            <label for="message">Message</label>
-                            <textarea id="message" rows="6" required></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-primary">
-                            <span>Send Message</span>
-                            <i class="fas fa-paper-plane"></i>
-                        </button>
-                    </form>
-                    <div class="form-status">
-                        <div class="success-message">
-                            <i class="fas fa-check-circle"></i>
-                            <p>Your message has been sent successfully!</p>
-                        </div>
-                        <div class="error-message">
-                            <i class="fas fa-exclamation-circle"></i>
-                            <p>Something went wrong. Please try again.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+      <div class="container">
+        <div class="section-header" data-aos="fade-up">
+          <span class="section-subtitle">Get In Touch</span>
+          <h2 class="section-title">Contact <span>Me</span></h2>
         </div>
+        <div class="contact-container glass-card">
+          <div class="contact-info" data-aos="fade-right" data-aos-duration="800">
+            <div class="contact-avatar floating-avatar">
+              <img src="img/profile.jpg" alt="Kamal Bura" />
+            </div>
+            <div class="contact-intro">
+              <h3>Let's talk about your project</h3>
+              <p>Feel free to reach out if you're looking for a developer, have a question, or just want to connect.</p>
+            </div>
+            <div class="contact-item">
+              <i class="fas fa-envelope animated-icon"></i>
+              <div>
+                <h4>Email</h4>
+                <a href="mailto:burakamal13@gmail.com">burakamal13@gmail.com</a>
+              </div>
+            </div>
+            <div class="contact-item">
+              <i class="fas fa-phone animated-icon"></i>
+              <div>
+                <h4>Phone</h4>
+                <a href="tel:+919491862415">+91 94918 62415</a>
+              </div>
+            </div>
+            <div class="contact-item">
+              <i class="fas fa-map-marker-alt animated-icon"></i>
+              <div>
+                <h4>Location</h4>
+                <p>Hyderabad, India</p>
+              </div>
+            </div>
+          </div>
+          <div class="contact-form" data-aos="fade-left" data-aos-duration="800">
+            <form id="contactForm" autocomplete="off">
+              <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" id="name" required aria-required="true" placeholder="Your Name">
+                <div class="form-error-message"></div>
+              </div>
+              <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" required aria-required="true" placeholder="you@email.com">
+                <div class="form-error-message"></div>
+              </div>
+              <div class="form-group full-width">
+                <label for="subject">Subject</label>
+                <input type="text" id="subject" required placeholder="Subject">
+              </div>
+              <div class="form-group full-width">
+                <label for="message">Message</label>
+                <textarea id="message" rows="6" required placeholder="Type your message..."></textarea>
+              </div>
+              <button type="submit" class="btn btn-primary send-btn">
+                <span>Send Message</span>
+                <i class="fas fa-paper-plane"></i>
+              </button>
+            </form>
+            <div class="form-status">
+              <div class="success-message">
+                <i class="fas fa-check-circle"></i>
+                <p>Your message has been sent successfully!</p>
+              </div>
+              <div class="error-message">
+                <i class="fas fa-exclamation-circle"></i>
+                <p>Something went wrong. Please try again.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </section>
 
     <!-- Footer -->
     <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-logo">
-                    <h3>K<span>B</span></h3>
-                    <p>Creating innovative solutions through technology</p>
-                </div>
-                <div class="footer-links">
-                    <h3>Quick Links</h3>
-                    <ul>
-                        <li><a href="#home">Home</a></li>
-                        <li><a href="#about">About</a></li>
-                        <li><a href="#skills">Skills</a></li>
-                        <li><a href="#projects">Projects</a></li>
-                        <li><a href="#blog">Blog</a></li>
-                        <li><a href="#contact">Contact</a></li>
-                    </ul>
-                </div>
-                <div class="footer-social">
-                    <h3>Connect</h3>
-                    <div class="social-links">
-                        <a href="#" class="social-link" aria-label="GitHub"><i class="fab fa-github"></i></a>
-                        <a href="#" class="social-link" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
-                        <a href="#" class="social-link" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
-                        <a href="#" class="social-link" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-                    </div>
-                </div>
+      <div class="container">
+        <div class="footer-content">
+          <div class="footer-logo">
+            <div class="logo-text">K<span>B</span></div>
+            <p>IoT Developer & ML Enthusiast</p>
+          </div>
+          <div class="footer-nav">
+            <h3>Quick Links</h3>
+            <ul class="footer-menu">
+              <li><a href="#home"><i class="fas fa-home"></i> Home</a></li>
+              <li><a href="#about"><i class="fas fa-user"></i> About</a></li>
+              <li><a href="#experience"><i class="fas fa-briefcase"></i> Experience</a></li>
+              <li><a href="#skills"><i class="fas fa-code"></i> Skills</a></li>
+              <li><a href="#projects"><i class="fas fa-project-diagram"></i> Projects</a></li>
+              <li><a href="#blog"><i class="fas fa-blog"></i> Blog</a></li>
+              <li><a href="#contact"><i class="fas fa-envelope"></i> Contact</a></li>
+            </ul>
+          </div>
+          <div class="footer-social-wrapper">
+            <h3>Connect</h3>
+            <div class="social-links">
+              <a href="https://github.com/Kamalbura" class="social-link" aria-label="GitHub"><i class="fab fa-github"></i></a>
+              <a href="https://www.linkedin.com/in/kamal-bura/" class="social-link" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+              <a href="https://twitter.com/kamalbura" class="social-link" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+              <a href="https://www.instagram.com/kamal.bura/" class="social-link" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
             </div>
-            <div class="footer-bottom">
-                <p>&copy; 2023 Kamal Bura. All Rights Reserved.</p>
+            <div class="footer-cta">
+              <a href="#contact" class="btn btn-primary">Let's Connect <i class="fas fa-handshake"></i></a>
             </div>
+          </div>
         </div>
+        <div class="footer-divider"></div>
+        <div class="footer-bottom">
+          <p>&copy; <span id="footer-year"></span> Kamal Bura. All Rights Reserved.</p>
+          <div class="footer-legal">
+            <a href="#">Privacy Policy</a>
+            <a href="#">Terms of Service</a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-aura"></div>
     </footer>
 
     <!-- Back to Top Button -->
@@ -651,5 +667,17 @@
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <script src="js/main.js"></script>
     <script src="js/projects-loader.js"></script>
+    <script>
+    // Dynamic year for copyright
+    const yearSpan = document.getElementById('footer-year');
+    if(yearSpan) yearSpan.textContent = new Date().getFullYear();
+    </script>
+
+    <!-- Add noscript fallback -->
+    <noscript>
+        <div class="noscript-message">
+            This website works best with JavaScript enabled. Please enable JavaScript for the best experience.
+        </div>
+    </noscript>
 </body>
 </html>
