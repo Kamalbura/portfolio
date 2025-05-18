@@ -2000,7 +2000,7 @@ body.modal-open {
     padding-right: 15px; /* Prevents layout shift */
 }
 
-/* Footer layout improvements */
+/* Footer layout improved  improvements */
 .footer-content {
   display: grid;
   grid-template-columns: 1fr 2fr 1fr;
