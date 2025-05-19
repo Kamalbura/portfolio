@@ -8,12 +8,12 @@
     /* Colors */
     --primary-color: #00ffff;      /* Cyan */
     --secondary-color: #ff00ff;    /* Magenta */
-    --accent-color: #ffff00;       /* Yellow */
+    --accent-color: #1f272dc4;       /* Yellow */
     --bg-dark: #080818;            /* Dark blue background */
     --bg-darker: #050510;          /* Slightly darker blue */
     --bg-card: rgba(10, 10, 27, 0.15);  /* Card background */
     --text-light: #ffffff;         /* White text */
-    --text-dim: #afafbf;           /* Slightly dimmed white */
+    --text-dim: #afafbf;           /* Slightlymed white */
     
     /* Missing Variables */
     --primary-color-dark: #00c8c8; /* Darker cyan for hover states */
@@ -39,7 +39,7 @@
     /* New aura variables */
     --aura-primary: 0 0 10px rgba(0, 243, 255, 0.7), 0 0 20px rgba(0, 243, 255, 0.4);
     --aura-secondary: 0 0 10px rgba(255, 0, 255, 0.7), 0 0 20px rgba(255, 0, 255, 0.4);
-    --aura-accent: 0 0 10px rgba(255, 255, 0, 0.7), 0 0 20px rgba(255, 255, 0, 0.4);
+    --aura-accent: 0 0 10px rgba(0, 255, 162, 0.7), 0 0 20px rgba(255, 255, 0, 0.4);
     --transition-glow: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
