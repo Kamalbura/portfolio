@@ -49,13 +49,15 @@
             <div class="circle"></div>
             <div class="circle"></div>
         </div>
-    </div>
-
-    <!-- Navbar -->
+    </div>    <!-- Navbar -->
     <nav class="navbar">
         <div class="container">
             <div class="logo">
-                <a href="#"><div class="logo-text">K<span>B</span></div></a>
+                <a href="#">
+                    <div class="logo-icon">
+                        <div class="logo-text">K<span>B</span></div>
+                    </div>
+                </a>
             </div>
             <div class="nav-toggle">
                 <span></span>
@@ -63,22 +65,23 @@
                 <span></span>
             </div>
             <ul class="nav-links">
-                <li><a href="#home" class="active">Home</a></li>
-                <li><a href="#about">About</a></li>
-                <li><a href="#experience">Experience</a></li>
-                <li><a href="#skills">Skills</a></li>
-                <li><a href="#projects">Projects</a></li>
-                <li><a href="personal.html">Personal Life</a></li>
-                <li><a href="#blog">Blog</a></li>
-                <li><a href="#contact">Contact</a></li>
+                <li><a href="#home" class="active"><i class="fas fa-home"></i> <span>Home</span></a></li>
+                <li><a href="#about"><i class="fas fa-user"></i> <span>About</span></a></li>
+                <li><a href="#experience"><i class="fas fa-briefcase"></i> <span>Experience</span></a></li>
+                <li><a href="#skills"><i class="fas fa-code"></i> <span>Skills</span></a></li>
+                <li><a href="#projects"><i class="fas fa-project-diagram"></i> <span>Projects</span></a></li>
+                <li><a href="personal.html"><i class="fas fa-smile"></i> <span>Personal</span></a></li>
+                <li><a href="#blog"><i class="fas fa-blog"></i> <span>Blog</span></a></li>
+                <li><a href="#contact"><i class="fas fa-paper-plane"></i> <span>Contact</span></a></li>
             </ul>
             <div class="nav-actions">
+                <a href="#contact" class="nav-cta">Let's Talk</a>
                 <button id="theme-toggle" aria-label="Toggle dark/light mode">
                     <i class="fas fa-moon"></i>
                 </button>
             </div>
         </div>
-    </nav>    <!-- Hero Section -->    <section id="home" class="hero">
+    </nav><!-- Hero Section -->    <section id="home" class="hero">
         <div class="particles-container" id="particles-js"></div>
         <div class="hero-overlay"></div>
         <div class="hero-grid-bg">
@@ -117,16 +120,32 @@
                         </a>
                         <a href="#contact" class="btn btn-outline">Contact Me</a>
                     </div>
-                </div>
-                <div class="hero-image" data-aos="fade-up" data-aos-delay="300" data-aos-duration="800">
+                </div>                <div class="hero-image" data-aos="fade-up" data-aos-delay="300" data-aos-duration="800">
                     <div class="profile-shape"></div>
                     <img src="img/hero-illustration.png" alt="Developer Illustration">
+                    <div class="floating-elements">
+                        <div class="floating-element element-1"><i class="fas fa-microchip"></i></div>
+                        <div class="floating-element element-2"><i class="fas fa-code"></i></div>
+                        <div class="floating-element element-3"><i class="fas fa-robot"></i></div>
+                        <div class="floating-element element-4"><i class="fas fa-wifi"></i></div>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-badges">
+                <div class="hero-badge" data-aos="fade-up" data-aos-delay="400">
+                    <div class="pulse-dot"></div>
+                    <span>Available for Work</span>
+                </div>
+                <div class="hero-badge custom-badge" data-aos="fade-up" data-aos-delay="500">
+                    <i class="fas fa-award"></i>
+                    <span>IoT Expert</span>
                 </div>
             </div>
             <div class="scroll-down">
                 <span>Scroll Down</span>
                 <i class="fas fa-chevron-down"></i>
             </div>
+            <div class="hero-particles" id="hero-particles"></div>
         </div>
     </section>
 
@@ -648,60 +667,45 @@
           </div>
         </div>
       </div>
-    </section>
-
-    <!-- Personal Section (CTA Cards) -->
-    <section id="personal" class="personal-cta-section">
+    </section>    <!-- Call to Action Section -->
+    <section id="cta" class="cta-section">
         <div class="container">
             <div class="section-header" data-aos="fade-up">
-                <span class="section-subtitle">Beyond Work</span>
-                <h2 class="section-title">My <span>Personal Side</span></h2>
+                <span class="section-subtitle">Let's Connect</span>
+                <h2 class="section-title">Ready to <span>Collaborate?</span></h2>
             </div>
             
             <div class="cta-container" data-aos="fade-up">
-                <div class="cta-cards-grid">
-                    <div class="cta-card" data-aos="zoom-in" data-aos-delay="100">
-                        <div class="cta-icon">
-                            <i class="fas fa-user-astronaut"></i>
+                <div class="cta-content">
+                    <div class="cta-text" data-aos="fade-right">
+                        <p>I'm always open to discussing new projects, creative ideas, or opportunities to be part of your vision. Whether you need expertise in IoT systems, machine learning applications, or full-stack development, let's create something amazing together.</p>
+                        
+                        <div class="cta-highlights">
+                            <div class="cta-highlight-item">
+                                <i class="fas fa-code"></i>
+                                <span>Custom Development</span>
+                            </div>
+                            <div class="cta-highlight-item">
+                                <i class="fas fa-microchip"></i>
+                                <span>IoT Solutions</span>
+                            </div>
+                            <div class="cta-highlight-item">
+                                <i class="fas fa-brain"></i>
+                                <span>ML Applications</span>
+                            </div>
                         </div>
-                        <h3>Personal Life</h3>
-                        <p>Discover my hobbies, interests, and the things that make me who I am beyond my professional life.</p>
+                    </div>
+                    
+                    <div class="cta-buttons" data-aos="fade-left">
+                        <a href="#contact" class="btn btn-primary">
+                            <span>Get in Touch</span>
+                            <i class="fas fa-paper-plane"></i>
+                        </a>
                         <a href="personal.html" class="btn btn-outline">
-                            <span>Explore</span>
-                            <i class="fas fa-arrow-right"></i>
+                            <span>About Me</span>
+                            <i class="fas fa-user"></i>
                         </a>
                     </div>
-                    
-                    <div class="cta-card" data-aos="zoom-in" data-aos-delay="200">
-                        <div class="cta-icon">
-                            <i class="fas fa-camera-retro"></i>
-                        </div>
-                        <h3>Photo Gallery</h3>
-                        <p>Visual highlights from my adventures, projects, and moments that inspire my creativity.</p>
-                        <a href="personal.html#gallery" class="btn btn-outline">
-                            <span>View Gallery</span>
-                            <i class="fas fa-images"></i>
-                        </a>
-                    </div>
-                    
-                    <div class="cta-card" data-aos="zoom-in" data-aos-delay="300">
-                        <div class="cta-icon">
-                            <i class="fas fa-road"></i>
-                        </div>
-                        <h3>My Journey</h3>
-                        <p>The story so far - key milestones and experiences that have shaped my personal and professional development.</p>
-                        <a href="personal.html#journey" class="btn btn-outline">
-                            <span>Read Story</span>
-                            <i class="fas fa-book-open"></i>
-                        </a>
-                    </div>
-                </div>
-                
-                <div class="personal-page-cta" data-aos="fade-up" data-aos-delay="400">
-                    <a href="personal.html" class="btn btn-primary">
-                        <span>Visit Personal Page</span>
-                        <i class="fas fa-external-link-alt"></i>
-                    </a>
                 </div>
             </div>
         </div>
