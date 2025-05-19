@@ -1,0 +1,76 @@
+[
+  {
+    "name": "Smart Classroom Monitoring System",
+    "description": "Designed and deployed an IoT-based system to monitor classroom conditions in real time using ESP32, DHT sensors, sound level meters, and occupancy detectors. The data is pushed to Firebase for real-time visualization, enabling administrators to analyze noise levels, temperature, and student presence. This project promotes smart learning environments and energy-efficient classrooms.",
+    "tags": ["IoT", "ESP32", "Firebase", "DHT11", "Real-time Dashboard", "Education Tech"],
+    "category": "iot",
+    "image": "img/projects/classroom-monitor.png",
+    "link": "https://github.com/Kamalbura/classroom-monitor",
+    "featured": true
+  },
+  {
+    "name": "Forest Fire Early Detection System",
+    "description": "Built a cost-effective, scalable early fire detection network using multiple ESP32 nodes communicating via ESP-NOW protocol. Flame sensors constantly monitor fire-prone zones and alert the base station via SIM800L when thresholds are breached. Integrated GPS modules ensure alerts include precise geolocation for faster emergency response. Designed to cover vast areas with minimal infrastructure.",
+    "tags": ["IoT", "ESP32", "Mesh Networking", "ESP-NOW", "SIM800L", "GPS", "Disaster Tech"],
+    "category": "iot",
+    "image": "img/projects/forest-fire.png",
+    "link": "https://github.com/Kamalbura/forest-fire-detection",
+    "featured": true
+  },
+  {
+    "name": "AI-Powered Blog Writer",
+    "description": "Developed a full-stack blog creation tool that converts speech to blog content using the Web Speech API and auto-enhances it with OpenAI's GPT-4 model. Users can dictate ideas, and the system structures it into clean, SEO-friendly blog articles. Ideal for creators who want to write faster and smarter using AI. Deployed using vanilla JavaScript and GitHub Pages.",
+    "tags": ["AI", "JavaScript", "GPT-4", "Speech Recognition", "Blogger Tools", "OpenAI"],
+    "category": "software",
+    "image": "img/projects/blog-ai.png",
+    "link": "https://github.com/Kamalbura/ai-blog-writer"
+  },
+  {
+    "name": "ESP32 Bluetooth Audio System with I2S DAC",
+    "description": "Created a portable, low-cost audio playback system that receives Bluetooth audio on ESP32 and routes it through an I2S DAC (MAX98357A) to drive speakers. Focused on optimizing sound clarity using RC filtering and minimal component cost. Ideal for smart speakers, wearables, or DIY audio setups. Can also stream alerts in disaster systems or public announcements.",
+    "tags": ["Embedded Audio", "ESP32", "I2S DAC", "Bluetooth", "MAX98357A", "RC Filter"],
+    "category": "embedded",
+    "image": "img/projects/esp32-audio.png",
+    "link": "https://github.com/Kamalbura/esp32-bluetooth-audio"
+  },
+  {
+    "name": "Blind Assistance System with Live Alerts",
+    "description": "Developed a wearable assistive device for visually impaired individuals using ultrasonic sensors to detect nearby obstacles and alert users via vibration/audio. In emergency scenarios, the system can send live GPS coordinates via the SIM800L GSM module. Designed for low latency and real-time feedback, ensuring safety and autonomy for the user.",
+    "tags": ["Accessibility", "ESP32", "Ultrasonic Sensors", "GSM", "GPS", "Real-time Safety"],
+    "category": "iot",
+    "image": "img/projects/blind-aid.png",
+    "link": "https://github.com/Kamalbura/blind-assistance"
+  },
+  {
+    "name": "Smart Farming with NPK Sensor and ESP32",
+    "description": "Built a soil health monitoring system using NPK sensors connected to ESP32. Captures Nitrogen, Phosphorous, and Potassium levels to guide farmers on optimal crop nutrition. Displayed results via serial monitor and planned future integration with mobile dashboards. Targets smart agriculture and resource optimization in rural setups.",
+    "tags": ["Agritech", "NPK Sensor", "ESP32", "Soil Monitoring", "Smart Farming"],
+    "category": "iot",
+    "image": "img/projects/smart-farming.png",
+    "link": "https://github.com/Kamalbura/smart-farming"
+  },
+  {
+    "name": "Mini Drone with Water Dispersion",
+    "description": "Engineered a lightweight quadcopter using 1000KV brushless motors and SimonK ESCs. Designed a central payload mount to carry a 200ml water bottle and used manual flight control to disperse water over a targeted zone. Suitable for precision agriculture or small-scale fire suppression. Optimized for budget builds and experimental payload delivery.",
+    "tags": ["Drones", "Aerial Robotics", "Brushless Motors", "Embedded Systems", "Mini Project"],
+    "category": "embedded",
+    "image": "img/projects/drone-water.png",
+    "link": "https://github.com/Kamalbura/water-drone"
+  },
+  {
+    "name": "Text-to-Speech Alert System with ESP32 + MAX98357",
+    "description": "Used ESP32 and an I2S DAC to create a TTS (Text-to-Speech) system that plays pre-recorded or generated audio alerts in local languages. Useful in forest fire alerts, blind-assist systems, or public health announcements. Developed using Arduino and ESP-ADF stack for real-time voice output.",
+    "tags": ["TTS", "Audio Alerts", "MAX98357A", "ESP32", "Emergency Tech"],
+    "category": "embedded",
+    "image": "img/projects/tts-alert.png",
+    "link": "https://github.com/Kamalbura/esp32-tts-alert"
+  },
+  {
+    "name": "GPS Location Tracker Using SIM800L",
+    "description": "Implemented a GPS-based location tracker using the NEO-6M GPS module and SIM800L. Sends live coordinates via SMS when triggered. Focused on reliability and low power usage. Suitable for personal safety, vehicle tracking, or animal movement monitoring.",
+    "tags": ["GPS", "GSM", "SIM800L", "Tracking System", "IoT Safety"],
+    "category": "iot",
+    "image": "img/projects/gps-tracker.png",
+    "link": "https://github.com/Kamalbura/gps-tracker"
+  }
+]

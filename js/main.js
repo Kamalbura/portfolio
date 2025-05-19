@@ -578,4 +578,270 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 1200);
       });
     });
+    
+    // ===== PERSONAL SECTION FEATURES =====
+    
+    // Project Carousel
+    const carouselInit = () => {
+        const carousel = document.querySelector('.personal-projects-carousel');
+        if (!carousel) return;
+        
+        const items = carousel.querySelectorAll('.carousel-item');
+        const dots = carousel.querySelectorAll('.dot');
+        const prev = carousel.querySelector('.carousel-prev');
+        const next = carousel.querySelector('.carousel-next');
+        let currentIndex = 0;
+        
+        // Show slide at index
+        const showSlide = (index) => {
+            // Handle index bounds
+            if (index < 0) index = items.length - 1;
+            if (index >= items.length) index = 0;
+            
+            // Hide all slides
+            items.forEach(item => {
+                item.classList.remove('active');
+                item.style.opacity = '0';
+            });
+            
+            // Update dots
+            dots.forEach(dot => dot.classList.remove('active'));
+            dots[index].classList.add('active');
+            
+            // Show current slide with animation
+            setTimeout(() => {
+                items[index].classList.add('active');
+                setTimeout(() => {
+                    items[index].style.opacity = '1';
+                }, 10);
+            }, 300);
+            
+            currentIndex = index;
+        };
+        
+        // Set up event listeners
+        if (prev) prev.addEventListener('click', () => showSlide(currentIndex - 1));
+        if (next) next.addEventListener('click', () => showSlide(currentIndex + 1));
+        
+        // Dot navigation
+        dots.forEach(dot => {
+            dot.addEventListener('click', function() {
+                const index = parseInt(this.getAttribute('data-index'));
+                showSlide(index);
+            });
+        });
+        
+        // Auto-advance carousel
+        let carouselInterval = setInterval(() => showSlide(currentIndex + 1), 8000);
+        
+        // Pause on hover
+        carousel.addEventListener('mouseenter', () => clearInterval(carouselInterval));
+        carousel.addEventListener('mouseleave', () => {
+            carouselInterval = setInterval(() => showSlide(currentIndex + 1), 8000);
+        });
+        
+        // Initialize
+        showSlide(0);
+    };
+    
+    // Photo Gallery
+    const galleryInit = () => {
+        const gallery = document.querySelector('.photo-gallery');
+        const captionEl = document.getElementById('gallery-caption');
+        if (!gallery) return;
+        
+        // Create overlay elements
+        const overlay = document.createElement('div');
+        overlay.className = 'gallery-overlay';
+        
+        const overlayContent = document.createElement('div');
+        overlayContent.className = 'gallery-overlay-content';
+        
+        const overlayImg = document.createElement('img');
+        const overlayCaption = document.createElement('div');
+        overlayCaption.className = 'gallery-overlay-caption';
+        
+        const closeBtn = document.createElement('button');
+        closeBtn.className = 'gallery-close';
+        closeBtn.innerHTML = '<i class="fas fa-times"></i>';
+        
+        overlayContent.appendChild(overlayImg);
+        overlayContent.appendChild(overlayCaption);
+        overlayContent.appendChild(closeBtn);
+        overlay.appendChild(overlayContent);
+        document.body.appendChild(overlay);
+        
+        // Close overlay
+        closeBtn.addEventListener('click', () => {
+            overlay.classList.remove('active');
+            document.body.classList.remove('modal-open');
+        });
+        
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) {
+                overlay.classList.remove('active');
+                document.body.classList.remove('modal-open');
+            }
+        });
+        
+        // Handle gallery item clicks
+        const galleryItems = gallery.querySelectorAll('.gallery-item');
+        galleryItems.forEach(item => {
+            // Show caption on hover
+            item.addEventListener('mouseenter', () => {
+                const caption = item.getAttribute('data-caption');
+                if (captionEl && caption) {
+                    captionEl.textContent = caption;
+                }
+            });
+            
+            item.addEventListener('mouseleave', () => {
+                if (captionEl) {
+                    captionEl.textContent = 'Click an image to see details';
+                }
+            });
+            
+            // Open image in overlay
+            item.addEventListener('click', () => {
+                const img = item.querySelector('img');
+                const caption = item.getAttribute('data-caption');
+                
+                overlayImg.src = img.src;
+                overlayCaption.textContent = caption || '';
+                
+                overlay.classList.add('active');
+                document.body.classList.add('modal-open');
+            });
+        });
+        
+        // Close on escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && overlay.classList.contains('active')) {
+                overlay.classList.remove('active');
+                document.body.classList.remove('modal-open');
+            }
+        });
+    };
+    
+    // Parallax effect for personal section
+    const personalParallaxInit = () => {
+        const personalSection = document.querySelector('.personal-section');
+        if (!personalSection) return;
+        
+        window.addEventListener('scroll', () => {
+            const scrollPosition = window.scrollY;
+            const sectionTop = personalSection.offsetTop;
+            const sectionHeight = personalSection.offsetHeight;
+            
+            if (scrollPosition > sectionTop - window.innerHeight && 
+                scrollPosition < sectionTop + sectionHeight) {
+                const parallaxOffset = (scrollPosition - sectionTop + window.innerHeight) * 0.1;
+                personalSection.style.backgroundPosition = `center ${parallaxOffset}px`;
+            }
+        });
+    };
+    
+    // Initialize personal section features
+    carouselInit();
+    galleryInit();
+    personalParallaxInit();
+    
+    // Dynamic footer year for copyright
+    const yearSpan = document.getElementById('footer-year');
+    if(yearSpan) yearSpan.textContent = new Date().getFullYear();
+    
+    // Create directory structure for personal section images if needed
+    function checkPersonalImagesDir() {
+        try {
+            // This is just a reminder - actual directory creation would need server-side code
+            console.log("Remember to create the img/personal directory for your personal photos.");
+        } catch (e) {
+            console.error("Couldn't verify personal images directory:", e);
+        }
+    }
+    checkPersonalImagesDir();
+    
+    // Social share links and copy functionality
+    initializeSocialShare();
 });
+
+// Initialize social share functionality
+function initializeSocialShare() {
+    const copyLinkButton = document.getElementById('copy-link');
+    if (!copyLinkButton) return;
+      copyLinkButton.addEventListener('click', function(e) {
+        e.preventDefault(); // Prevent any default button action
+        const portfolioUrl = window.location.origin + window.location.pathname.replace(/\/[^\/]*$/, '/') || 'https://kamalbura.com';
+        
+        // Check if the clipboard API is available
+        if (navigator.clipboard) {
+            navigator.clipboard.writeText(portfolioUrl)
+                .then(() => {
+                    showCopySuccess(copyLinkButton);
+                    // Show an alert for accessibility
+                    const alertContainer = document.createElement('div');
+                    alertContainer.role = 'alert';
+                    alertContainer.className = 'sr-only';
+                    alertContainer.textContent = 'URL copied to clipboard';
+                    document.body.appendChild(alertContainer);
+                    setTimeout(() => document.body.removeChild(alertContainer), 3000);
+                })
+                .catch(err => {
+                    console.error('Failed to copy text: ', err);
+                    fallbackCopy(portfolioUrl, copyLinkButton);
+                });
+        } else {
+            fallbackCopy(portfolioUrl, copyLinkButton);
+        }
+    });
+    
+    // Fallback for browsers that don't support clipboard API
+    function fallbackCopy(text, button) {
+        const textArea = document.createElement('textarea');
+        textArea.value = text;
+        textArea.style.position = 'fixed';
+        textArea.style.left = '-999999px';
+        textArea.style.top = '-999999px';
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        
+        try {
+            const successful = document.execCommand('copy');
+            if (successful) {
+                showCopySuccess(button);
+            } else {
+                console.error('Failed to copy using execCommand');
+            }
+        } catch (err) {
+            console.error('Failed to execute copy command', err);
+        }
+        
+        document.body.removeChild(textArea);
+    }
+      // Visual feedback for successful copy
+    function showCopySuccess(button) {
+        button.classList.add('copied');
+        const tooltip = button.querySelector('.copy-tooltip');
+        
+        if (tooltip) {
+            // Show the tooltip
+            tooltip.style.opacity = '1';
+            tooltip.style.visibility = 'visible';
+            tooltip.style.transform = 'translateY(-5px)';
+            
+            // Reset after animation
+            setTimeout(() => {
+                tooltip.style.opacity = '0';
+                tooltip.style.visibility = 'hidden';
+                tooltip.style.transform = 'translateY(0)';
+                button.classList.remove('copied');
+            }, 2000);
+        } else {
+            // Reset button state if tooltip doesn't exist
+            setTimeout(() => {
+                button.classList.remove('copied');
+            }, 2000);
+        }
+    }
+}

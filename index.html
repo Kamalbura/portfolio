@@ -68,6 +68,7 @@
                 <li><a href="#experience">Experience</a></li>
                 <li><a href="#skills">Skills</a></li>
                 <li><a href="#projects">Projects</a></li>
+                <li><a href="personal.html">Personal Life</a></li>
                 <li><a href="#blog">Blog</a></li>
                 <li><a href="#contact">Contact</a></li>
             </ul>
@@ -77,19 +78,38 @@
                 </button>
             </div>
         </div>
-    </nav>
-
-    <!-- Hero Section -->
-    <section id="home" class="hero">
+    </nav>    <!-- Hero Section -->    <section id="home" class="hero">
         <div class="particles-container" id="particles-js"></div>
         <div class="hero-overlay"></div>
+        <div class="hero-grid-bg">
+            <div class="grid-lines horizontal"></div>
+            <div class="grid-lines vertical"></div>
+        </div>
+        <div class="hero-shapes">
+            <div class="hero-shape shape-1"></div>
+            <div class="hero-shape shape-2"></div>
+            <div class="hero-shape shape-3"></div>
+        </div>
         <div class="container">
-            <div class="hero-content">
-                <div class="hero-intro" data-aos="fade-up" data-aos-duration="800">
+            <div class="hero-content">                <div class="hero-intro" data-aos="fade-up" data-aos-duration="800">
+                    <div class="badge-container">
+                        <span class="hero-badge available-badge">
+                            <span class="pulse-dot"></span>
+                            Available for Work
+                        </span>
+                    </div>
                     <div class="presents-text">Hello, I'm</div>
                     <h1 class="glitch-text aura-text" data-text="KAMAL BURA">KAMAL BURA</h1>
-                    <p class="tagline">IoT Developer & <span class="typed-text"></span></p>
-                    <p class="hero-description">Building intelligent systems and innovative solutions for the connected world</p>
+                    <p class="tagline">IoT Developer & <span class="typed-text"></span></p>                    <div class="hero-description-container">
+                        <p class="hero-description">Building intelligent systems and innovative solutions for the connected world</p>
+                    </div>
+                    <div class="tech-highlights">
+                        <span class="tech-icon" title="Raspberry Pi"><i class="fab fa-raspberry-pi"></i></span>
+                        <span class="tech-icon" title="Python"><i class="fab fa-python"></i></span>
+                        <span class="tech-icon" title="JavaScript"><i class="fab fa-js"></i></span>
+                        <span class="tech-icon" title="Microcontrollers"><i class="fas fa-microchip"></i></span>
+                        <span class="tech-icon" title="Machine Learning"><i class="fas fa-robot"></i></span>
+                    </div>
                     <div class="hero-buttons">
                         <a href="#projects" class="btn btn-primary">
                             <span>View Projects</span>
@@ -562,12 +582,31 @@
                 <h4>Phone</h4>
                 <a href="tel:+919491862415">+91 94918 62415</a>
               </div>
-            </div>
-            <div class="contact-item">
+            </div>            <div class="contact-item">
               <i class="fas fa-map-marker-alt animated-icon"></i>
               <div>
                 <h4>Location</h4>
                 <p>Hyderabad, India</p>
+              </div>
+            </div>
+              <div class="social-share-container">
+              <h4>Share My Profile</h4>
+              <div class="social-share-links">
+                <a href="https://www.linkedin.com/shareArticle?mini=true&url=https://kamalbura.com" target="_blank" class="share-link" aria-label="Share on LinkedIn" title="Share on LinkedIn">
+                  <i class="fab fa-linkedin"></i>
+                </a>
+                <a href="https://twitter.com/intent/tweet?url=https://kamalbura.com&text=Check out Kamal Bura's IoT and ML portfolio!" target="_blank" class="share-link" aria-label="Share on Twitter" title="Share on Twitter">
+                  <i class="fab fa-twitter"></i>
+                </a>                <a href="https://www.facebook.com/sharer/sharer.php?u=https://kamalbura.com" target="_blank" class="share-link" aria-label="Share on Facebook" title="Share on Facebook">
+                  <i class="fab fa-facebook"></i>
+                </a>
+                <a href="https://www.instagram.com/create/story" target="_blank" class="share-link" aria-label="Share on Instagram" title="Share on Instagram Story">
+                  <i class="fab fa-instagram"></i>
+                </a>
+                <button id="copy-link" class="share-link" aria-label="Copy profile link" title="Copy profile link">
+                  <i class="fas fa-link"></i>
+                  <span class="copy-tooltip">Copied!</span>
+                </button>
               </div>
             </div>
           </div>
@@ -609,6 +648,63 @@
           </div>
         </div>
       </div>
+    </section>
+
+    <!-- Personal Section (CTA Cards) -->
+    <section id="personal" class="personal-cta-section">
+        <div class="container">
+            <div class="section-header" data-aos="fade-up">
+                <span class="section-subtitle">Beyond Work</span>
+                <h2 class="section-title">My <span>Personal Side</span></h2>
+            </div>
+            
+            <div class="cta-container" data-aos="fade-up">
+                <div class="cta-cards-grid">
+                    <div class="cta-card" data-aos="zoom-in" data-aos-delay="100">
+                        <div class="cta-icon">
+                            <i class="fas fa-user-astronaut"></i>
+                        </div>
+                        <h3>Personal Life</h3>
+                        <p>Discover my hobbies, interests, and the things that make me who I am beyond my professional life.</p>
+                        <a href="personal.html" class="btn btn-outline">
+                            <span>Explore</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                    
+                    <div class="cta-card" data-aos="zoom-in" data-aos-delay="200">
+                        <div class="cta-icon">
+                            <i class="fas fa-camera-retro"></i>
+                        </div>
+                        <h3>Photo Gallery</h3>
+                        <p>Visual highlights from my adventures, projects, and moments that inspire my creativity.</p>
+                        <a href="personal.html#gallery" class="btn btn-outline">
+                            <span>View Gallery</span>
+                            <i class="fas fa-images"></i>
+                        </a>
+                    </div>
+                    
+                    <div class="cta-card" data-aos="zoom-in" data-aos-delay="300">
+                        <div class="cta-icon">
+                            <i class="fas fa-road"></i>
+                        </div>
+                        <h3>My Journey</h3>
+                        <p>The story so far - key milestones and experiences that have shaped my personal and professional development.</p>
+                        <a href="personal.html#journey" class="btn btn-outline">
+                            <span>Read Story</span>
+                            <i class="fas fa-book-open"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="personal-page-cta" data-aos="fade-up" data-aos-delay="400">
+                    <a href="personal.html" class="btn btn-primary">
+                        <span>Visit Personal Page</span>
+                        <i class="fas fa-external-link-alt"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
     </section>
 
     <!-- Footer -->
