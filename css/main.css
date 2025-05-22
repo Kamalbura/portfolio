@@ -5,19 +5,19 @@
 
 /* ===== VARIABLES ===== */
 :root {
-    /* Colors */
-    --primary-color: #00ffff;      /* Cyan */
-    --secondary-color: #ff00ff;    /* Magenta */
-    --accent-color: #1f272dc4;       /* Yellow */
-    --bg-dark: #080818;            /* Dark blue background */
-    --bg-darker: #050510;          /* Slightly darker blue */
-    --bg-card: rgba(10, 10, 27, 0.15);  /* Card background */
-    --text-light: #ffffff;         /* White text */
-    --text-dim: #afafbf;           /* Slightlymed white */
+    /* Colors - More professional palette */
+    --primary-color: #0099cc;      /* Professional blue */
+    --secondary-color: #6a5acd;    /* Soft purple */
+    --accent-color: #003366;       /* Deep blue accent */
+    --bg-dark: #121620;            /* Dark blue-gray background */
+    --bg-darker: #0a0d14;          /* Slightly darker blue-gray */
+    --bg-card: rgba(18, 22, 32, 0.6);  /* Card background */
+    --text-light: #f5f5f7;         /* Off-white text */
+    --text-dim: #b8b8c0;           /* Slightly dimmed white */
     
-    /* Missing Variables */
-    --primary-color-dark: #00c8c8; /* Darker cyan for hover states */
-    --border-color: rgba(0, 243, 255, 0.2); /* Border color for timeline */
+    /* Additional Variables */
+    --primary-color-dark: #007399; /* Darker blue for hover states */
+    --border-color: rgba(0, 153, 204, 0.2); /* Border color for timeline */
     
     /* Font families */
     --header-font: 'Orbitron', sans-serif;
@@ -35,12 +35,11 @@
     /* Borders */
     --border-radius-sm: 4px;
     --border-radius-md: 10px;
-    
-    /* New aura variables */
-    --aura-primary: 0 0 10px rgba(0, 243, 255, 0.7), 0 0 20px rgba(0, 243, 255, 0.4);
-    --aura-secondary: 0 0 10px rgba(255, 0, 255, 0.7), 0 0 20px rgba(255, 0, 255, 0.4);
-    --aura-accent: 0 0 10px rgba(0, 255, 162, 0.7), 0 0 20px rgba(255, 255, 0, 0.4);
-    --transition-glow: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      /* New aura variables - more subtle and professional */
+    --aura-primary: 0 0 8px rgba(0, 153, 204, 0.5), 0 0 16px rgba(0, 153, 204, 0.2);
+    --aura-secondary: 0 0 8px rgba(106, 90, 205, 0.5), 0 0 16px rgba(106, 90, 205, 0.2);
+    --aura-accent: 0 0 8px rgba(0, 51, 102, 0.5), 0 0 16px rgba(0, 51, 102, 0.2);
+    --transition-glow: all 0.3s ease;
 }
 
 /* ===== RESET ===== */
@@ -175,8 +174,8 @@ h1 {
 
 /* apply to section titles */
 .section-title {
-    composes: aura; /* if using CSS Modules */
-    /* or just add class="section-title aura" in HTML */
+    /* Apply aura effect directly */
+    text-shadow: 0 0 8px var(--primary-glow), 0 0 16px var(--primary-glow);
 }
 
 /* ===== LAYOUT ===== */
@@ -1081,6 +1080,7 @@ section {
         gap: 25px;
     }
     
+    /* Improved responsive timeline */
     .timeline::before {
         left: 30px;
     }
@@ -1090,8 +1090,9 @@ section {
     }
     
     .timeline-content {
-        width: calc(100% - 60px);
+        width: calc(100% - 80px);
         margin-left: 60px !important;
+        margin-right: 0 !important;
     }
     
     .tools-grid {
@@ -1853,9 +1854,9 @@ section {
 .blog-card p {
     color: var(--text-dim);
     margin-bottom: 20px;
-    flex: 1;
-    display: -webkit-box;
+    flex: 1;    display: -webkit-box;
     -webkit-line-clamp: 3;
+    line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
