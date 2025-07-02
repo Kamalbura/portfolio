@@ -1,10 +1,44 @@
-# Getting Started with Create React App
+# Professional Portfolio Website
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A modern, clean portfolio website built with React, styled-components, and Framer Motion animations. This portfolio is designed to showcase professional skills, projects, and experience with a beautiful user interface.
+
+![Portfolio Screenshot](screenshot.png)
+
+## Features
+
+- **Modern Design**: Clean, professional UI with a carefully crafted color scheme
+- **Responsive Layout**: Fully responsive design that works on all device sizes
+- **Smooth Animations**: Engaging animations using Framer Motion
+- **Contact Form**: Functional contact form powered by EmailJS
+- **Project Showcase**: Filterable project gallery with search functionality
+- **Dark Theme**: Professional dark theme with carefully selected colors
+- **SEO Optimized**: Proper meta tags for better search engine indexing
+
+## Technologies Used
+
+- React 18
+- styled-components
+- Framer Motion
+- React Router
+- EmailJS
+- React Icons
+- React Intersection Observer
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js (v16 or higher)
+- npm or yarn
+
+### Installation
+
+1. Clone the repository
+2. Install dependencies
+3. Configure environment variables using `.env.example` as a template
+4. Start the development server
 
 ## Available Scripts
-
-In the project directory, you can run:
 
 ### `npm start`
 

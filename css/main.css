@@ -35,11 +35,11 @@
     /* Borders */
     --border-radius-sm: 4px;
     --border-radius-md: 10px;
-      /* New aura variables - more subtle and professional */
-    --aura-primary: 0 0 8px rgba(0, 153, 204, 0.5), 0 0 16px rgba(0, 153, 204, 0.2);
-    --aura-secondary: 0 0 8px rgba(106, 90, 205, 0.5), 0 0 16px rgba(106, 90, 205, 0.2);
-    --aura-accent: 0 0 8px rgba(0, 51, 102, 0.5), 0 0 16px rgba(0, 51, 102, 0.2);
-    --transition-glow: all 0.3s ease;
+    /* Updated aura variables - even more subtle and professional */
+    --aura-primary: 0 0 6px rgba(0, 153, 204, 0.4), 0 0 10px rgba(0, 153, 204, 0.15);
+    --aura-secondary: 0 0 6px rgba(106, 90, 205, 0.4), 0 0 10px rgba(106, 90, 205, 0.15);
+    --aura-accent: 0 0 6px rgba(0, 51, 102, 0.4), 0 0 10px rgba(0, 51, 102, 0.15);
+    --transition-glow: all 0.25s ease;
 }
 
 /* ===== RESET ===== */
@@ -167,15 +167,14 @@ h1 {
 /* ===== AURA GLOW UTILITY ===== */
 .aura {
     text-shadow:
-        0 0 8px var(--primary-glow),
-        0 0 16px var(--primary-glow),
-        0 0 24px var(--secondary-glow);
+        0 0 6px var(--primary-color),
+        0 0 12px rgba(0, 153, 204, 0.4);
 }
 
 /* apply to section titles */
 .section-title {
-    /* Apply aura effect directly */
-    text-shadow: 0 0 8px var(--primary-glow), 0 0 16px var(--primary-glow);
+    /* Apply aura effect directly - more subtle and professional */
+    text-shadow: 0 0 6px var(--primary-color), 0 0 12px rgba(0, 153, 204, 0.3);
 }
 
 /* ===== LAYOUT ===== */
@@ -1079,8 +1078,7 @@ section {
     .skills-container {
         gap: 25px;
     }
-    
-    /* Improved responsive timeline */
+      /* Improved responsive timeline */
     .timeline::before {
         left: 30px;
     }
@@ -1093,6 +1091,20 @@ section {
         width: calc(100% - 80px);
         margin-left: 60px !important;
         margin-right: 0 !important;
+    }
+    
+    /* Add transition for smoother responsive behavior */
+    .timeline-item {
+        transition: all 0.3s ease;
+    }
+    
+    /* Add additional timeline responsive improvements */
+    .timeline::before {
+        box-shadow: var(--aura-primary);
+    }
+    
+    .timeline-dot {
+        box-shadow: var(--aura-primary);
     }
     
     .tools-grid {
@@ -1239,6 +1251,27 @@ section {
         right: 20px;
         width: 40px;
         height: 40px;
+    }
+    
+    /* Improve timeline experience on very small devices */
+    .timeline-content {
+        width: calc(100% - 50px);
+        margin-left: 40px !important;
+        padding: 15px;
+    }
+    
+    .timeline-header h3 {
+        font-size: 1.2rem;
+    }
+    
+    .timeline::before {
+        left: 20px;
+    }
+    
+    .timeline-dot {
+        left: 20px;
+        width: 16px;
+        height: 16px;
     }
 }
 

@@ -4,7 +4,7 @@
  * sorting, animations, and interaction capabilities
  * 
  * @author Kamal Bura
- * @version 1.2.0
+ * @version 1.2.1
  */
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', function() {
         searchTerm: '',
         isLoading: true,
         sortOption: 'featured', // default sort option
-    }
+    };
     
     /**
      * Load projects from localStorage or API
@@ -40,6 +40,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (!response.ok) throw new Error('Failed to fetch projects.json');
                 projects = await response.json();
             }
+            
             state.allProjects = projects;
             state.filteredProjects = [...projects];
             
@@ -48,8 +49,8 @@ document.addEventListener('DOMContentLoaded', function() {
             renderProjects();
             initializeFilterListeners();
             
-            // If no projects are available, show sample projects
-            if (!projects || projects.length === 0) {
+            // If no projects are available, load sample projects
+            if (projects.length === 0) {
                 console.warn('No projects found, loading sample projects');
                 loadSampleProjects();
             }
@@ -58,7 +59,7 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log('Projects loaded successfully:', projects.length);
         } catch (error) {
             console.error('Error loading projects:', error);
-            renderErrorState('Failed to load projects. Please try again.');
+            renderErrorState('Failed to load projects. Please try again later.');
             
             // As a fallback, show sample projects even on error
             loadSampleProjects();

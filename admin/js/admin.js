@@ -84,14 +84,16 @@ document.addEventListener('DOMContentLoaded', function() {
         
         const username = document.getElementById('username').value;
         const password = document.getElementById('password').value;
-        
-        if (username === adminCredentials.username && password === adminCredentials.password) {
+          if (username === adminCredentials.username && password === adminCredentials.password) {
             localStorage.setItem('adminLoggedIn', 'true');
             loginModal.classList.remove('active');
             loadProjects();
+            initAdminPanels();
         } else {
-            // FIXED: Use classList instead of inline style
-            loginError.classList.add('active');
+            // Show error message
+            loginError.style.display = 'block';
+            // Clear password field for security
+            document.getElementById('password').value = '';
         }
     });
     
