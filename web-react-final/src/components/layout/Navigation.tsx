@@ -14,10 +14,12 @@ export default function Navigation() {
       setIsScrolled(window.scrollY > 20);
     };
 
-    // Check for preferred color scheme or saved preference
+    // Check for dark mode preference
     const darkModePreference = localStorage.getItem('darkMode');
+    const prefersDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
     
-    if (darkModePreference === 'true' || (darkModePreference === null && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+    // Set dark mode based on saved preference or system preference
+    if (darkModePreference === 'true' || (darkModePreference === null && prefersDarkMode)) {
       setIsDark(true);
       document.documentElement.classList.add('dark');
     } else {
@@ -25,14 +27,43 @@ export default function Navigation() {
       document.documentElement.classList.remove('dark');
     }
 
+    // Apply dark mode to body too for better transitions
+    const updateBodyClass = () => {
+      if (isDark) {
+        document.body.classList.add('dark-mode');
+      } else {
+        document.body.classList.remove('dark-mode');
+      }
+    };
+    updateBodyClass();
+
+    // Listen for changes in system dark mode preference
+    const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const handleDarkModeChange = (e: MediaQueryListEvent) => {
+      // Only apply system preference if user hasn't set a manual preference
+      if (localStorage.getItem('darkMode') === null) {
+        setIsDark(e.matches);
+        if (e.matches) {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+      }
+    };
+    
+    darkModeMediaQuery.addEventListener('change', handleDarkModeChange);
     window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      darkModeMediaQuery.removeEventListener('change', handleDarkModeChange);
+    };
   }, []);
 
   useEffect(() => {
     // Close mobile menu when clicking outside
     const handleClickOutside = (event: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node) && isMobileMenuOpen) {
         setIsMobileMenuOpen(false);
       }
     };
@@ -57,12 +88,20 @@ export default function Navigation() {
     
     if (newDarkMode) {
       document.documentElement.classList.add('dark');
+      document.body.classList.add('dark-mode');
     } else {
       document.documentElement.classList.remove('dark');
+      document.body.classList.remove('dark-mode');
     }
     
     // Save preference to localStorage
     localStorage.setItem('darkMode', newDarkMode.toString());
+    
+    // Force reapplication of dark mode colors
+    setTimeout(() => {
+      const event = new Event('dark-mode-changed');
+      window.dispatchEvent(event);
+    }, 50);
   };
 
   const navItems = [
@@ -77,15 +116,15 @@ export default function Navigation() {
   return (
     <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
       isScrolled 
-        ? 'bg-white/90 dark:bg-gray-900/90 backdrop-blur-md shadow-sm' 
-        : 'bg-transparent'
+        ? 'bg-gray-100/60 dark:bg-gray-800/60 backdrop-blur-md shadow-sm' 
+        : 'bg-gray-100/60 dark:bg-gray-800/60 backdrop-blur-sm'
     }`}>
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
           <Link 
             href="/" 
-            className="text-xl font-semibold text-gray-900 dark:text-white hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+            className="text-xl font-semibold text-gray-900 dark:text-white transition-colors"
           >
             KB
           </Link>
@@ -96,18 +135,17 @@ export default function Navigation() {
               <Link
                 key={item.label}
                 href={item.href}
-                className={`text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white font-medium transition-colors relative group ${
+                className={`text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white font-medium transition-colors ${
                   item.label === 'Pages' ? 'pages-link' : ''
                 }`}
               >
                 {item.label}
                 {item.label === 'Pages' && (
-                  <div className="absolute left-1/2 -translate-x-1/2 top-full mt-2 w-52 px-4 py-3 bg-white dark:bg-gray-800 rounded-lg shadow-lg text-sm text-gray-700 dark:text-gray-300 opacity-0 group-hover:opacity-100 pointer-events-none z-10 before:content-[''] before:absolute before:left-1/2 before:-top-2 before:-translate-x-1/2 before:border-8 before:border-transparent before:border-b-white dark:before:border-b-gray-800 pages-tooltip">
+                  <div className="absolute left-1/2 -translate-x-1/2 top-full mt-2 w-52 px-4 py-3 bg-gray-100 dark:bg-gray-800 rounded-lg shadow-lg text-sm text-gray-700 dark:text-gray-300 opacity-0 group-hover:opacity-100 pointer-events-none z-10 before:content-[''] before:absolute before:left-1/2 before:-top-2 before:-translate-x-1/2 before:border-8 before:border-transparent before:border-b-gray-100 dark:before:border-b-gray-800 pages-tooltip">
                     <p className="font-medium text-center">✨ Discover My Other Websites! </p>
                     <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 text-center">Click to explore my other sites</p>
                   </div>
                 )}
-                <span className="absolute inset-x-0 -bottom-px h-px bg-gray-900 dark:bg-white scale-x-0 group-hover:scale-x-100 transition-transform"></span>
               </Link>
             ))}
           </div>
@@ -116,7 +154,7 @@ export default function Navigation() {
           <div className="flex items-center space-x-3">
             <button
               onClick={toggleDarkMode}
-              className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+              className="p-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 transition-colors"
               aria-label="Toggle dark mode"
             >
               {isDark ? (
@@ -133,7 +171,7 @@ export default function Navigation() {
             {/* Mobile Menu Button */}
             <button 
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="md:hidden p-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+              className="md:hidden p-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 transition-colors"
               aria-label="Toggle mobile menu"
             >
               {isMobileMenuOpen ? (
@@ -155,18 +193,21 @@ export default function Navigation() {
         ref={menuRef}
         className={`md:hidden fixed inset-0 z-50 transition-all duration-300 ease-in-out ${
           isMobileMenuOpen 
-            ? 'opacity-100 translate-x-0' 
-            : 'opacity-0 translate-x-full pointer-events-none'
+            ? 'opacity-100 pointer-events-auto' 
+            : 'opacity-0 pointer-events-none'
         }`}
       >
         <div className="absolute inset-0 bg-gray-900/70 backdrop-blur-sm" onClick={() => setIsMobileMenuOpen(false)}></div>
-        <div className="absolute right-0 top-0 bottom-0 w-64 sm:w-80 bg-white dark:bg-gray-900 shadow-xl flex flex-col">
+        <div className={`absolute right-0 top-0 bottom-0 w-64 sm:w-80 bg-white dark:bg-gray-900 shadow-xl flex flex-col h-full transition-transform duration-300 ease-in-out transform ${
+          isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
+        }`}>
           {/* Menu Header */}
-          <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-800">
-            <Link href="/" className="text-xl font-semibold text-gray-900 dark:text-white">KB</Link>
+          <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-800 sticky top-0 bg-white dark:bg-gray-900 z-10">
+            <Link href="/" className="text-xl font-semibold text-gray-900 dark:text-white" onClick={() => setIsMobileMenuOpen(false)}>KB</Link>
             <button 
               onClick={() => setIsMobileMenuOpen(false)}
-              className="p-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
+              className="p-2 rounded-lg text-gray-600 dark:text-gray-300"
+              aria-label="Close menu"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
@@ -175,20 +216,20 @@ export default function Navigation() {
           </div>
           
           {/* Menu Items */}
-          <div className="flex-1 overflow-y-auto py-4 px-6">
-            <div className="flex flex-col space-y-3">
+          <div className="flex-1 overflow-y-auto py-4 px-6 overscroll-contain">
+            <div className="flex flex-col space-y-1">
               {navItems.map((item) => (
                 <div key={item.label} className="relative">
                   <Link
                     href={item.href}
-                    className="py-3 text-lg font-medium text-gray-800 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white border-b border-gray-100 dark:border-gray-800 block"
+                    className="py-3 text-lg font-medium text-gray-800 dark:text-gray-200 border-b border-gray-100 dark:border-gray-800 block w-full"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     {item.label}
                   </Link>
                 {item.label === 'Pages' && (
                     <div className="text-sm bg-blue-50 dark:bg-blue-900/20 rounded-md p-2 text-gray-700 dark:text-gray-300 mt-1 mb-2 pl-3">
-                      <span className="font-medium">Discover My Other Websites ! </span>
+                      <span className="font-medium">View other portfolio pages</span>
                     </div>
                   )}
                 </div>
@@ -202,7 +243,7 @@ export default function Navigation() {
               <div className="text-sm text-gray-600 dark:text-gray-400">© 2025 Kamal Bura</div>
               <button
                 onClick={toggleDarkMode}
-                className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+                className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 transition-colors"
                 aria-label="Toggle dark mode"
               >
                 {isDark ? "Light Mode" : "Dark Mode"}

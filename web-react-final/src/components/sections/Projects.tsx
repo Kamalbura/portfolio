@@ -103,40 +103,40 @@ export default function Projects() {
           </p>
         </div>
 
-        {/* Category Filter - Responsive grid on mobile */}
+        {/* Enhanced Category Filter with Magnetic Effect */}
         <div className={`mb-8 sm:mb-12 transition-all duration-700 delay-100 ${
           isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
         }`}>
-          {/* Mobile: 2x2 grid */}
-          <div className="grid grid-cols-2 gap-2 sm:hidden">
+          {/* Mobile: 2x2 grid with enhanced styling */}
+          <div className="grid grid-cols-2 gap-3 sm:hidden">
             {categories.map((category) => (
               <button
                 key={category.id}
                 onClick={() => setSelectedCategory(category.id)}
-                className={`px-3 py-2 rounded-full font-medium text-sm transition-colors ${
+                className={`relative px-4 py-3 rounded-lg font-medium text-sm transition-colors ${
                   selectedCategory === category.id
-                    ? 'bg-gray-900 dark:bg-white text-white dark:text-gray-900'
-                    : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
+                    ? 'bg-gray-800 dark:bg-gray-200 text-white dark:text-gray-900 shadow-sm'
+                    : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
                 }`}
               >
-                {category.shortLabel}
+                <span className="relative z-10">{category.shortLabel}</span>
               </button>
             ))}
           </div>
           
-          {/* Desktop: horizontal layout */}
+          {/* Desktop: horizontal layout with magnetic hover */}
           <div className="hidden sm:flex justify-center flex-wrap gap-4">
             {categories.map((category) => (
               <button
                 key={category.id}
                 onClick={() => setSelectedCategory(category.id)}
-                className={`px-6 py-2 rounded-full font-medium whitespace-nowrap transition-colors ${
+                className={`relative px-8 py-3 rounded-lg font-medium whitespace-nowrap transition-colors ${
                   selectedCategory === category.id
-                    ? 'bg-gray-900 dark:bg-white text-white dark:text-gray-900'
-                    : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
+                    ? 'bg-gray-800 dark:bg-gray-200 text-white dark:text-gray-900 shadow-sm'
+                    : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
                 }`}
               >
-                {category.label}
+                <span className="relative z-10">{category.label}</span>
               </button>
             ))}
           </div>
@@ -151,11 +151,10 @@ export default function Projects() {
               key={project.id}
               className={`bg-gray-50 dark:bg-gray-800 rounded-lg overflow-hidden hover:shadow-lg transition-all duration-300 ${
                 project.featured ? 'md:col-span-2' : ''
-              } ${isVisible ? '' : 'opacity-0'} animate-fade-in`}
-              style={{ animationDelay: `${index * 150}ms` }}
+              } ${isVisible ? 'opacity-100' : 'opacity-0'}`}
             >
               {/* Project Image Placeholder */}
-              <div className="h-48 bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-600 flex items-center justify-center">
+              <div className="h-48 bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
                 <div className="text-gray-500 dark:text-gray-400 text-center">
                   <div className="text-4xl mb-2">📱</div>
                   <div className="text-sm">Project Screenshot</div>
@@ -169,7 +168,7 @@ export default function Projects() {
                     {project.title}
                   </h3>
                   {project.featured && (
-                    <span className="px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-xs font-medium rounded">
+                    <span className="px-2 py-1 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 text-xs font-medium rounded">
                       Featured
                     </span>
                   )}
@@ -247,13 +246,6 @@ export default function Projects() {
         .hide-scrollbar {
           -ms-overflow-style: none;
           scrollbar-width: none;
-        }
-        @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(10px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        .animate-fade-in {
-          animation: fadeIn 0.5s ease-out forwards;
         }
       `}</style>
     </section>

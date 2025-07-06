@@ -15,6 +15,7 @@
 /* Smooth scrolling */
 html {
   scroll-behavior: smooth;
+  -webkit-tap-highlight-color: transparent; /* Remove tap highlight on mobile */
 }
 
 /* Font optimization */
@@ -46,6 +47,47 @@ body {
 @media (max-width: 640px) {
   *:focus {
     outline-width: 1px;
+  }
+  
+  /* Increase tap target sizes on mobile */
+  button, 
+  [role="button"],
+  a,
+  input,
+  select,
+  textarea {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Optimize font sizes for small screens */
+  h1 {
+    font-size: clamp(1.75rem, 5vw, 3rem);
+  }
+  
+  h2 {
+    font-size: clamp(1.25rem, 4vw, 2rem);
+  }
+  
+  p {
+    font-size: clamp(0.875rem, 3vw, 1rem);
+  }
+  
+  /* Improve scrolling on mobile */
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+/* Prevent text scaling in landscape orientation on iOS */
+@media screen and (max-device-width: 480px) and (orientation: landscape) {
+  html {
+    -webkit-text-size-adjust: 100%;
   }
 }
 
@@ -143,5 +185,373 @@ body {
   a {
     min-height: 44px;
     min-width: 44px;
+  }
+}
+
+/* Advanced Animation Keyframes */
+@keyframes magneticHover {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-2px, -2px) scale(1.05); }
+}
+
+@keyframes liquidMorph {
+  0%, 100% { border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; }
+  25% { border-radius: 58% 42% 75% 25% / 76% 46% 54% 24%; }
+  50% { border-radius: 50% 50% 33% 67% / 55% 27% 73% 45%; }
+  75% { border-radius: 33% 67% 58% 42% / 63% 68% 32% 37%; }
+}
+
+@keyframes textShimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+@keyframes particleFloat {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  33% { transform: translateY(-10px) rotate(120deg); }
+  66% { transform: translateY(5px) rotate(240deg); }
+}
+
+@keyframes gradientShift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* Enhanced Utility Classes */
+.magnetic-element {
+  transition: transform 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+  will-change: transform;
+}
+
+.liquid-morph {
+  animation: liquidMorph 8s ease-in-out infinite;
+}
+
+.text-shimmer {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.4) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: textShimmer 2s ease-in-out infinite;
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, #667eea 0%, #2d0259 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-size: 200% 200%;
+  animation: gradientShift 3s ease infinite;
+}
+
+.glass-morphism {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+}
+
+.project-card {
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transform-style: preserve-3d;
+}
+
+.project-card:hover {
+  transform: translateY(-10px) rotateX(5deg);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+/* Updated button and scrollbar styles to match the main theme */
+
+/* Button Styles */
+.button {
+  background-color: #1a202c; /* Main background color */
+  color: #fff; /* Text color */
+  border: none;
+  border-radius: 0.375rem;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+}
+.button:hover {
+  background-color: #2d3748; /* Darker shade for hover */
+}
+
+/* Scrollbar Styles */
+#smooth-scroll-container {
+  scrollbar-width: thin;
+  scrollbar-color: #1a202c transparent;
+}
+#smooth-scroll-container::-webkit-scrollbar {
+  width: 4px;
+  background: transparent;
+}
+#smooth-scroll-container::-webkit-scrollbar-thumb {
+  background: #1a202c;
+  border-radius: 4px;
+}
+
+/* Mobile Styles */
+@media (max-width: 768px) {
+  #smooth-scroll-container::-webkit-scrollbar {
+    width: 2px;
+  }
+}
+
+/* Smooth scrollbar styling - updated to match site palette */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #3b82f6 0%, #8b5cf6 100%);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #2563eb 0%, #7c3aed 100%);
+}
+
+/* Performance optimizations */
+.will-change-transform {
+  will-change: transform;
+}
+
+.will-change-opacity {
+  will-change: opacity;
+}
+
+.gpu-accelerated {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  
+  .magnetic-element:hover {
+    transform: none !important;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .gradient-text {
+    -webkit-text-fill-color: currentColor;
+    background: none;
+  }
+  
+  .glass-morphism {
+    background: rgba(0, 0, 0, 0.8);
+    border: 2px solid currentColor;
+  }
+}
+
+/* Magnetic Button and Cursor Enhancements */
+.magnetic-element {
+  transition: transform 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+  will-change: transform;
+}
+
+/* Custom Cursor Hide on Mobile */
+@media (hover: none) and (pointer: coarse) {
+  .custom-cursor,
+  .custom-cursor-follower {
+    display: none !important;
+  }
+}
+
+/* Gradient Border Animation for Magnetic Elements */
+.magnetic-gradient-border {
+  position: relative;
+  background: linear-gradient(45deg, #3b82f6, #8b5cf6, #06b6d4, #10b981);
+  background-size: 300% 300%;
+  animation: gradientShift 3s ease infinite;
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Enhanced Button Hover Effects */
+.magnetic-button:hover {
+  box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.3),
+              0 10px 10px -5px rgba(59, 130, 246, 0.04);
+}
+
+/* Shimmer Effect for Loading States */
+.shimmer {
+  background: linear-gradient(90deg, 
+    rgba(255, 255, 255, 0) 0%, 
+    rgba(255, 255, 255, 0.2) 20%, 
+    rgba(255, 255, 255, 0.5) 60%, 
+    rgba(255, 255, 255, 0) 100%);
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* Parallax Elements */
+.parallax-element {
+  will-change: transform;
+}
+
+/* Text Reveal Animations (prep for next feature) */
+.text-reveal {
+  overflow: hidden;
+}
+
+.text-reveal-line {
+  transform: translateY(100%);
+  transition: transform 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.text-reveal-line.revealed {
+  transform: translateY(0);
+}
+
+/* Magnetic Field Visual Effect */
+.magnetic-field::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, #3b82f6, #8b5cf6, #06b6d4, #10b981);
+  background-size: 400% 400%;
+  z-index: -1;
+  border-radius: inherit;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  animation: gradientShift 3s ease infinite;
+}
+
+.magnetic-field:hover::before {
+  opacity: 0.7;
+}
+
+/* Performance Optimizations */
+.gpu-accelerated {
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+/* Dark mode adjustments for magnetic effects */
+.dark .magnetic-button:hover {
+  box-shadow: 0 10px 25px -5px rgba(139, 92, 246, 0.4),
+              0 10px 10px -5px rgba(139, 92, 246, 0.06);
+}
+
+/* Improved accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .magnetic-element,
+  .magnetic-button,
+  .shimmer,
+  .text-reveal-line {
+    animation: none !important;
+    transition: none !important;
+  }
+  
+  .magnetic-field::before {
+    animation: none !important;
+  }
+}
+
+/* View Projects Button Styling - updated to match site palette */
+.view-projects-button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  user-select: none;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  font-size: 1.125rem;
+  border-radius: 0.75rem;
+  background-image: linear-gradient(to right, #0b234a, #30146f);
+  color: #fff;
+  box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.2);
+}
+.view-projects-button:hover {
+  background-image: linear-gradient(to right, #163f97, #341072);
+  box-shadow: 0 12px 20px -5px rgba(59, 130, 246, 0.4);
+  transform: translateY(-1px);
+}
+.view-projects-button:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.6);
+}
+
+/* Normalized button styles */
+.btn,
+.button,
+button[type="submit"] {
+  background-image: linear-gradient(to right, #173a73, #200a54);
+  color: #fff;
+  padding: 0.5rem 1.25rem;
+  border-radius: 0.5rem;
+  transition: all 0.3s ease;
+  border: none;
+  font-weight: 500;
+}
+
+.btn:hover,
+.button:hover,
+button[type="submit"]:hover {
+  background-image: linear-gradient(to right, #172d5e, #3b1976);
+  box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.3);
+}
+
+/* Mobile responsiveness improvements */
+@media (max-width: 640px) {
+  /* Prevent content overflow for horizontal scrolling elements */
+  .overflow-x-auto {
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Smaller padding for UI elements */
+  .sm\:p-4 {
+    padding: 0.75rem;
+  }
+
+  /* Smaller text for better mobile fit */
+  .text-xs {
+    font-size: 0.75rem;
+  }
+
+  /* Reduce margins between stacked elements */
+  .space-y-8 > :not([hidden]) ~ :not([hidden]) {
+    --tw-space-y-reverse: 0;
+    margin-top: calc(1.5rem * calc(1 - var(--tw-space-y-reverse)));
+    margin-bottom: calc(1.5rem * var(--tw-space-y-reverse));
   }
 }

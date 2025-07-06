@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Navigation from '@/components/layout/Navigation';
 import Link from 'next/link';
 
 interface Page {
@@ -92,9 +91,7 @@ export default function PagesDirectory() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors">
-      <Navigation />
-      
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors">      
       <main className="pt-24 pb-16 px-4 sm:px-6 max-w-6xl mx-auto">
         <div className="text-center mb-12">
           <h1 
