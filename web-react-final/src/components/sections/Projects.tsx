@@ -72,10 +72,10 @@ export default function Projects() {
   ];
 
   const categories = [
-    { id: 'all', label: 'All Projects' },
-    { id: 'web', label: 'Web Development' },
-    { id: 'iot', label: 'IoT Systems' },
-    { id: 'ml', label: 'Machine Learning' }
+    { id: 'all', label: 'All Projects', shortLabel: 'All' },
+    { id: 'web', label: 'Web Development', shortLabel: 'Web Dev' },
+    { id: 'iot', label: 'IoT Systems', shortLabel: 'IoT' },
+    { id: 'ml', label: 'Machine Learning', shortLabel: 'ML' }
   ];
 
   const filteredProjects = selectedCategory === 'all' 
@@ -103,16 +103,34 @@ export default function Projects() {
           </p>
         </div>
 
-        {/* Category Filter - Scrollable on mobile */}
+        {/* Category Filter - Responsive grid on mobile */}
         <div className={`mb-8 sm:mb-12 transition-all duration-700 delay-100 ${
           isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
         }`}>
-          <div className="flex overflow-x-auto pb-3 sm:justify-center sm:flex-wrap gap-2 sm:gap-4 hide-scrollbar">
+          {/* Mobile: 2x2 grid */}
+          <div className="grid grid-cols-2 gap-2 sm:hidden">
             {categories.map((category) => (
               <button
                 key={category.id}
                 onClick={() => setSelectedCategory(category.id)}
-                className={`px-4 sm:px-6 py-2 rounded-full font-medium whitespace-nowrap transition-colors ${
+                className={`px-3 py-2 rounded-full font-medium text-sm transition-colors ${
+                  selectedCategory === category.id
+                    ? 'bg-gray-900 dark:bg-white text-white dark:text-gray-900'
+                    : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
+                }`}
+              >
+                {category.shortLabel}
+              </button>
+            ))}
+          </div>
+          
+          {/* Desktop: horizontal layout */}
+          <div className="hidden sm:flex justify-center flex-wrap gap-4">
+            {categories.map((category) => (
+              <button
+                key={category.id}
+                onClick={() => setSelectedCategory(category.id)}
+                className={`px-6 py-2 rounded-full font-medium whitespace-nowrap transition-colors ${
                   selectedCategory === category.id
                     ? 'bg-gray-900 dark:bg-white text-white dark:text-gray-900'
                     : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'

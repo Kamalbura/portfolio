@@ -63,7 +63,7 @@ export default function Contact() {
 
           {/* LinkedIn */}
           <a
-            href="https://linkedin.com/in/kamalbura"
+            href="https://linkedin.com/in/kamal-bura"
             target="_blank"
             rel="noopener noreferrer"
             className="bg-gray-50 dark:bg-gray-800 p-4 sm:p-6 rounded-lg hover:shadow-lg transition-all duration-300 group"
