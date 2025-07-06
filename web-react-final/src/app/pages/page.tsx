@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Navigation from '@/components/layout/Navigation';
+import Link from 'next/link';
 
 interface Page {
   name: string;
@@ -17,42 +18,50 @@ export default function PagesDirectory() {
   const [showNameChanger, setShowNameChanger] = useState(false);
   const [newSiteName, setNewSiteName] = useState('');
 
-  // Mock deployed pages data - replace with real data
+  // Load the site name from localStorage on component mount
+  useEffect(() => {
+    const savedName = localStorage.getItem('portfolio-site-name');
+    if (savedName) {
+      setSiteName(savedName);
+    }
+  }, []);
+
+  // Deployed pages data
   const pages: Page[] = [
     {
       name: 'Main Portfolio',
       url: '/',
       description: 'Primary portfolio showcasing projects, skills, and experience',
       status: 'live',
-      lastUpdated: '2024-01-20'
+      lastUpdated: '2025-07-02'
     },
     {
-      name: 'Project Showcase',
-      url: '/projects',
-      description: 'Detailed project galleries with live demos and source code',
-      status: 'development',
-      lastUpdated: '2024-01-18'
-    },
-    {
-      name: 'Technical Blog',
-      url: '/blog',
-      description: 'Technical articles and coding tutorials',
-      status: 'development',
-      lastUpdated: '2024-01-15'
-    },
-    {
-      name: 'Resume Generator',
-      url: '/resume',
-      description: 'Dynamic resume generator with multiple templates',
-      status: 'archived',
-      lastUpdated: '2023-12-10'
-    },
-    {
-      name: 'Contact Form',
-      url: '/contact',
-      description: 'Professional contact form with email integration',
+      name: 'DSA Academy',
+      url: 'https://dsa.burakamal.site',
+      description: 'Data Structures and Algorithms learning platform with tutorials and practice problems',
       status: 'live',
-      lastUpdated: '2024-01-19'
+      lastUpdated: '2025-06-25'
+    },
+    {
+      name: 'Skilllance',
+      url: 'https://skilllance.burakamal.site',
+      description: 'Freelance skills marketplace connecting professionals with clients',
+      status: 'live',
+      lastUpdated: '2025-06-20'
+    },
+    {
+      name: 'Freelance Platform',
+      url: 'https://freelance.burakamal.site',
+      description: 'Platform for finding and managing freelance opportunities',
+      status: 'live',
+      lastUpdated: '2025-06-15'
+    },
+    {
+      name: 'Acumen',
+      url: 'https://acumen.burakamal.site',
+      description: 'A website for college events and activities, providing information and updates',
+      status: 'live',
+      lastUpdated: '2025-06-10'
     }
   ];
 
@@ -82,194 +91,109 @@ export default function PagesDirectory() {
     }
   };
 
-  // Load saved site name on mount
-  useEffect(() => {
-    const savedName = localStorage.getItem('portfolio-site-name');
-    if (savedName) {
-      setSiteName(savedName);
-    }
-  }, []);
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'live': return 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400';
-      case 'development': return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400';
-      case 'archived': return 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-400';
-      default: return 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-400';
-    }
-  };
-
-  const getStatusIcon = (status: string) => {
-    switch (status) {
-      case 'live':
-        return (
-          <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-          </svg>
-        );
-      case 'development':
-        return (
-          <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
-          </svg>
-        );
-      case 'archived':
-        return (
-          <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-            <path d="M4 3a2 2 0 100 4h12a2 2 0 100-4H4z" />
-            <path fillRule="evenodd" d="M3 8h14v7a2 2 0 01-2 2H5a2 2 0 01-2-2V8zm5 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z" clipRule="evenodd" />
-          </svg>
-        );
-      default:
-        return null;
-    }
-  };
-
   return (
-    <>
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors">
       <Navigation />
       
-      <main className="min-h-screen bg-white dark:bg-gray-900 pt-16">
-        <div className="max-w-6xl mx-auto px-6 py-12">
-          {/* Header */}
-          <div className="text-center mb-12">
-            <h1 
-              className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4 cursor-pointer select-none"
-              onClick={handleSecretClick}
-              title={clickCount > 0 ? `${clickCount}/5 clicks` : ''}
-            >
-              {siteName}
-            </h1>
-            <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
-              Deployed Pages Directory
-            </p>
-            <div className="w-24 h-1 bg-gradient-to-r from-blue-600 to-purple-600 mx-auto mt-6 rounded-full"></div>
-          </div>
-
-          {/* Secret Name Changer */}
+      <main className="pt-24 pb-16 px-4 sm:px-6 max-w-6xl mx-auto">
+        <div className="text-center mb-12">
+          <h1 
+            className="text-3xl sm:text-4xl md:text-5xl font-light text-gray-900 dark:text-white mb-4 cursor-pointer"
+            onClick={handleSecretClick}
+          >
+            {siteName}
+          </h1>
+          <div className="w-20 h-px bg-gray-900 dark:bg-white mx-auto mb-4"></div>
+          <p className="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+            A collection of web applications, projects, and platforms developed by Kamal Bura
+          </p>
+          
+          {/* Secret name changer that appears after 5 clicks */}
           {showNameChanger && (
-            <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-              <div className="bg-white dark:bg-gray-800 rounded-2xl p-8 max-w-md w-full border border-gray-200 dark:border-gray-700 shadow-2xl">
-                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-                  🎉 Secret Feature Unlocked!
-                </h3>
-                <p className="text-gray-600 dark:text-gray-400 mb-6">
-                  You've discovered the hidden site name changer! Enter a new name for this portfolio:
-                </p>
-                <input
-                  type="text"
-                  value={newSiteName}
-                  onChange={(e) => setNewSiteName(e.target.value)}
-                  className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent mb-6"
-                  placeholder="Enter new site name..."
-                  maxLength={50}
-                />
-                <div className="flex gap-3">
-                  <button
-                    onClick={handleNameChange}
-                    className="flex-1 px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200"
-                  >
-                    Update Name
-                  </button>
-                  <button
-                    onClick={() => {
-                      setShowNameChanger(false);
-                      setClickCount(0);
-                    }}
-                    className="px-6 py-3 bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white font-semibold rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
-                  >
-                    Cancel
-                  </button>
-                </div>
-              </div>
+            <div className="mt-8 p-4 bg-white dark:bg-gray-800 rounded-lg max-w-md mx-auto shadow-sm">
+              <input
+                type="text"
+                value={newSiteName}
+                onChange={(e) => setNewSiteName(e.target.value)}
+                className="w-full mb-3 px-4 py-2 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Enter new site name"
+              />
+              <button
+                onClick={handleNameChange}
+                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+              >
+                Update Site Name
+              </button>
             </div>
           )}
-
-          {/* Stats Overview */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-            <div className="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 p-6 rounded-2xl border border-green-200 dark:border-green-800">
-              <div className="flex items-center justify-between mb-2">
-                <h3 className="text-sm font-semibold text-green-800 dark:text-green-400 uppercase tracking-wide">Live Pages</h3>
-                <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
-              </div>
-              <p className="text-3xl font-bold text-green-900 dark:text-green-300">
-                {pages.filter(p => p.status === 'live').length}
-              </p>
-            </div>
-            
-            <div className="bg-gradient-to-br from-yellow-50 to-yellow-100 dark:from-yellow-900/20 dark:to-yellow-800/20 p-6 rounded-2xl border border-yellow-200 dark:border-yellow-800">
-              <div className="flex items-center justify-between mb-2">
-                <h3 className="text-sm font-semibold text-yellow-800 dark:text-yellow-400 uppercase tracking-wide">In Development</h3>
-                <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
-              </div>
-              <p className="text-3xl font-bold text-yellow-900 dark:text-yellow-300">
-                {pages.filter(p => p.status === 'development').length}
-              </p>
-            </div>
-            
-            <div className="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800/50 dark:to-gray-700/50 p-6 rounded-2xl border border-gray-200 dark:border-gray-700">
-              <div className="flex items-center justify-between mb-2">
-                <h3 className="text-sm font-semibold text-gray-800 dark:text-gray-400 uppercase tracking-wide">Total Pages</h3>
-                <div className="w-3 h-3 bg-gray-500 rounded-full"></div>
-              </div>
-              <p className="text-3xl font-bold text-gray-900 dark:text-gray-300">
-                {pages.length}
-              </p>
-            </div>
-          </div>
-
-          {/* Pages Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {pages.map((page, index) => (
-              <div
-                key={index}
-                className="group bg-white dark:bg-gray-800 p-6 rounded-2xl border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
-              >
-                <div className="flex items-start justify-between mb-4">
-                  <h3 className="text-xl font-semibold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {pages.map((page) => (
+            <div 
+              key={page.name}
+              className="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow border border-gray-100 dark:border-gray-700"
+            >
+              <div className="p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="text-xl font-semibold text-gray-900 dark:text-white truncate">
                     {page.name}
-                  </h3>
-                  <div className={`flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(page.status)}`}>
-                    {getStatusIcon(page.status)}
-                    {page.status}
-                  </div>
+                  </h2>
+                  <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                    page.status === 'live' 
+                      ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300' 
+                      : page.status === 'development'
+                        ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300'
+                        : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
+                  }`}>
+                    {page.status.charAt(0).toUpperCase() + page.status.slice(1)}
+                  </span>
                 </div>
                 
-                <p className="text-gray-600 dark:text-gray-400 mb-4 leading-relaxed">
+                <p className="text-gray-600 dark:text-gray-300 mb-5 h-12 line-clamp-2">
                   {page.description}
                 </p>
                 
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-500 dark:text-gray-500">
-                    Updated: {new Date(page.lastUpdated).toLocaleDateString()}
-                  </span>
+                <div className="flex justify-between items-center">
+                  <a
+                    href={page.url}
+                    target={page.url.startsWith('http') ? '_blank' : '_self'}
+                    rel={page.url.startsWith('http') ? 'noopener noreferrer' : ''}
+                    className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium inline-flex items-center"
+                  >
+                    Visit
+                    <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                    </svg>
+                  </a>
                   
-                  {page.status === 'live' && (
-                    <a
-                      href={page.url}
-                      className="inline-flex items-center gap-1 text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium text-sm transition-colors"
-                    >
-                      Visit
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                      </svg>
-                    </a>
-                  )}
+                  <span className="text-xs text-gray-500 dark:text-gray-400">
+                    Updated: {page.lastUpdated}
+                  </span>
                 </div>
               </div>
-            ))}
-          </div>
-
-          {/* Footer Info */}
-          <div className="mt-16 text-center">
-            <p className="text-gray-500 dark:text-gray-500 text-sm">
-              This directory showcases all deployed pages and projects. 
-              <br className="hidden sm:block" />
-              Built with Next.js, TypeScript, and TailwindCSS.
-            </p>
-          </div>
+            </div>
+          ))}
+        </div>
+        
+        <div className="mt-12 text-center">
+          <Link
+            href="/"
+            className="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+          >
+            <svg className="w-5 h-5 mr-2 -ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+            </svg>
+            Back to Portfolio
+          </Link>
         </div>
       </main>
-    </>
+      
+      <footer className="py-6 border-t border-gray-200 dark:border-gray-800">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 text-center text-gray-500 dark:text-gray-400 text-sm">
+          © {new Date().getFullYear()} Kamal Bura. All rights reserved.
+        </div>
+      </footer>
+    </div>
   );
 }

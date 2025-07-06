@@ -26,6 +26,8 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
+  overflow-x: hidden; /* Prevent horizontal scroll on mobile */
+  width: 100%;
 }
 
 /* Selection styles */
@@ -38,6 +40,13 @@ body {
 *:focus {
   outline: 2px solid #3b82f6;
   outline-offset: 2px;
+}
+
+/* Improved focus styles for mobile */
+@media (max-width: 640px) {
+  *:focus {
+    outline-width: 1px;
+  }
 }
 
 /* Custom transitions */
@@ -69,4 +78,70 @@ body {
 
 .animate-spin-reverse {
   animation: spin-reverse 30s linear infinite;
+}
+
+/* Fade-in animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+/* Mobile optimizations */
+/* Hide scrollbars but keep functionality */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Pages tooltip animation */
+.pages-tooltip {
+  opacity: 0;
+  transform: translate(-50%, -15px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(229, 231, 235, 0.3);
+}
+
+.group:hover .pages-tooltip {
+  opacity: 1;
+  transform: translate(-50%, 0);
+  animation: tooltipBounce 0.5s ease-out, tooltipGlow 2s infinite alternate;
+}
+
+@keyframes tooltipBounce {
+  0%, 100% { transform: translate(-50%, 0); }
+  50% { transform: translate(-50%, -5px); }
+  75% { transform: translate(-50%, 2px); }
+}
+
+@keyframes tooltipGlow {
+  0% { box-shadow: 0 6px 20px rgba(59, 130, 246, 0.1); }
+  100% { box-shadow: 0 8px 25px rgba(59, 130, 246, 0.25); }
+}
+
+@keyframes fadeDown {
+  from { 
+    opacity: 0; 
+    transform: translate(-50%, -15px);
+  }
+  to { 
+    opacity: 1; 
+    transform: translate(-50%, 0);
+  }
+}
+
+/* Better tap targets for mobile */
+@media (max-width: 640px) {
+  button, 
+  a {
+    min-height: 44px;
+    min-width: 44px;
+  }
 }

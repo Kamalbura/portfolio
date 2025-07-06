@@ -1,204 +1,260 @@
 'use client';
 
-const Skills = () => {
+import { useState, useEffect, useRef } from 'react';
+
+export default function Skills() {
+  const [isVisible, setIsVisible] = useState(false);
+  const [activeTab, setActiveTab] = useState(0);
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const [scrollPosition, setScrollPosition] = useState(0);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    // Add smooth scrolling effect for skills
+    const handleScroll = () => {
+      setScrollPosition(window.scrollY);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
   const skills = [
     {
-      name: 'JavaScript',
-      icon: (
-        <svg viewBox="0 0 256 256" className="w-12 h-12">
-          <rect width="256" height="256" fill="#F7DF1E"/>
-          <path d="m67.312 213.932 19.59-11.856c3.78 6.701 7.218 12.371 15.465 12.371 7.905 0 12.89-3.092 12.89-15.12v-81.798h24.057v82.138c0 24.917-14.606 36.259-35.916 36.259-19.245 0-30.416-9.967-36.087-21.996m85.07-2.576 19.588-11.341c5.157 8.421 11.859 14.607 23.715 14.607 9.969 0 16.325-4.984 16.325-11.858 0-8.248-6.53-11.17-17.528-15.98l-6.013-2.58c-17.357-7.387-28.87-16.667-28.87-36.257 0-18.044 13.747-31.792 35.228-31.792 15.294 0 26.292 5.328 34.196 19.247l-18.732 12.03c-4.125-7.389-8.591-10.31-15.465-10.31-7.046 0-11.514 4.468-11.514 10.31 0 7.217 4.468 10.14 14.778 14.608l6.014 2.577c20.45 8.765 31.963 17.7 31.963 37.804 0 21.654-17.012 33.51-39.867 33.51-22.339 0-36.774-10.654-43.819-24.574"/>
-        </svg>
-      )
+      id: 'frontend',
+      title: 'Frontend Development',
+      icon: '🎨',
+      color: 'from-blue-400 to-cyan-400',
+      items: [
+        { name: 'React', icon: '⚛️', description: 'Component Architecture' },
+        { name: 'Next.js', icon: '▲', description: 'Full-Stack Framework' },
+        { name: 'TypeScript', icon: 'TS', description: 'Type Safety' },
+        { name: 'JavaScript', icon: 'JS', description: 'Core Language' },
+        { name: 'Tailwind CSS', icon: '🎨', description: 'Utility Styling' },
+        { name: 'HTML/CSS', icon: '🌐', description: 'Web Fundamentals' }
+      ]
     },
     {
-      name: 'TypeScript',
-      icon: (
-        <svg viewBox="0 0 256 256" className="w-12 h-12">
-          <rect width="256" height="256" fill="#3178C6"/>
-          <path fill="#FFF" d="M56.612 128.85h-8.612v78.993h-8.613V128.85H30.775v-7.72h25.837v7.72zM111.543 198.425c-6.26 0-11.89-2.34-16.888-7.02-4.998-4.68-7.497-10.14-7.497-16.38 0-6.24 2.5-11.7 7.497-16.38 4.999-4.68 10.628-7.02 16.888-7.02 6.26 0 11.89 2.34 16.888 7.02 4.998 4.68 7.497 10.14 7.497 16.38 0 6.24-2.5 11.7-7.497 16.38-4.999 4.68-10.628 7.02-16.888 7.02zm.09-7.2c4.32 0 8.01-1.53 11.07-4.59 3.06-3.06 4.59-6.75 4.59-11.07 0-4.32-1.53-8.01-4.59-11.07-3.06-3.06-6.75-4.59-11.07-4.59-4.32 0-8.01 1.53-11.07 4.59-3.06 3.06-4.59 6.75-4.59 11.07 0 4.32 1.53 8.01 4.59 11.07 3.06 3.06 6.75 4.59 11.07 4.59z"/>
-          <path fill="#FFF" d="M166.705 207.843V121.13h51.372v7.72h-42.76v78.993h-8.612z"/>
-        </svg>
-      )
+      id: 'backend',
+      title: 'Backend Development',
+      icon: '⚙️',
+      color: 'from-green-400 to-emerald-500',
+      items: [
+        { name: 'Node.js', icon: '🟢', description: 'Server Runtime' },
+        { name: 'Express', icon: '⚡', description: 'Web Framework' },
+        { name: 'Python', icon: '🐍', description: 'AI & Backend' },
+        { name: 'MongoDB', icon: '🍃', description: 'NoSQL Database' },
+        { name: 'Firebase', icon: '🔥', description: 'Backend as a Service' },
+        { name: 'REST APIs', icon: '📡', description: 'API Design' }
+      ]
     },
     {
-      name: 'React',
-      icon: (
-        <svg viewBox="0 0 256 228" className="w-12 h-12">
-          <path fill="#00D8FF" d="M210.483 73.824a171.49 171.49 0 0 0-8.24-2.597c.465-1.9.893-3.777 1.273-5.621 6.238-30.281 2.16-54.676-11.769-62.708-13.355-7.7-35.196.329-57.254 19.526a171.23 171.23 0 0 0-6.375 5.848 155.866 155.866 0 0 0-4.241-3.917C100.759 3.829 77.587-4.822 63.673 3.233 50.33 10.957 46.379 33.89 51.995 62.588a170.974 170.974 0 0 0 1.892 8.48c-3.28.932-6.445 1.924-9.474 2.98C17.309 83.498 0 98.307 0 113.668c0 15.865 18.582 31.778 46.812 41.427a145.52 145.52 0 0 0 6.921 2.165 167.467 167.467 0 0 0-2.01 9.138c-5.354 28.2-1.173 50.591 12.134 58.266 13.744 7.926 36.812-.22 59.273-19.855a145.567 145.567 0 0 0 5.342-4.923 168.064 168.064 0 0 0 6.92 6.314c21.758 18.722 43.246 26.282 56.54 18.586 13.731-7.949 18.194-32.003 12.4-61.268a145.016 145.016 0 0 0-1.535-6.842c1.62-.48 3.21-.974 4.76-1.488C229.4 145.734 256 129.831 256 113.668c0-15.323-17.197-30.376-45.517-39.844zM128 144.668c-17.673 0-32-14.327-32-32s14.327-32 32-32 32 14.327 32 32-14.327 32-32 32z"/>
-        </svg>
-      )
-    },
-    {
-      name: 'Next.js',
-      icon: (
-        <svg viewBox="0 0 256 256" className="w-12 h-12">
-          <rect width="256" height="256" fill="#000"/>
-          <path fill="#FFF" d="M119.617.069c-.55.05-2.302.225-3.879.35-36.36 3.278-70.419 22.894-91.99 53.044-12.012 16.764-19.694 35.78-22.597 55.922C.125 116.415 0 118.492 0 128.025c0 9.533.125 11.61 1.151 18.64 6.957 48.065 41.165 88.449 87.56 103.411 8.309 2.678 17.067 4.504 27.027 5.605 3.879.425 20.645.425 24.524 0 17.192-1.902 31.756-6.155 46.12-13.486 2.202-1.126 2.628-1.426 2.327-1.677-.2-.15-9.584-12.735-20.845-27.948l-20.47-27.648-25.65-37.956c-14.114-20.868-25.725-37.932-25.825-37.932-.1-.025-.2 16.84-.25 37.431-.076 36.055-.1 37.506-.551 38.357-.65 1.226-1.151 1.727-2.202 2.277-.801.4-1.501.475-5.28.475h-4.303l-1.15-.725c-.5-.375-.901-.875-1.151-1.491-.3-.765-.35-1.565-.35-18.764V78.742l.525-.917c.25-.475.75-1.026 1.151-1.226.65-.325 1.25-.4 5.53-.4 4.704 0 5.956.149 7.132 1.226 1.327 1.176 13.188 19.695 29.131 45.344 25.749 41.368 46.044 73.564 67.064 106.411l11.544 18.515 5.855-3.903c15.114-10.07 27.27-24.738 35.069-42.376 4.628-10.395 6.956-20.016 8.957-37.09C254.925 139.616 256 131.91 256 128.025c0-9.533-.124-11.61-1.15-18.64C248.694 61.319 211.584 21.038 162.286 6.776c-8.259-2.428-17.217-4.403-26.651-5.38C131.755.245 123.596-.124 119.617.07zm81.72 79.8c.776.551 1.151 1.251 1.327 2.202.149.776.149 14.914 0 31.632l-.149 30.007-5.555-8.558-5.555-8.558v-21.573c0-23.623.074-22.872-2.202-24.323-1.327-.851-3.704-.851-5.005 0-2.277 1.451-2.202.7-2.202 24.323v21.948l-34.233-52.535c-18.814-28.873-34.382-52.759-34.608-53.135l-.425-.675h8.033c7.583 0 8.084.05 8.909.725z"/>
-        </svg>
-      )
-    },
-    {
-      name: 'Node.js',
-      icon: (
-        <svg viewBox="0 0 256 289" className="w-12 h-12">
-          <path fill="#539E43" d="M127.999 288.463c-3.975 0-7.685-1.06-11.061-2.121l-35.098-20.814c-5.3-2.915-2.65-3.975-1.06-4.505 7.155-2.385 8.48-2.915 15.9-7.155.795-.53 1.856-.265 2.65.265l26.883 15.9c1.06.53 2.385.53 3.18 0l104.963-60.57c1.06-.53 1.59-1.325 1.59-2.385v-121.13c0-1.06-.53-1.855-1.59-2.385L129.589 22.28c-1.06-.53-2.385-.53-3.18 0L21.446 82.849c-1.06.53-1.59 1.325-1.59 2.385v121.13c0 1.06.53 1.855 1.59 2.385l28.738 16.695c15.635 7.95 25.288-1.325 25.288-10.6V93.714c0-1.59 1.325-2.915 2.915-2.915h12.72c1.59 0 2.915 1.325 2.915 2.915v121.395c0 21.344-11.326 33.724-31.078 33.724-6.095 0-10.865 0-24.228-6.625l-27.413-15.9c-6.89-3.975-11.061-11.326-11.061-19.276V85.499c0-7.95 4.17-15.3 11.061-19.276L113.56 5.653c6.625-3.71 15.497-3.71 22.122 0l104.963 60.57c6.89 3.975 11.061 11.326 11.061 19.276v121.13c0 7.95-4.17 15.3-11.061 19.276l-104.963 60.57c-3.445 1.856-7.42 2.915-11.326 2.915"/>
-          <path fill="#333" d="M159.597 178.296c-46.038 0-55.69-21.079-55.69-38.834 0-1.59 1.325-2.915 2.915-2.915h13.25c1.456 0 2.65 1.06 2.915 2.385 1.855 12.985 7.42 19.276 37.14 19.276 22.915 0 32.568-5.3 32.568-17.755 0-7.155-2.65-12.455-38.304-15.9-29.798-2.915-48.158-9.54-48.158-33.459 0-22.122 18.625-35.363 49.703-35.363 35.098 0 52.323 12.19 54.443 38.304.265.795-.265 1.59-.795 2.12-.53.53-1.325.795-2.12.795h-13.25c-1.325 0-2.65-1.06-2.915-2.12-3.18-14.575-11.326-19.276-35.363-19.276-26.088 0-29.003 9.01-29.003 15.9 0 8.215 3.71 10.6 37.14 15.37 33.194 4.77 49.322 11.591 49.322 33.989-.265 23.712-19.806 37.67-54.358 37.67"/>
-        </svg>
-      )
-    },
-    {
-      name: 'Python',
-      icon: (
-        <svg viewBox="0 0 256 255" className="w-12 h-12">
-          <defs>
-            <linearGradient id="pyYellow" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" style={{stopColor:'#FFD43B'}}/>
-              <stop offset="100%" style={{stopColor:'#FFE873'}}/>
-            </linearGradient>
-            <linearGradient id="pyBlue" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" style={{stopColor:'#306998'}}/>
-              <stop offset="100%" style={{stopColor:'#4B8BBE'}}/>
-            </linearGradient>
-          </defs>
-          <path fill="url(#pyYellow)" d="M126.916.072c-64.832 0-60.784 28.115-60.784 28.115l.072 29.128h61.868v8.745H41.631S.145 61.355.145 126.77c0 65.417 36.21 63.097 36.21 63.097h21.61v-30.356s-1.165-36.21 35.632-36.21h61.362s34.475.557 34.475-33.319V33.97S194.67.072 126.916.072zM92.802 19.66a11.12 11.12 0 0 1 11.13 11.13 11.12 11.12 0 0 1-11.13 11.13 11.12 11.12 0 0 1-11.13-11.13 11.12 11.12 0 0 1 11.13-11.13z"/>
-          <path fill="url(#pyBlue)" d="M128.757 254.126c64.832 0 60.784-28.115 60.784-28.115l-.072-29.127H127.6v-8.745h86.441s41.486 4.705 41.486-60.712c0-65.416-36.21-63.096-36.21-63.096h-21.61v30.355s1.165 36.21-35.632 36.21h-61.362s-34.475-.557-34.475 33.32v56.013s-5.235 33.897 62.519 33.897zm34.114-19.586a11.12 11.12 0 0 1-11.13-11.13 11.12 11.12 0 0 1 11.13-11.131 11.12 11.12 0 0 1 11.13 11.13 11.12 11.12 0 0 1-11.13 11.13z"/>
-        </svg>
-      )
-    },
-    {
-      name: 'Java',
-      icon: (
-        <svg viewBox="0 0 256 346" className="w-12 h-12">
-          <path fill="#5382A1" d="M82.554 267.473s-13.198 7.675 9.393 10.272c27.369 3.122 41.356 2.675 71.517-3.034 0 0 7.93 4.972 19.003 9.279-67.611 28.977-153.019-1.679-99.913-16.517"/>
-          <path fill="#5382A1" d="M74.292 230.781s-14.803 10.958 7.805 13.296c29.236 3.016 52.324 3.263 92.276-4.43 0 0 5.526 5.602 14.215 8.666-81.747 23.904-172.798 1.885-114.296-17.532"/>
-          <path fill="#E76F00" d="M143.942 165.515c16.66 19.18-4.377 36.44-4.377 36.44s42.301-21.837 22.874-49.183c-18.144-25.5-32.059-38.172 43.268-81.858 0 0-118.238 29.53-61.765 94.6"/>
-          <path fill="#5382A1" d="M233.364 295.442s9.767 8.047-10.757 14.273c-39.026 11.823-162.432 15.391-196.714.471-12.323-5.36 10.787-12.8 18.056-14.362 7.581-1.644 11.914-1.337 11.914-1.337-13.705-9.655-88.583 18.957-38.034 27.15 137.853 22.356 251.292-10.066 215.535-26.195"/>
-          <path fill="#5382A1" d="M88.9 190.48s-62.771 14.91-22.228 20.323c17.118 2.292 51.243 1.774 83.030-.89 25.978-2.19 52.063-6.85 52.063-6.85s-9.16 3.923-15.787 8.448c-63.744 16.765-186.886 8.966-151.435-8.183 29.981-14.492 54.358-12.848 54.358-12.848"/>
-          <path fill="#5382A1" d="M201.506 253.422c64.8-33.672 34.839-66.03 13.927-61.67-5.126 1.066-7.411 1.99-7.411 1.99s1.903-2.98 5.537-4.27c41.37-14.545 73.187 42.897-13.355 65.647 0 .001 1.003-.895 1.302-1.697"/>
-          <path fill="#E76F00" d="M162.439.371s35.887 35.9-34.037 91.101c-56.071 44.282-12.786 69.53-.023 98.377-32.73-29.53-56.75-55.526-40.635-79.72C111.395 74.612 176.918 57.393 162.439.37"/>
-          <path fill="#5382A1" d="M95.268 344.665c62.199 3.982 157.712-2.209 159.974-31.64 0 0-4.348 11.158-51.404 20.018-53.088 9.99-118.564 8.824-157.399 2.421.001 0 7.95 6.58 48.829 9.201"/>
-        </svg>
-      )
-    },
-    {
-      name: 'C++',
-      icon: (
-        <svg viewBox="0 0 256 288" className="w-12 h-12">
-          <path fill="#00599C" d="M255.569 84.452c-.002-4.83-1.035-9.098-3.124-12.761-2.052-3.602-5.125-6.621-9.247-9.008-34.025-19.619-68.083-39.178-102.097-58.817-9.17-5.294-18.061-5.101-27.163.269C82.01 21.477 47.812 41.211 13.654 60.853 9.539 63.24 6.398 66.339 4.323 70.024 2.289 73.645 1.244 77.812 1.244 82.503v122.867c0 4.724 1.005 8.901 3.02 12.543 2.046 3.697 5.177 6.835 9.338 9.212 33.972 19.493 67.96 38.925 101.955 58.316 9.17 5.22 18.063 5.414 27.214-.267 33.897-19.832 67.838-39.567 101.797-59.284 4.16-2.42 7.293-5.525 9.344-9.207 2.018-3.626 3.019-7.788 3.019-12.507V84.452h-.362zM128.182 143.241l-2.07.002L126.096 143l-47.414 47.413c-5.293 5.295-5.295 13.857-.002 19.152a13.534 13.534 0 0 0 19.154-.002l47.415-47.415.016-.002.002-.014L192.681 114.719c5.295-5.295 5.295-13.857 0-19.152a13.534 13.534 0 0 0-19.154 0l-45.345 45.345-2.07.002v2.327z"/>
-          <path fill="#004482" d="M206.348 70.823c-2.006-2.006-5.266-2.006-7.272 0l-71.409 71.409-71.409-71.409c-2.006-2.006-5.266-2.006-7.272 0-2.006 2.006-2.006 5.266 0 7.272l71.409 71.409-71.409 71.409c-2.006 2.006-2.006 5.266 0 7.272s5.266 2.006 7.272 0l71.409-71.409 71.409 71.409c2.006 2.006 5.266 2.006 7.272 0s2.006-5.266 0-7.272l-71.409-71.409 71.409-71.409c2.006-2.006 2.006-5.266 0-7.272z"/>
-        </svg>
-      )
-    },
-    {
-      name: 'Git',
-      icon: (
-        <svg viewBox="0 0 256 256" className="w-12 h-12">
-          <path fill="#DE4C36" d="M251.172 116.594L139.4 4.828c-6.433-6.437-16.873-6.437-23.314 0l-23.21 23.21 29.443 29.443c6.842-2.312 14.688-.761 20.142 4.693 5.48 5.489 7.02 13.402 4.652 20.266l28.375 28.376c6.865-2.365 14.786-.835 20.269 4.657 7.663 7.659 7.663 20.075 0 27.734-7.665 7.666-20.08 7.666-27.749 0-5.764-5.77-7.188-14.235-4.27-21.336l-26.462-26.462-.003 69.637a19.82 19.82 0 0 1 5.188 3.71c7.663 7.66 7.663 20.076 0 27.747-7.665 7.651-20.08 7.651-27.749 0-7.663-7.671-7.663-20.086 0-27.746a19.654 19.654 0 0 1 6.421-4.281V94.196a19.378 19.378 0 0 1-6.421-4.281c-5.806-5.798-7.202-14.317-4.227-21.446L81.47 39.442l-76.64 76.635c-6.44 6.443-6.44 16.884 0 23.322l111.774 111.768c6.435 6.438 16.873 6.438 23.316 0l111.251-111.249c6.438-6.44 6.438-16.887 0-23.324"/>
-        </svg>
-      )
-    },
-    {
-      name: 'Docker',
-      icon: (
-        <svg viewBox="0 0 256 185" className="w-12 h-12">
-          <path fill="#2496ED" d="M250.716 78.932c-5.765-4.284-19.168-6.839-29.436-4.284-1.345-10.269-6.84-19.168-16.764-26.008l-5.765-3.594-3.594 5.765c-7.185 11.615-9.05 30.782-1.345 43.397 2.245 3.594 6.839 9.05 15.418 12.644-4.284 2.245-12.644 5.765-23.603 5.765H1.349c-1.345 8.224-.345 18.493 3.594 28.762 6.839 18.493 21.358 28.762 43.397 28.762 41.152.69 71.589-18.838 85.763-53.321 11.269 0 22.538-1.345 31.117-6.839 5.765-3.594 13.989-10.269 18.493-20.538l2.244-5.765-5.765-3.594c-12.989-7.84-29.436-7.15-42.397-1.345zM139.481 0v17.148h18.493V0h-18.493zM139.481 34.296v17.148h18.493V34.296h-18.493zM139.481 51.444v17.148h18.493V51.444h-18.493zM103.566 34.296v17.148h18.493V34.296h-18.493zM103.566 51.444v17.148h18.493V51.444h-18.493zM103.566 68.592v17.148h18.493V68.592h-18.493zM67.651 51.444v17.148h18.493V51.444H67.651zM67.651 68.592v17.148h18.493V68.592H67.651zM31.736 68.592v17.148h18.493V68.592H31.736z"/>
-        </svg>
-      )
-    },
-    {
-      name: 'MongoDB',
-      icon: (
-        <svg viewBox="0 0 256 549" className="w-12 h-12">
-          <path fill="#01EC64" d="M175.622 61.108C152.612 33.807 132.797 6.078 128.749.32a1.03 1.03 0 0 0-1.492 0c-4.048 5.759-23.863 33.487-46.874 60.788-197.507 251.896 31.108 421.89 31.108 421.89l1.917 1.28c1.704 26.234 5.966 63.988 5.966 63.988h17.045s4.26-37.54 5.965-63.987l1.918-1.494c.213.214 228.828-169.78 31.32-421.677"/>
-          <path fill="#13AA52" d="M140.417 533.3a89.47 89.47 0 0 0-.855-14.032l-1.918 1.493c-1.704 26.234-5.965 63.988-5.965 63.988s-4.048-37.54-5.966-63.987l-1.917-1.28-.855 14.032c0 15.083 7.664 18.275 16.476 14.461v-14.675z"/>
-          <path fill="#00684A" d="m128.749.32-.107.32c-4.26 15.404-1.597 29.862 1.277 44.107.747 3.732 1.598 7.253 2.238 10.775 8.812 49.523 27.056 94.166 52.24 133.43 12.758 19.129 26.232 37.397 40.559 55.24 15.191 18.914 31.535 37.614 44.934 58.676 3.519 5.543 7.036 11.3 10.127 17.056 26.658 49.735 39.629 105.826 39.629 105.826s-228.615 169.891-31.108 421.89l1.918 1.494c-2.878-14.246-5.541-28.492-7.037-42.952-.32-3.198-.64-6.396-.747-9.808-1.065-26.659-1.065-53.531 3.732-79.763 3.198-17.483 8.099-34.754 14.461-51.384 3.732-9.809 7.677-19.405 11.836-28.895 15.617-35.605 33.434-69.57 53.305-102.414 30.47-50.163 65.651-97.775 82.707-155.648 2.025-6.823 3.624-13.861 5.223-20.898 14.675-64.934 8.526-132.151-19.202-191.71z"/>
-        </svg>
-      )
-    },
-    {
-      name: 'AWS',
-      icon: (
-        <svg viewBox="0 0 256 153" className="w-12 h-12">
-          <path fill="#F90" d="M72.392 55.438c0 2.182.295 3.951.886 5.307.591 1.356 1.476 2.712 2.654 4.068l-8.84 7.397c-.886-.996-1.772-2.182-2.658-3.658-.886-1.476-1.329-3.218-1.329-5.22 0-2.658.591-4.884 1.772-6.68 1.181-1.796 2.805-3.218 4.872-4.264 2.067-1.046 4.429-1.569 7.086-1.569 2.362 0 4.429.364 6.2 1.092 1.771.728 3.218 1.772 4.341 3.132 1.123 1.36 1.943 2.977 2.461 4.85.518 1.873.777 3.915.777 6.126v27.152H79.773V58.686c0-2.953-.518-5.107-1.554-6.462-1.036-1.355-2.558-2.033-4.566-2.033-1.182 0-2.281.295-3.296.886-1.015.591-1.851 1.45-2.509 2.576-.658 1.126-.984 2.509-.984 4.15v.635h.528z"/>
-          <path fill="#F90" d="M55.438 27.866v9.93c-1.477-1.772-3.248-3.1-5.312-3.984-2.064-.884-4.396-1.326-6.996-1.326-3.953 0-7.397 1.182-10.332 3.546-2.935 2.364-5.312 5.651-7.131 9.861-1.819 4.21-2.729 9.071-2.729 14.583 0 5.512.91 10.373 2.729 14.583 1.819 4.21 4.196 7.497 7.131 9.861 2.935 2.364 6.379 3.546 10.332 3.546 2.6 0 4.932-.442 6.996-1.326 2.064-.884 3.835-2.212 5.312-3.984v9.93h10.773V27.866H55.438zm-4.872 27.152c0 3.248-.664 6.126-1.992 8.634-1.328 2.508-3.1 4.486-5.316 5.934-2.216 1.448-4.695 2.172-7.437 2.172-2.742 0-5.221-.724-7.437-2.172-2.216-1.448-3.988-3.426-5.316-5.934-1.328-2.508-1.992-5.386-1.992-8.634 0-3.248.664-6.126 1.992-8.634 1.328-2.508 3.1-4.486 5.316-5.934 2.216-1.448 4.695-2.172 7.437-2.172 2.742 0 5.221.724 7.437 2.172 2.216 1.448 3.988 3.426 5.316 5.934 1.328 2.508 1.992 5.386 1.992 8.634z"/>
-          <path fill="#232F3E" d="M208.575 118.367c-18.782 13.811-46.093 21.208-69.586 21.208-32.875 0-62.507-12.129-84.875-32.297-.441-.441-.044-.884.484-.592 12.129 7.054 27.1 11.292 42.517 11.292 20.768 0 43.599-4.238 64.589-13.367 3.173-1.325 5.854 2.21 2.871 4.756z"/>
-          <path fill="#232F3E" d="M215.629 110.086c-2.43-3.108-15.982-1.473-22.1-.736-.884.088-1.032-.663-.221-1.251 10.807-7.584 28.544-5.398 30.619-2.869 2.074 2.53-.552 20.047-10.543 28.411-.766.642-1.487.295-1.147-.552 2.297-5.734 7.363-18.606 4.956-22.547l-.564-.456z"/>
-        </svg>
-      )
+      id: 'other',
+      title: 'Other Technologies',
+      icon: '🔧',
+      color: 'from-purple-400 to-pink-500',
+      items: [
+        { name: 'Git/GitHub', icon: '📋', description: 'Version Control' },
+        { name: 'Docker', icon: '🐳', description: 'Containerization' },
+        { name: 'AWS', icon: '☁️', description: 'Cloud Platform' },
+        { name: 'IoT', icon: '🔌', description: 'Internet of Things' },
+        { name: 'Machine Learning', icon: '🧠', description: 'AI Models' },
+        { name: 'Embedded Systems', icon: '💻', description: 'Hardware Programming' }
+      ]
     }
   ];
 
-  const skillCategories = [
-    {
-      title: 'Frontend Development',
-      skills: skills.filter(skill => ['JavaScript', 'TypeScript', 'React', 'Next.js'].includes(skill.name))
-    },
-    {
-      title: 'Backend & Database',
-      skills: skills.filter(skill => ['Node.js', 'Python', 'Java', 'MongoDB'].includes(skill.name))
-    },
-    {
-      title: 'Development Tools',
-      skills: skills.filter(skill => ['C++', 'Git', 'Docker', 'AWS'].includes(skill.name))
-    }
+  const tools = [
+    { name: 'VS Code', icon: '📝', description: 'Code Editor' },
+    { name: 'Git', icon: '📋', description: 'Version Control' },
+    { name: 'GitHub', icon: '🐙', description: 'Code Repository' },
+    { name: 'npm', icon: '📦', description: 'Package Manager' },
+    { name: 'Webpack', icon: '📦', description: 'Module Bundler' },
+    { name: 'Vercel', icon: '▲', description: 'Deployment' },
+    { name: 'Figma', icon: '🎨', description: 'UI Design' },
+    { name: 'Jest', icon: '🧪', description: 'Testing' },
+    { name: 'ESLint', icon: '🔍', description: 'Code Linting' },
+    { name: 'Firebase', icon: '🔥', description: 'Backend Services' },
+    { name: 'Docker', icon: '🐳', description: 'Containerization' },
+    { name: 'AWS', icon: '☁️', description: 'Cloud Services' }
   ];
 
   return (
-    <section id="skills" className="py-20 bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800">
+    <section 
+      id="skills" 
+      ref={sectionRef}
+      className="py-16 sm:py-20 bg-gray-50 dark:bg-gray-800 transition-colors overflow-hidden"
+    >
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
+        <div className={`text-center mb-10 sm:mb-16 transition-all duration-700 ${
+          isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+        }`}>
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-light text-gray-900 dark:text-white mb-6 sm:mb-8">
             Technical Skills
           </h2>
-          <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+          <div className="w-20 h-px bg-gray-900 dark:bg-white mx-auto mb-6 sm:mb-8"></div>
+          <p className="text-base sm:text-lg text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
             A comprehensive toolkit of modern technologies and frameworks that I use to build scalable, 
             efficient, and innovative solutions.
           </p>
         </div>
 
-        {/* Skills Grid */}
-        <div className="space-y-12">
-          {skillCategories.map((category, categoryIndex) => (
-            <div key={categoryIndex} className="text-center">
-              <h3 className="text-2xl font-semibold text-gray-800 dark:text-gray-200 mb-8">
+        {/* Skills Tabs - Mobile Friendly */}
+        <div className={`mb-8 transition-all duration-700 delay-100 ${
+          isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+        }`}>
+          <div className="flex overflow-x-auto pb-3 sm:justify-center hide-scrollbar">
+            {skills.map((category, index) => (
+              <button
+                key={category.id}
+                onClick={() => setActiveTab(index)}
+                className={`flex items-center px-4 sm:px-6 py-2.5 rounded-lg font-medium whitespace-nowrap mr-2 sm:mr-4 transition-colors ${
+                  activeTab === index
+                    ? 'bg-gradient-to-r bg-gray-900 dark:bg-white text-white dark:text-gray-900'
+                    : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600'
+                }`}
+              >
+                <span className="mr-2">{category.icon}</span>
                 {category.title}
-              </h3>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-                {category.skills.map((skill, skillIndex) => (
-                  <div
-                    key={skillIndex}
-                    className="group flex flex-col items-center p-6 rounded-xl bg-white dark:bg-gray-800 
-                             shadow-sm hover:shadow-lg border border-gray-200 dark:border-gray-700
-                             transition-all duration-300 hover:scale-105 hover:border-blue-300 
-                             dark:hover:border-blue-600"
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Skills Content */}
+        <div className={`transition-all duration-700 delay-200 ${
+          isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+        }`}>
+          {skills.map((category, index) => (
+            <div
+              key={category.id}
+              className={`${activeTab === index ? 'block' : 'hidden'}`}
+            >
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 smooth-scroll">
+                {category.items.map((skill, skillIndex) => (
+                  <div 
+                    key={skill.name}
+                    className="flex flex-col items-center p-4 bg-white dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600 hover:shadow-md hover:scale-105 transition-all duration-300 float-animation"
+                    style={{ animationDelay: `${skillIndex * 0.1}s` }}
                   >
-                    <div className="mb-4 transform group-hover:scale-110 transition-transform duration-300">
+                    <div className="text-2xl mb-4">
                       {skill.icon}
                     </div>
-                    <h4 className="text-lg font-medium text-gray-900 dark:text-white">
-                      {skill.name}
-                    </h4>
+                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300 mt-2">{skill.name}</span>
+                    <p className="text-xs text-center text-gray-500 dark:text-gray-400 mt-3">{skill.description}</p>
                   </div>
                 ))}
+              </div>
+
+              {/* Mobile-friendly card view of skills */}
+              <div className="mt-8 sm:mt-12 lg:hidden">
+                <div className="bg-white dark:bg-gray-700 rounded-lg p-5 sm:p-6 shadow-sm">
+                  <div className="flex items-center mb-4">
+                    <div className={`w-10 h-10 rounded-lg bg-gradient-to-r ${category.color} flex items-center justify-center text-xl mr-4`}>
+                      {category.icon}
+                    </div>
+                    <h3 className="text-xl font-semibold text-gray-900 dark:text-white">{category.title} Overview</h3>
+                  </div>
+                  <p className="text-gray-600 dark:text-gray-300 mb-6">
+                    {index === 0 && "Creating responsive and interactive user interfaces with modern frameworks and technologies."}
+                    {index === 1 && "Building robust server-side applications with scalable APIs and database integrations."}
+                    {index === 2 && "Leveraging additional tools and technologies to enhance development workflow and product capabilities."}
+                  </p>
+                  <div className="grid grid-cols-2 gap-3">
+                    {category.items.map((skill) => (
+                      <div key={skill.name} className="flex items-center p-2 bg-gray-50 dark:bg-gray-600 rounded-lg">
+                        <div className="w-6 h-6 flex items-center justify-center mr-2">
+                          {skill.icon}
+                        </div>
+                        <span className="text-gray-700 dark:text-gray-300">{skill.name}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
             </div>
           ))}
         </div>
 
-        {/* Additional Info */}
-        <div className="mt-16 text-center">
-          <div className="inline-flex items-center px-6 py-3 rounded-full bg-blue-50 dark:bg-blue-900/20 
-                         border border-blue-200 dark:border-blue-800">
-            <span className="text-blue-700 dark:text-blue-300 font-medium">
+        {/* Tools & Technologies Grid */}
+        <div className={`mt-20 transition-all duration-700 delay-300 ${
+          isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+        }`}>
+          <h3 className="text-xl font-semibold text-gray-900 dark:text-white text-center mb-10">Tools & Technologies</h3>
+          
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-5 smooth-scroll">
+            {tools.map((tool, toolIndex) => (
+              <div 
+                key={tool.name}
+                className="flex flex-col items-center p-5 bg-white dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600 hover:shadow-md hover:scale-105 transition-all duration-300 float-animation"
+                style={{ 
+                  animationDelay: `${toolIndex * 0.1}s`,
+                  animationDuration: `${3 + toolIndex * 0.5}s` 
+                }}
+              >
+                <div className="text-3xl mb-4">{tool.icon}</div>
+                <span className="text-sm font-medium text-gray-700 dark:text-gray-300 mt-2">{tool.name}</span>
+                <span className="text-xs text-gray-500 dark:text-gray-400 mt-3 text-center">{tool.description}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Learning & Growth */}
+        <div className={`mt-12 sm:mt-16 text-center transition-all duration-700 delay-400 ${
+          isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+        }`}>
+          <div className="inline-flex items-center px-5 py-2.5 rounded-full bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800">
+            <span className="text-blue-700 dark:text-blue-300 font-medium text-sm sm:text-base">
               Always learning and exploring new technologies
             </span>
           </div>
         </div>
       </div>
+
+      <style jsx>{`
+        .hide-scrollbar::-webkit-scrollbar {
+          display: none;
+        }
+        .hide-scrollbar {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+        @keyframes floatUpDown {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-8px); }
+        }
+        @keyframes fadeInSlide {
+          from { opacity: 0; transform: translateX(-20px); }
+          to { opacity: 1; transform: translateX(0); }
+        }
+        .smooth-scroll {
+          transform: translateY(calc(${scrollPosition * 0.02}px));
+          transition: transform 0.8s ease-out;
+        }
+        .float-animation {
+          animation: floatUpDown 3s ease-in-out infinite;
+        }
+        .fade-in-slide {
+          animation: fadeInSlide 0.5s ease-out forwards;
+        }
+      `}</style>
     </section>
   );
-};
-
-export default Skills;
+}

@@ -75,9 +75,10 @@ export default function Skills() {
   useEffect(() => {
     if (!isVisible) return;
 
+    // Auto-rotate through orbits with a longer interval for smooth effect
     const interval = setInterval(() => {
       setActiveOrbit((prev) => (prev + 1) % techOrbits.length);
-    }, 4000);
+    }, 6000); // Slower rotation (6 seconds)
 
     return () => clearInterval(interval);
   }, [isVisible, techOrbits.length]);
@@ -164,10 +165,10 @@ export default function Skills() {
                       </div>
                       
                       {/* Tooltip */}
-                      <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
-                        <div className="bg-gray-900 text-white px-3 py-1 rounded-lg text-sm whitespace-nowrap border border-gray-700">
+                      <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-10">
+                        <div className="bg-gray-900 text-white px-3 py-2 rounded-lg text-sm whitespace-nowrap border border-gray-700">
                           <div className="font-semibold">{tech.name}</div>
-                          <div className="text-gray-300 text-xs">{tech.description}</div>
+                          <div className="text-gray-300 text-xs mt-1">{tech.description}</div>
                         </div>
                       </div>
                     </div>
@@ -189,14 +190,14 @@ export default function Skills() {
                 }`}
                 onClick={() => setActiveOrbit(index)}
               >
-                <div className={`w-12 h-12 rounded-lg bg-gradient-to-r ${orbit.center.color} flex items-center justify-center text-2xl mb-4 shadow-lg`}>
+                <div className={`w-12 h-12 rounded-lg bg-gradient-to-r ${orbit.center.color} flex items-center justify-center text-2xl mb-5 shadow-lg`}>
                   {orbit.center.icon}
                 </div>
-                <h3 className="text-xl font-semibold text-white mb-2">{orbit.name}</h3>
-                <div className="space-y-2">
+                <h3 className="text-xl font-semibold text-white mb-5">{orbit.name}</h3>
+                <div className="space-y-3.5">
                   {orbit.satellites.map((tech) => (
                     <div key={tech.name} className="flex items-center text-gray-300 text-sm">
-                      <span className="w-2 h-2 rounded-full bg-blue-400 mr-2"></span>
+                      <span className="w-2 h-2 rounded-full bg-blue-400 mr-3"></span>
                       {tech.name}
                     </div>
                   ))}
@@ -236,11 +237,18 @@ export default function Skills() {
           from { transform: rotate(360deg); }
           to { transform: rotate(0deg); }
         }
+        @keyframes float {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-5px); }
+        }
         .animate-spin-slow {
-          animation: spin-slow 20s linear infinite;
+          animation: spin-slow 30s linear infinite; /* Slower spin */
         }
         .animate-spin-reverse {
-          animation: spin-reverse 30s linear infinite;
+          animation: spin-reverse 40s linear infinite; /* Slower reverse spin */
+        }
+        .animate-float {
+          animation: float 5s ease-in-out infinite;
         }
       `}</style>
     </section>
