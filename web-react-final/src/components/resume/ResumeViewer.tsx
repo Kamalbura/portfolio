@@ -9,7 +9,6 @@ interface ResumeViewerProps {
 export default function ResumeViewer({ onCloseAction }: ResumeViewerProps) {
   const [isLoading, setIsLoading] = useState(true);
   const iframeRef = useRef<HTMLIFrameElement>(null);
-  const progressRef = useRef<HTMLDivElement>(null);
   
   // Direct GitHub raw URL for the resume - verified by user
   const resumeUrl = "https://raw.githubusercontent.com/Kamalbura/portfolio/f8a59091c7119e0577b9f19206d82f068d30127f/web-react-final/public/Kamal-bura-resume-jun-2025.pdf";
@@ -103,9 +102,8 @@ export default function ResumeViewer({ onCloseAction }: ResumeViewerProps) {
                 {/* Progress bar with smooth animation */}
                 <div className="w-64 bg-gray-200 dark:bg-gray-700 rounded-full h-2 overflow-hidden mx-auto">
                   <div 
-                    ref={progressRef}
-                    className="h-full bg-gradient-to-r from-blue-500 to-blue-600 rounded-full transition-all duration-300 ease-out"
-                    style={{ width: '0%' }}
+                    className="h-full bg-gradient-to-r from-blue-500 to-blue-600 rounded-full transition-all duration-300 ease-out animate-pulse"
+                    style={{ width: '65%' }}
                   ></div>
                 </div>
                 

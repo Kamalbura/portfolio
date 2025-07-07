@@ -192,12 +192,13 @@ export default function Skills() {
           </div>
         </div>
 
-        {/* Learning & Growth - Kept further down to prevent overlap and resized for mobile */}
+        {/* Learning & Growth - Made more prominent and readable */}
         <div className={`mt-14 sm:mt-20 md:mt-32 text-center transition-all duration-700 delay-400 ${
           isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
         }`}>
-          <div className="inline-flex items-center px-2 py-1 sm:px-3 sm:py-1.5 md:px-4 md:py-2 rounded-md bg-gray-200/60 dark:bg-gray-700/60 border border-gray-300/60 dark:border-gray-600/60">
-            <span className="text-gray-700 dark:text-gray-300 font-medium text-[8px] sm:text-[10px] md:text-xs lg:text-sm">
+          <div className="inline-flex items-center px-4 py-3 sm:px-6 sm:py-4 md:px-8 md:py-5 rounded-lg bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border border-blue-200/60 dark:border-blue-700/60 shadow-sm">
+            <span className="text-gray-800 dark:text-gray-200 font-semibold text-base sm:text-lg md:text-xl flex items-center gap-2">
+              <span className="text-blue-600 dark:text-blue-400">🚀</span>
               Always learning and exploring new technologies
             </span>
           </div>
