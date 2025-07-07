@@ -58,7 +58,7 @@ export default function Navigation() {
       window.removeEventListener('scroll', handleScroll);
       darkModeMediaQuery.removeEventListener('change', handleDarkModeChange);
     };
-  }, []);
+  }, [isDark]);
 
   useEffect(() => {
     // Close mobile menu when clicking outside

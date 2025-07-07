@@ -39,7 +39,7 @@ export const useSmoothScroll = () => {
     };
   }, []);
 
-  const scrollTo = (target: string | number, options?: any) => {
+  const scrollTo = (target: string | number, options?: Record<string, unknown>) => {
     lenisRef.current?.scrollTo(target, options);
   };
 

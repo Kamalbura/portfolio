@@ -1,7 +1,6 @@
 'use client';
 
 import { useSmoothScroll } from '@/hooks/useSmoothScroll';
-import dynamic from 'next/dynamic';
 
 // Disable CustomCursor for now
 // const CustomCursor = dynamic(

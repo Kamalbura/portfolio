@@ -145,8 +145,7 @@ export default function Projects() {
         {/* Projects Grid */}
         <div className={`grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 transition-all duration-700 delay-200 ${
           isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-        }`}>
-          {filteredProjects.map((project, index) => (
+        }`}>            {filteredProjects.map((project) => (
             <div 
               key={project.id}
               className={`bg-gray-50 dark:bg-gray-800 rounded-lg overflow-hidden hover:shadow-lg transition-all duration-300 ${

@@ -61,25 +61,25 @@ export default function Hero() {
             ))}
           </div>
           
-          {/* CTA Buttons - Optimized for mobile to fit side-by-side */}
-          <div className="flex flex-row flex-wrap gap-2 justify-center items-center mt-5 sm:mt-8 md:mt-12">
+          {/* CTA Buttons - Consistent sizing and center alignment */}
+          <div className="flex flex-row flex-wrap gap-3 justify-center items-center mt-5 sm:mt-8 md:mt-12">
             <Link 
               href="#projects"
-              className="text-[10px] xs:text-xs sm:text-sm py-1 px-2 xs:px-3 sm:py-1.5 sm:px-3 md:py-2 md:px-4 rounded-md bg-gray-800 dark:bg-gray-700 text-white transition-colors hover:bg-gray-700 dark:hover:bg-gray-600"
+              className="flex items-center justify-center text-xs sm:text-sm md:text-base py-2 px-4 sm:py-2.5 sm:px-5 md:py-3 md:px-6 rounded-lg bg-gray-800 dark:bg-gray-700 text-white font-medium transition-colors hover:bg-gray-700 dark:hover:bg-gray-600 min-w-[100px] text-center"
             >
               View Projects
             </Link>
             
             <button 
               onClick={handleResumeClick}
-              className="text-[10px] xs:text-xs sm:text-sm py-1 px-2 xs:px-3 sm:py-1.5 sm:px-3 md:py-2 md:px-4 rounded-md bg-gray-200 dark:bg-gray-800 text-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-700 transition-colors hover:bg-gray-300 dark:hover:bg-gray-700"
+              className="flex items-center justify-center text-xs sm:text-sm md:text-base py-2 px-4 sm:py-2.5 sm:px-5 md:py-3 md:px-6 rounded-lg bg-gray-200 dark:bg-gray-800 text-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-700 font-medium transition-colors hover:bg-gray-300 dark:hover:bg-gray-700 min-w-[100px] text-center"
             >
               View Resume
             </button>
             
             <Link 
               href="#contact"
-              className="text-xs sm:text-sm md:text-base py-1 px-3 sm:py-2 sm:px-4 md:py-2.5 md:px-5 rounded-lg text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+              className="flex items-center justify-center text-xs sm:text-sm md:text-base py-2 px-4 sm:py-2.5 sm:px-5 md:py-3 md:px-6 rounded-lg text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 font-medium transition-colors min-w-[100px] text-center"
             >
               Get in Touch
             </Link>

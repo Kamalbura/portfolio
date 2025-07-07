@@ -6,7 +6,8 @@ export default function Skills() {
   const [isVisible, setIsVisible] = useState(false);
   const [activeTab, setActiveTab] = useState(0);
   const sectionRef = useRef<HTMLDivElement>(null);
-  const [scrollPosition, setScrollPosition] = useState(0);
+  // Remove unused scrollPosition
+  // const [scrollPosition, setScrollPosition] = useState(0);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -22,15 +23,15 @@ export default function Skills() {
       observer.observe(sectionRef.current);
     }
 
-    // Add smooth scrolling effect for skills
-    const handleScroll = () => {
-      setScrollPosition(window.scrollY);
-    };
+    // Remove scroll position tracking as it's not used
+    // const handleScroll = () => {
+    //   setScrollPosition(window.scrollY);
+    // };
 
-    window.addEventListener('scroll', handleScroll);
+    // window.addEventListener('scroll', handleScroll);
     return () => {
       observer.disconnect();
-      window.removeEventListener('scroll', handleScroll);
+      // window.removeEventListener('scroll', handleScroll);
     };
   }, []);
 
@@ -149,7 +150,7 @@ export default function Skills() {
               className={`${activeTab === index ? 'block' : 'hidden'}`}
             >
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2 sm:gap-3 md:gap-4">
-                {category.items.map((skill, skillIndex) => (
+                {category.items.map((skill) => (
                   <div 
                     key={skill.name}
                     className="flex flex-col items-center p-2 sm:p-3 md:p-4 bg-white dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600 hover:shadow-md transition-all duration-300"
@@ -178,7 +179,7 @@ export default function Skills() {
           <h3 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white text-center mb-6 sm:mb-8 md:mb-10">Tools & Technologies</h3>
           
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2 sm:gap-3 md:gap-5">
-            {tools.map((tool, toolIndex) => (
+            {tools.map((tool) => (
               <div 
                 key={tool.name}
                 className="flex flex-col items-center p-2 sm:p-3 md:p-5 bg-white dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600 hover:shadow-md transition-all duration-300"
