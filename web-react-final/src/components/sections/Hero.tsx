@@ -36,22 +36,21 @@ export default function Hero() {
           {/* Title & Institution */}
           <div className="space-y-1 sm:space-y-2 md:space-y-3">
             <h2 className="text-base sm:text-xl md:text-2xl font-medium text-gray-700 dark:text-gray-300">
-              Software Engineer & IoT Developer
+              IoT & Machine Learning Developer
             </h2>
             <p className="text-sm sm:text-base md:text-lg text-gray-600 dark:text-gray-400">
-              Computer Science Engineering • Vasavi College of Engineering • Class of 2025
+              Final-year Computer Science Engineering, Vasavi College of Engineering (2022 – 2026)
             </p>
           </div>
           
           {/* Brief Description */}
           <p className="text-sm sm:text-base md:text-xl leading-relaxed text-gray-600 dark:text-gray-300 max-w-3xl mx-auto font-light">
-            Building scalable web applications and intelligent IoT systems. 
-            Passionate about creating technology that solves real-world problems.
+            Designing connected devices and data-driven interfaces for classrooms, labs, and early-stage teams. I combine embedded work with modern web tooling to prototype ideas that can be tested fast and iterated even faster.
           </p>
           
           {/* Skills Tags - Reduced size for mobile */}
           <div className="flex flex-wrap justify-center gap-1 sm:gap-2 md:gap-3 mt-4 sm:mt-6 md:mt-8">
-            {['React', 'Node.js', 'Python', 'IoT', 'Machine Learning', 'Firebase'].map((skill) => (
+            {['React', 'Node.js', 'Python', 'IoT', 'Edge ML', 'Firebase'].map((skill) => (
               <span 
                 key={skill}
                 className="px-2 sm:px-3 md:px-4 py-0.5 sm:py-1 md:py-2 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-full text-[10px] sm:text-xs md:text-sm font-medium"

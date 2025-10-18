@@ -121,11 +121,19 @@ export default function Skills() {
           isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
         }`}>
           <div className="flex justify-center">
-            <div className="flex overflow-x-auto max-w-full pb-2 hide-scrollbar">
+            <div
+              className="flex overflow-x-auto max-w-full pb-2 hide-scrollbar"
+              role="tablist"
+              aria-label="Skill categories"
+            >
               {skills.map((category, index) => (
                 <button
                   key={category.id}
                   onClick={() => setActiveTab(index)}
+                  role="tab"
+                  aria-selected={activeTab === index}
+                  aria-controls={`${category.id}-panel`}
+                  id={`${category.id}-tab`}
                   className={`flex items-center px-2 sm:px-2.5 md:px-3 py-0.5 sm:py-1 md:py-1.5 text-[8px] sm:text-[10px] md:text-xs rounded-md font-medium whitespace-nowrap mr-1 sm:mr-1.5 md:mr-2 transition-colors ${
                     activeTab === index
                       ? 'bg-gray-800 dark:bg-gray-200 text-white dark:text-gray-900'
@@ -147,6 +155,10 @@ export default function Skills() {
           {skills.map((category, index) => (
             <div
               key={category.id}
+              role="tabpanel"
+              id={`${category.id}-panel`}
+              aria-labelledby={`${category.id}-tab`}
+              aria-hidden={activeTab === index ? 'false' : 'true'}
               className={`${activeTab === index ? 'block' : 'hidden'}`}
             >
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2 sm:gap-3 md:gap-4">
@@ -192,17 +204,6 @@ export default function Skills() {
           </div>
         </div>
 
-        {/* Learning & Growth - Made more prominent and readable */}
-        <div className={`mt-14 sm:mt-20 md:mt-32 text-center transition-all duration-700 delay-400 ${
-          isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-        }`}>
-          <div className="inline-flex items-center px-4 py-3 sm:px-6 sm:py-4 md:px-8 md:py-5 rounded-lg bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border border-blue-200/60 dark:border-blue-700/60 shadow-sm">
-            <span className="text-gray-800 dark:text-gray-200 font-semibold text-base sm:text-lg md:text-xl flex items-center gap-2">
-              <span className="text-blue-600 dark:text-blue-400">🚀</span>
-              Always learning and exploring new technologies
-            </span>
-          </div>
-        </div>
       </div>
 
       <style jsx>{`

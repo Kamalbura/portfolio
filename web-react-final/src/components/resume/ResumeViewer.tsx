@@ -11,7 +11,7 @@ export default function ResumeViewer({ onCloseAction }: ResumeViewerProps) {
   const iframeRef = useRef<HTMLIFrameElement>(null);
   
   // Direct GitHub raw URL for the resume - verified by user
-  const resumeUrl = "https://raw.githubusercontent.com/Kamalbura/portfolio/f8a59091c7119e0577b9f19206d82f068d30127f/web-react-final/public/Kamal-bura-resume-jun-2025.pdf";
+  const resumeUrl = "https://raw.githubusercontent.com/Kamalbura/portfolio/f8a59091c7119e056d82f068d30127f/web-react-final/public/Kamal-bura-resume-jun-2025.pdf";
   
   // Google Docs viewer URL for better compatibility
   const googleDocsUrl = `https://docs.google.com/viewer?url=${encodeURIComponent(resumeUrl)}&embedded=true`;

@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import ClientLayout from "@/components/layout/ClientLayout";
@@ -15,10 +15,60 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Kamal Bura | Software Engineer & IoT Developer",
+  metadataBase: new URL("https://www.burakamal.site"),
+  title: {
+    default: "Kamal Bura | IoT & ML Developer",
+    template: "%s | Kamal Bura",
+  },
   description:
-    "Portfolio of Kamal Bura, a Computer Science Engineering student focused on software development and IoT solutions.",
-  viewport: "width=device-width, initial-scale=1, maximum-scale=5",
+    "Fourth-year Computer Science student building IoT products and machine learning prototypes for classrooms, labs, and freelance teams.",
+  keywords: [
+    "Kamal Bura",
+    "IoT developer",
+    "Machine learning",
+    "Next.js portfolio",
+    "Lenis GSAP animations",
+    "Freelance IoT projects",
+  ],
+  authors: [{ name: "Kamal Bura" }],
+  openGraph: {
+    type: "website",
+    url: "https://www.burakamal.site",
+    title: "Kamal Bura | IoT & ML Developer",
+    description:
+      "Interactive portfolio of Kamal Bura showcasing IoT systems, ML experiments, and immersive web interfaces.",
+    siteName: "Kamal Bura Portfolio",
+    locale: "en_US",
+    images: [
+      {
+        url: "https://www.burakamal.site/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Water-inspired hero banner for Kamal Bura's IoT and ML portfolio",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Kamal Bura | IoT & ML Developer",
+    description:
+      "Immersive portfolio for an IoT and ML developer exploring smooth interactions and responsive experiences.",
+    creator: "@burakamal",
+    images: ["https://www.burakamal.site/og-image.jpg"],
+  },
+  alternates: {
+    canonical: "https://www.burakamal.site",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
 };
 
 export default function RootLayout({
@@ -31,6 +81,9 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen`}
       >
+        <a href="#main-content" className="skip-link">
+          Skip to main content
+        </a>
         <ClientLayout>
           <Navigation />
           {children}

@@ -6,6 +6,47 @@ export default function About() {
   const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
 
+  const highlights = [
+    {
+      title: 'IoT systems in the wild',
+      description:
+        'Delivered sensor networks for classrooms, labs, and freelance clients with ESP32, Firebase, and lightweight dashboards.',
+    },
+    {
+      title: 'Edge ML experimentation',
+      description:
+        'Deploy anomaly detection and vision models on microcontrollers to keep latency and power low for field devices.',
+    },
+    {
+      title: 'Rapid iteration mindset',
+      description:
+        'Pair hardware prototypes with Next.js interfaces so stakeholders can test, measure, and request changes in days—not months.',
+    },
+  ];
+
+  const timeline = [
+    {
+      period: '2022',
+      title: 'Began CSE (AIML) at Vasavi College',
+      detail: 'Built first connected classroom monitor and started documenting IoT learnings.',
+    },
+    {
+      period: '2023',
+      title: 'First freelance IoT engagement',
+      detail: 'Delivered an air-quality tracker for a co-working space with real-time dashboards for facilities teams.',
+    },
+    {
+      period: '2024',
+      title: 'Edge ML + automation focus',
+      detail: 'Experimented with ESP32-S3 vision, TensorFlow Lite, and automated alerting workflows for safety projects.',
+    },
+    {
+      period: '2025',
+      title: 'Portfolio refresh & mentorship',
+      detail: 'Documenting projects, mentoring juniors on IoT basics, and opening up availability for new collaborations.',
+    },
+  ];
+
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -45,21 +86,20 @@ export default function About() {
             
             <div className="space-y-4 sm:space-y-6 text-base sm:text-lg leading-relaxed text-gray-600 dark:text-gray-300">
               <p>
-                I&apos;m a final-year Computer Science Engineering student at Vasavi College of Engineering, 
-                passionate about building technology that makes a difference. My journey spans from developing 
-                intelligent IoT systems to creating scalable web applications.
+                I&apos;m a final-year Computer Science Engineering student at Vasavi College of Engineering. My work sits where
+                connected hardware meets modern web interfaces—building prototypes that teams can trial quickly, measure in the
+                field, and refine with confidence.
               </p>
-              
+
               <p>
-                Currently focused on full-stack development and machine learning, I&apos;ve led projects in 
-                smart classroom monitoring, forest fire detection systems, and AI-powered content generation. 
-                I believe in writing clean, efficient code and designing user-centric solutions.
+                Over the last few semesters I&apos;ve been shipping IoT monitoring stacks, classroom automation pilots, and ML-driven
+                alerts for clients and campus labs. The goal is always the same: give stakeholders dependable insights without
+                overwhelming them with tooling or maintenance.
               </p>
-              
+
               <p>
-                When I&apos;m not coding, you&apos;ll find me exploring emerging technologies, participating in hackathons, 
-                or mentoring fellow students. I&apos;m always excited about opportunities to learn and contribute to 
-                meaningful projects.
+                Outside project work, you&apos;ll find me documenting build logs, mentoring juniors through robotics clubs, and
+                exploring how edge ML can live comfortably on low-power hardware.
               </p>
             </div>
 
@@ -81,34 +121,36 @@ export default function About() {
 
           {/* Stats/Timeline */}
           <div className="space-y-6 sm:space-y-8 mt-6 lg:mt-0">
-            <div className="grid grid-cols-2 gap-4 sm:gap-6">
-              <div className="text-center p-4 sm:p-6 bg-white dark:bg-gray-700 rounded-lg shadow-sm">
-                <div className="text-2xl sm:text-3xl font-light text-gray-900 dark:text-white mb-2">15+</div>
-                <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 uppercase tracking-wide">Projects Completed</div>
+            <div className="space-y-4 sm:space-y-6">
+              <div className="bg-white dark:bg-gray-700 rounded-lg p-5 sm:p-6 shadow-sm">
+                <h3 className="text-lg sm:text-xl font-medium text-gray-900 dark:text-white mb-4">Highlights</h3>
+                <ul className="space-y-4">
+                  {highlights.map((item) => (
+                    <li key={item.title}>
+                      <p className="text-sm font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                        {item.title}
+                      </p>
+                      <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300 mt-1">
+                        {item.description}
+                      </p>
+                    </li>
+                  ))}
+                </ul>
               </div>
-              <div className="text-center p-4 sm:p-6 bg-white dark:bg-gray-700 rounded-lg shadow-sm">
-                <div className="text-2xl sm:text-3xl font-light text-gray-900 dark:text-white mb-2">3+</div>
-                <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 uppercase tracking-wide">Years Coding</div>
-              </div>
-              <div className="text-center p-4 sm:p-6 bg-white dark:bg-gray-700 rounded-lg shadow-sm">
-                <div className="text-2xl sm:text-3xl font-light text-gray-900 dark:text-white mb-2">5+</div>
-                <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 uppercase tracking-wide">Technologies</div>
-              </div>
-              <div className="text-center p-4 sm:p-6 bg-white dark:bg-gray-700 rounded-lg shadow-sm">
-                <div className="text-2xl sm:text-3xl font-light text-gray-900 dark:text-white mb-2">B.E(B.Tech)</div>
-                <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 uppercase tracking-wide">CSE-AIML 2026</div>
-              </div>
-            </div>
 
-            {/* Education */}
-            <div className="bg-white dark:bg-gray-700 rounded-lg p-5 sm:p-6 shadow-sm">
-              <h3 className="text-lg sm:text-xl font-medium text-gray-900 dark:text-white mb-4">Education</h3>
-              <div className="space-y-4">
-                <div>
-                  <div className="font-medium text-gray-900 dark:text-white">B.E in Computer Science Engineering</div>
-                  <div className="text-gray-600 dark:text-gray-300">Vasavi College of Engineering</div>
-                  <div className="text-sm text-gray-500 dark:text-gray-400">2022 - 2026 • Hyderabad, India</div>
-                </div>
+              <div className="bg-white dark:bg-gray-700 rounded-lg p-5 sm:p-6 shadow-sm">
+                <h3 className="text-lg sm:text-xl font-medium text-gray-900 dark:text-white mb-4">Timeline</h3>
+                <ol className="space-y-4">
+                  {timeline.map((entry) => (
+                    <li key={entry.period} className="relative pl-6">
+                      <span className="absolute left-0 top-2 h-2 w-2 rounded-full bg-gray-400 dark:bg-gray-500"></span>
+                      <div className="text-sm font-semibold text-gray-700 dark:text-gray-200">
+                        {entry.period} · {entry.title}
+                      </div>
+                      <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">{entry.detail}</p>
+                    </li>
+                  ))}
+                </ol>
               </div>
             </div>
           </div>

@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import Lenis from 'lenis';
+import Lenis from '@studio-freight/lenis';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -9,33 +9,60 @@ export const useSmoothScroll = () => {
   const lenisRef = useRef<Lenis | null>(null);
 
   useEffect(() => {
-    // Initialize Lenis smooth scroll
+    if (typeof window === 'undefined') {
+      return;
+    }
+
+    const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+    if (motionQuery.matches) {
+      const container = document.getElementById('smooth-scroll-container');
+      if (container) {
+        container.style.scrollBehavior = 'auto';
+      }
+      return;
+    }
+
     const lenis = new Lenis({
       lerp: 0.1,
-      wheelMultiplier: 1
+      wheelMultiplier: 1,
     });
 
     lenisRef.current = lenis;
 
-    // RAF loop for smooth scrolling
-    function raf(time: number) {
-      lenis.raf(time);
-      requestAnimationFrame(raf);
-    }
-    requestAnimationFrame(raf);
-
-    // Connect Lenis with GSAP ScrollTrigger
+    // Initialize Lenis smooth scroll
     lenis.on('scroll', ScrollTrigger.update);
 
-    gsap.ticker.add((time: number) => {
+    // Drive Lenis from the GSAP ticker to keep ScrollTrigger in sync
+    const tickerCallback = (time: number) => {
       lenis.raf(time * 1000);
-    });
+    };
 
+    gsap.ticker.add(tickerCallback);
     gsap.ticker.lagSmoothing(0);
 
+    const handleMotionPreferenceChange = (event: MediaQueryListEvent) => {
+      if (event.matches) {
+        lenis.stop();
+        lenis.off('scroll', ScrollTrigger.update);
+        gsap.ticker.remove(tickerCallback);
+        lenis.destroy();
+        if (lenisRef.current === lenis) {
+          lenisRef.current = null;
+        }
+      }
+    };
+
+    motionQuery.addEventListener('change', handleMotionPreferenceChange);
+
     return () => {
+      motionQuery.removeEventListener('change', handleMotionPreferenceChange);
+      lenis.off('scroll', ScrollTrigger.update);
+      gsap.ticker.remove(tickerCallback);
       lenis.destroy();
-      gsap.ticker.remove(() => {});
+      if (lenisRef.current === lenis) {
+        lenisRef.current = null;
+      }
     };
   }, []);
 

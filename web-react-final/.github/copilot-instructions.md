@@ -1,0 +1,27 @@
+# AI Implementation Notes
+- **Stack overview**: Next.js 15 App Router with React 19, Tailwind CSS 4, GSAP, and Lenis; routing lives in `src/app`, shared UI in `src/components`.
+- **Entry layout**: `src/app/layout.tsx` wraps pages with `ClientLayout` and `Navigation`; anything that must sit outside smooth-scroll or nav should mount above those wrappers.
+- **Smooth scroll system**: `ClientLayout` mounts `useSmoothScroll` and the container with id `smooth-scroll-container`. Duplicate the hook only when you truly need a second Lenis instance.
+- **Lenis container rule**: Place scroll-sensitive elements inside the element with id `smooth-scroll-container`. If you need document-level scroll, use `useNativeSmoothScroll` or fall back to window APIs.
+- **Animation libs**: GSAP `ScrollTrigger` ties into Lenis in `useSmoothScroll`; register new triggers inside `useEffect` and clean them explicitly to avoid ticker leaks.
+- **Section pattern**: Sections in `src/components/sections` are client components using `IntersectionObserver` for reveal animations—reuse that pattern for consistent transitions.
+- **Data-first sections**: `Projects.tsx` and `Skills.tsx` drive UI from in-file arrays; extend those arrays instead of scattering literals throughout the JSX.
+- **Navigation behavior**: `Navigation.tsx` manages scroll-state, dark mode, and mobile drawer; use `localStorage` only inside guarded `useEffect` blocks to keep SSR safe.
+- **Dark mode contract**: Toggle works by adding/removing the `dark` class on `<html>`; ensure new theme-aware styles rely on Tailwind `dark:` variants.
+- **Pages directory**: `src/app/pages/page.tsx` lists external microsites and stores a custom heading in `localStorage`; keep client-only logic behind `'use client'` and remember to reset overflow when modals close.
+- **Resume modal**: `ResumeViewer.tsx` loads an external PDF through Google Docs; avoid switching to `react-pdf` unless you also restore the worker at `public/pdf.worker.min.js`.
+- **Custom cursor**: `CustomCursor.tsx` currently returns `null`; the prior implementation lives in `dump/` comments—only re-enable if performance budgets stay green.
+- **Hooks toolbox**: `useMagneticButton` expects hover-capable devices and a ref; wrap interactive buttons with it instead of reimplementing GSAP magnetism.
+- **Styling source**: Tailwind classes dominate; global tweaks and keyframes live in `src/app/globals.css`. Add new utilities there rather than editing Tailwind internals.
+- **Design tokens**: Tailwind config extends fonts and gradients; reuse `primary`/`secondary` scales for new color work.
+- **Client-first bias**: Most components are client-side; if you introduce server components, verify they do not pull in hooks or browser-only APIs.
+- **Type safety**: TypeScript uses `@/*` paths; import shared types via the alias instead of relative climbs.
+- **Linting/build**: `npm run lint` (Next lint) and `npm run build` are the enforcement gates; run `npm run dev` for hot reload.
+- **Bundle tuning**: `next.config.ts` already splits animation libraries; avoid additional manual chunking unless you update that webpack override.
+- **Image assets**: Prefer Next `<Image>` and the formats configured in `next.config.ts`; static placeholders can live under `public/`.
+- **Performance guardrails**: Aim to keep reveal transitions cheap, respect the reduced-motion media query already wired in `globals.css`.
+- **Accessibility cues**: Buttons share gradient styles and focus rings from `globals.css`; mirror those classes to keep tap targets >=44px on mobile.
+- **State scope**: Zustand is available but unused; favor component state or create a store only when multiple sections truly need shared data.
+- **Deployment**: Project targets Vercel; ensure new environment needs (keys, APIs) are set via Next runtime configs before shipping.
+- **Research tips**: If behavior seems odd, check `dump/` for prior experiments and `TRANSFORMATION_PLAN.md` or `PROJECT_PLAN.md` for intent.
+- **When unsure**: Ask before changing scroll/dark-mode infrastructure or adding heavy animation libraries—they impact the core experience.
