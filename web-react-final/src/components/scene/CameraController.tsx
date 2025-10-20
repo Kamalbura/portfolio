@@ -1,13 +1,9 @@
-'use client';
-
-// ...existing code... (removed unused useEffect import)
+"use client";
 import { useThree } from '@react-three/fiber';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useReducedMotion } from '@/context/MotionPreferenceContext';
 
-gsap.registerPlugin(ScrollTrigger);
 
 export default function CameraController() {
   const { camera } = useThree();

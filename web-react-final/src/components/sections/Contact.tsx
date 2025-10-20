@@ -19,40 +19,22 @@ export default function Contact() {
   useGSAP(
     () => {
       if (shouldReduceMotion) return;
-
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: 'top 60%',
-          end: 'bottom center',
-          scrub: true,
-        },
-      });
-
-      tl.to(sectionRef.current, {
-        duration: 1.2,
-        ease: 'none',
-        backgroundColor: '#ffeba7',
-        color: '#111827',
-      })
-        .fromTo(
-          headingRef.current,
-          { autoAlpha: 0, scale: 0.92, yPercent: 10 },
-          { autoAlpha: 1, scale: 1, yPercent: 0, duration: 0.6, ease: 'power3.out' },
-          '-=0.8',
-        )
-        .fromTo(
-          copyRef.current,
-          { autoAlpha: 0, yPercent: 12 },
-          { autoAlpha: 1, yPercent: 0, duration: 0.6, ease: 'power3.out' },
-          '-=0.4',
-        )
-        .fromTo(
-          ctaRef.current,
-          { autoAlpha: 0, yPercent: 12 },
-          { autoAlpha: 1, yPercent: 0, duration: 0.6, ease: 'power3.out' },
-          '-=0.4',
-        );
+      const tl = gsap.timeline({ defaults: { ease: 'power2.out' } });
+      if (headingRef.current) {
+        tl.from(headingRef.current, { y: 20, autoAlpha: 0, duration: 0.6 });
+      }
+      if (copyRef.current) {
+        tl.from(copyRef.current, { y: 20, autoAlpha: 0, duration: 0.6 }, '-=0.4');
+      }
+      if (ctaRef.current) {
+        tl.from(ctaRef.current.children, {
+          y: 20,
+          autoAlpha: 0,
+          duration: 0.6,
+          stagger: 0.1,
+        }, '-=0.4');
+      }
+      return tl;
     },
     { scope: sectionRef, dependencies: [shouldReduceMotion] },
   );
@@ -61,7 +43,7 @@ export default function Contact() {
     <section
       ref={sectionRef}
       id="contact"
-      className="relative overflow-hidden bg-gray-950 py-28 text-white transition-colors duration-700 md:py-40"
+      className="contact-section relative overflow-hidden bg-gray-950 py-28 text-white transition-colors duration-700 md:py-40"
       aria-labelledby="contact-heading"
     >
       <div className="mx-auto flex max-w-5xl flex-col items-center gap-10 px-4 text-center sm:px-6">

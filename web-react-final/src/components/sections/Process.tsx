@@ -162,7 +162,7 @@ export default function Process() {
           </ol>
         ) : (
           <div className="relative w-full max-w-5xl h-[320px] sm:h-[360px] md:h-[420px]">
-            <div className="absolute inset-0 rounded-3xl border border-white/10 bg-white/5 backdrop-blur-md" aria-hidden="true" />
+            <div className="absolute inset-0 rounded-3xl border border-white/10 bg-white/10 backdrop-blur-md" aria-hidden="true" />
             {renderSteps}
           </div>
         )}

@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react';
+import { siteConfig } from '@/config/siteConfig';
 
 interface ResumeViewerProps {
   onCloseAction: () => void;
@@ -10,8 +11,8 @@ export default function ResumeViewer({ onCloseAction }: ResumeViewerProps) {
   const [isLoading, setIsLoading] = useState(true);
   const iframeRef = useRef<HTMLIFrameElement>(null);
   
-  // Direct GitHub raw URL for the resume - verified by user
-  const resumeUrl = "https://raw.githubusercontent.com/Kamalbura/portfolio/f8a59091c7119e056d82f068d30127f/web-react-final/public/Kamal-bura-resume-jun-2025.pdf";
+  // Use resume URL from siteConfig
+  const resumeUrl = siteConfig.resumeUrl;
   
   // Google Docs viewer URL for better compatibility
   const googleDocsUrl = `https://docs.google.com/viewer?url=${encodeURIComponent(resumeUrl)}&embedded=true`;
@@ -29,6 +30,10 @@ export default function ResumeViewer({ onCloseAction }: ResumeViewerProps) {
     // Prevent background scrolling
     const originalStyle = window.getComputedStyle(document.body).overflow;
     document.body.style.overflow = 'hidden';
+    // Prevent Lenis scroll container from scrolling
+    const scrollContainer = document.getElementById('smooth-scroll-container');
+    const originalContainerOverflow = scrollContainer ? scrollContainer.style.overflow : '';
+    if (scrollContainer) scrollContainer.style.overflow = 'hidden';
     
     // Optimized timeout for better UX
     const timer = setTimeout(() => {
@@ -39,6 +44,8 @@ export default function ResumeViewer({ onCloseAction }: ResumeViewerProps) {
       clearTimeout(timer);
       document.removeEventListener('keydown', handleKeyDown);
       document.body.style.overflow = originalStyle;
+      // Restore Lenis scroll container overflow
+      if (scrollContainer) scrollContainer.style.overflow = originalContainerOverflow;
     };
   }, [onCloseAction]);
 

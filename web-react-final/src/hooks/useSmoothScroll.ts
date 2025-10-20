@@ -36,7 +36,12 @@ export const useSmoothScroll = () => {
     }
 
     if (shouldReduceMotion) {
-      // Ensure native scroll path
+      // Ensure native scroll path and clear any ScrollTriggers
+      try {
+        ScrollTrigger.getAll().forEach((t) => t.kill());
+        ScrollTrigger.defaults({ scroller: undefined as unknown as Element });
+        ScrollTrigger.refresh(true);
+      } catch {}
       document.documentElement.classList.remove('lenis-active');
       lenisRef.current = null;
       return;
@@ -122,6 +127,7 @@ export const useSmoothScroll = () => {
         if (scrollerEl && ScrollTrigger) {
           // clear defaults to avoid leaking the element reference
           ScrollTrigger.defaults({ scroller: undefined as unknown as Element });
+          ScrollTrigger.getAll().forEach((t) => t.kill());
         }
       } catch {
         // ignore cleanup errors

@@ -56,12 +56,28 @@ export function useSectionReveal<T extends HTMLElement>(options: RevealOptions =
   const shouldReduceMotion = useReducedMotion();
   const { direction = "up", duration = 1, delay = 0, trigger, start = "top 85%" } = options;
 
+  // When animations are disabled, make sure the element is visible immediately
+  useGSAP(() => {
+    if (!elementRef.current) return;
+    if (shouldReduceMotion) {
+      // Kill any existing triggers on this element
+      try {
+        ScrollTrigger.getAll().forEach((t) => {
+          if (t.vars?.trigger === elementRef.current) t.kill();
+        });
+      } catch {}
+      gsap.set(elementRef.current, { clearProps: "all", autoAlpha: 1, x: 0, y: 0 });
+    }
+  }, { scope: elementRef, dependencies: [shouldReduceMotion] });
+
   useGSAP(
     () => {
       if (shouldReduceMotion) return;
       if (!elementRef.current) return;
 
       const offsets = buildOffsets(direction);
+      const scrollerEl =
+        (typeof document !== 'undefined' && document.getElementById('smooth-scroll-container')) || undefined;
 
       gsap.fromTo(
         elementRef.current,
@@ -73,9 +89,11 @@ export function useSectionReveal<T extends HTMLElement>(options: RevealOptions =
           duration,
           delay,
           ease: "power3.out",
+          immediateRender: false,
           scrollTrigger: {
             trigger: resolveTrigger(trigger, elementRef.current),
             start,
+            scroller: scrollerEl,
             toggleActions: "play none none none",
           },
         },
@@ -102,6 +120,20 @@ export function useStaggerReveal<T extends HTMLElement>(
     start = "top 80%",
   } = options;
 
+  // When animations are disabled, make sure the items are visible immediately
+  useGSAP(() => {
+    if (!containerRef.current) return;
+    if (shouldReduceMotion) {
+      try {
+        ScrollTrigger.getAll().forEach((t) => {
+          if (t.vars?.trigger === containerRef.current) t.kill();
+        });
+      } catch {}
+      const elements = gsap.utils.toArray<HTMLElement>(selector, containerRef.current);
+      if (elements.length) gsap.set(elements, { clearProps: "all", autoAlpha: 1, x: 0, y: 0 });
+    }
+  }, { scope: containerRef, dependencies: [shouldReduceMotion] });
+
   useGSAP(
     () => {
       if (shouldReduceMotion) return;
@@ -110,6 +142,8 @@ export function useStaggerReveal<T extends HTMLElement>(
       const offsets = buildOffsets(direction);
       const elements = gsap.utils.toArray<HTMLElement>(selector, containerRef.current);
       if (!elements.length) return;
+      const scrollerEl =
+        (typeof document !== 'undefined' && document.getElementById('smooth-scroll-container')) || undefined;
 
       gsap.fromTo(
         elements,
@@ -122,9 +156,11 @@ export function useStaggerReveal<T extends HTMLElement>(
           delay,
           ease: "power2.out",
           stagger,
+          immediateRender: false,
           scrollTrigger: {
             trigger: resolveTrigger(trigger, containerRef.current),
             start,
+            scroller: scrollerEl,
             toggleActions: "play none none none",
           },
         },

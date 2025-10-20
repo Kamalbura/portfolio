@@ -6,6 +6,7 @@ import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useReducedMotion } from '@/context/MotionPreferenceContext';
+import { skillsConfig, toolsConfig } from '@/config/contentConfig';
 
 export default function Skills() {
   const [activeTab, setActiveTab] = useState(0);
@@ -47,71 +48,14 @@ export default function Skills() {
     { dependencies: [shouldReduceMotion] },
   );
 
-  const skills = [
-    {
-      id: 'frontend',
-      title: 'Frontend',
-      icon: '🎨',
-      color: 'from-blue-400 to-cyan-400',
-      items: [
-        { name: 'React', icon: '⚛️', description: 'Component Architecture' },
-        { name: 'Next.js', icon: '▲', description: 'Full-Stack Framework' },
-        { name: 'TypeScript', icon: 'TS', description: 'Type Safety' },
-        { name: 'JavaScript', icon: 'JS', description: 'Core Language' },
-        { name: 'Tailwind CSS', icon: '🎨', description: 'Utility Styling' },
-        { name: 'HTML/CSS', icon: '🌐', description: 'Web Fundamentals' }
-      ]
-    },
-    {
-      id: 'backend',
-      title: 'Backend',
-      icon: '⚙️',
-      color: 'from-green-400 to-emerald-500',
-      items: [
-        { name: 'Node.js', icon: '🟢', description: 'Server Runtime' },
-        { name: 'Express', icon: '⚡', description: 'Web Framework' },
-        { name: 'Python', icon: '🐍', description: 'AI & Backend' },
-        { name: 'MongoDB', icon: '🍃', description: 'NoSQL Database' },
-        { name: 'Firebase', icon: '🔥', description: 'Backend as a Service' },
-        { name: 'REST APIs', icon: '📡', description: 'API Design' }
-      ]
-    },
-    {
-      id: 'other',
-      title: 'Other Technologies',
-      icon: '🔧',
-      color: 'from-purple-400 to-pink-500',
-      items: [
-        { name: 'Git/GitHub', icon: '📋', description: 'Version Control' },
-        { name: 'Docker', icon: '🐳', description: 'Containerization' },
-        { name: 'AWS', icon: '☁️', description: 'Cloud Platform' },
-        { name: 'IoT', icon: '🔌', description: 'Internet of Things' },
-        { name: 'Machine Learning', icon: '🧠', description: 'AI Models' },
-        { name: 'Embedded Systems', icon: '💻', description: 'Hardware Programming' }
-      ]
-    }
-  ];
-
-  const tools = [
-    { name: 'VS Code', icon: '📝', description: 'Code Editor' },
-    { name: 'Git', icon: '📋', description: 'Version Control' },
-    { name: 'GitHub', icon: '🐙', description: 'Code Repository' },
-    { name: 'npm', icon: '📦', description: 'Package Manager' },
-    { name: 'Webpack', icon: '📦', description: 'Module Bundler' },
-    { name: 'Vercel', icon: '▲', description: 'Deployment' },
-    { name: 'Figma', icon: '🎨', description: 'UI Design' },
-    { name: 'Jest', icon: '🧪', description: 'Testing' },
-    { name: 'ESLint', icon: '🔍', description: 'Code Linting' },
-    { name: 'Firebase', icon: '🔥', description: 'Backend Services' },
-    { name: 'Docker', icon: '🐳', description: 'Containerization' },
-    { name: 'AWS', icon: '☁️', description: 'Cloud Services' }
-  ];
+  const skills = skillsConfig;
+  const tools = toolsConfig;
 
   return (
     <section
       id="skills"
       ref={sectionRef}
-      className="relative py-12 sm:py-16 md:py-20 bg-gray-50 dark:bg-gray-800 transition-colors overflow-hidden"
+      className="skills-section relative py-12 sm:py-16 md:py-20 bg-white/60 dark:bg-gray-800/60 backdrop-blur-[2px] transition-colors overflow-hidden"
     >
       <div ref={accentRef} className="pointer-events-none absolute inset-0 bg-[radial-gradient(60%_40%_at_20%_10%,rgba(255,235,167,0.07),transparent_60%)]" aria-hidden="true" />
       <div className="max-w-6xl mx-auto px-3 sm:px-6 lg:px-8">
@@ -145,8 +89,8 @@ export default function Skills() {
                   id={`${category.id}-tab`}
                   className={`flex items-center px-2 sm:px-2.5 md:px-3 py-0.5 sm:py-1 md:py-1.5 text-[8px] sm:text-[10px] md:text-xs rounded-md font-medium whitespace-nowrap mr-1 sm:mr-1.5 md:mr-2 transition-colors ${
                     activeTab === index
-                      ? 'bg-gray-800 dark:bg-gray-200 text-white dark:text-gray-900'
-                      : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
+                      ? 'bg-gray-800/80 dark:bg-gray-200/80 text-white dark:text-gray-900 backdrop-blur'
+                      : 'bg-gray-200/70 dark:bg-gray-700/70 text-gray-700 dark:text-gray-300 hover:bg-gray-300/80 dark:hover:bg-gray-600/80 backdrop-blur'
                   }`}
                 >
                   <span className="mr-1">{category.icon}</span>
@@ -172,7 +116,7 @@ export default function Skills() {
                 {category.items.map((skill) => (
                   <div
                     key={skill.name}
-                    className="skill-card flex flex-col items-center p-2 sm:p-3 md:p-4 bg-white dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600 hover:shadow-md transition-all duration-300"
+                    className="skill-card flex flex-col items-center p-2 sm:p-3 md:p-4 bg-white/80 dark:bg-gray-700/80 backdrop-blur rounded-lg border border-gray-200/70 dark:border-gray-600/70 hover:shadow-md transition-all duration-300"
                   >
                     <div className="text-lg sm:text-xl md:text-2xl mb-2 sm:mb-3">
                       {skill.icon}
@@ -195,11 +139,11 @@ export default function Skills() {
         <div ref={toolsRef} className="mt-10 sm:mt-14 md:mt-20">
           <h3 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white text-center mb-6 sm:mb-8 md:mb-10">Tools & Technologies</h3>
           
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2 sm:gap-3 md:gap-5">
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2 sm:gap-3 md:gap-5">
             {tools.map((tool) => (
               <div
                 key={tool.name}
-                className="tool-card flex flex-col items-center p-2 sm:p-3 md:p-5 bg-white dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600 hover:shadow-md transition-all duration-300"
+                  className="tool-card flex flex-col items-center p-2 sm:p-3 md:p-5 bg-white/80 dark:bg-gray-700/80 backdrop-blur rounded-lg border border-gray-200/70 dark:border-gray-600/70 hover:shadow-md transition-all duration-300"
               >
                 <div className="text-xl sm:text-2xl md:text-3xl mb-2 sm:mb-3 md:mb-4">{tool.icon}</div>
                 <span className="text-[10px] sm:text-xs md:text-sm font-medium text-gray-700 dark:text-gray-300 mt-1 sm:mt-2">{tool.name}</span>

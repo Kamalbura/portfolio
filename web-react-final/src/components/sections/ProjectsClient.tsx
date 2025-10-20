@@ -71,7 +71,7 @@ export default function ProjectsClient({ projects }: ProjectsClientProps) {
   return (
     <section
       id="projects"
-      className="relative bg-white py-16 transition-colors dark:bg-gray-900 sm:py-20 overflow-hidden"
+      className="relative bg-white/60 dark:bg-gray-900/60 backdrop-blur-[2px] py-16 transition-colors sm:py-20 overflow-hidden"
       aria-labelledby="projects-heading"
     >
       <div

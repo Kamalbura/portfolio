@@ -101,7 +101,7 @@ export default function Hero() {
   return (
     <section
       id="home"
-      className="relative min-h-screen overflow-hidden bg-gray-950 text-white"
+      className="hero-section relative min-h-screen overflow-hidden bg-gray-950 text-white"
       aria-labelledby="hero-heading"
     >
       <div ref={gradientRef} className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_top,_rgba(255,235,167,0.12),_transparent_55%)]" aria-hidden="true" />

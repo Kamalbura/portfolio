@@ -33,5 +33,5 @@ async function buildProjectsList(): Promise<ProjectsClientProject[]> {
 export default async function Projects() {
   const projects = await buildProjectsList();
 
-  return <ProjectsClient projects={projects} />;
+  return <div className="projects-container"><ProjectsClient projects={projects} /></div>;
 }

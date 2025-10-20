@@ -90,7 +90,7 @@ export default function About() {
     <section
       id="about"
       ref={sectionRef}
-      className="relative py-16 sm:py-20 bg-gray-50 dark:bg-gray-800 transition-colors overflow-hidden"
+      className="about-section relative py-16 sm:py-20 bg-white/60 dark:bg-gray-800/60 backdrop-blur-[2px] transition-colors overflow-hidden"
     >
       <div ref={accentRef} className="pointer-events-none absolute inset-0 bg-[radial-gradient(60%_40%_at_10%_20%,rgba(255,235,167,0.08),transparent_60%)]" aria-hidden="true" />
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
