@@ -59,7 +59,11 @@ export default function Process() {
         return;
       }
 
-      gsap.set(steps, { autoAlpha: 0, y: 80 });
+      // Initial hidden state with slight recede
+      gsap.set(steps, { autoAlpha: 0, y: 80, scale: 0.95 });
+
+      // Prefer Lenis scroller when active
+      const scrollerEl = document.getElementById('smooth-scroll-container') || undefined;
 
       const timeline = gsap.timeline({
         defaults: { ease: 'power2.out' },
@@ -67,28 +71,36 @@ export default function Process() {
           trigger: sectionRef.current,
           pin: wrapperRef.current,
           start: 'top top',
-          end: `+=${steps.length * 100}%`,
+          // Slightly shorter total distance so it doesn't feel too slow
+          end: `+=${steps.length * 85}%`,
           scrub: true,
+          scroller: scrollerEl,
+          anticipatePin: 1,
+          invalidateOnRefresh: true,
         },
       });
 
       steps.forEach((step, index) => {
+        // Reveal with pop-forward
         timeline.to(
           step,
           {
             autoAlpha: 1,
             y: 0,
+            scale: 1.05,
             duration: 0.8,
           },
           index,
         );
 
         if (index < steps.length - 1) {
+          // Hide with recede
           timeline.to(
             step,
             {
               autoAlpha: 0,
               y: -80,
+              scale: 0.95,
               duration: 0.8,
             },
             index + 0.6,
@@ -122,12 +134,12 @@ export default function Process() {
     <section
       ref={sectionRef}
       id="process"
-      className="relative bg-gray-950 py-24 sm:py-32 text-white overflow-hidden"
+      className="relative bg-gray-950/70 backdrop-blur-[2px] py-24 sm:py-32 text-white overflow-hidden transition-colors"
       aria-labelledby="process-heading"
     >
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(255,235,167,0.08),_transparent_55%)]" aria-hidden="true" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(255,235,167,0.08),_transparent_55%)]" aria-hidden="true" />
       <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="mb-16 sm:mb-20 text-center">
+        <div className="mb-8 sm:mb-10 md:mb-12 text-center sticky top-0 pt-4 pb-4 backdrop-blur-[1px] bg-transparent">
           <span className="text-xs uppercase tracking-[0.3em] text-yellow-300/70">Process</span>
           <h2 id="process-heading" className="mt-4 text-3xl sm:text-4xl md:text-5xl font-light text-white">
             Bringing ideas to field-ready products
@@ -143,7 +155,7 @@ export default function Process() {
         className={
           shouldReduceMotion
             ? 'relative py-12 sm:py-14'
-            : 'relative h-screen flex items-center justify-center'
+            : 'relative min-h-[75vh] sm:min-h-[80vh] md:min-h-screen flex items-center justify-center'
         }
       >
         {shouldReduceMotion ? (
@@ -161,7 +173,7 @@ export default function Process() {
             ))}
           </ol>
         ) : (
-          <div className="relative w-full max-w-5xl h-[320px] sm:h-[360px] md:h-[420px]">
+          <div className="relative w-full max-w-5xl h-[320px] sm:h-[360px] md:h-[420px] mx-auto">
             <div className="absolute inset-0 rounded-3xl border border-white/10 bg-white/10 backdrop-blur-md" aria-hidden="true" />
             {renderSteps}
           </div>

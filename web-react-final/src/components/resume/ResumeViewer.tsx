@@ -28,7 +28,7 @@ export default function ResumeViewer({ onCloseAction }: ResumeViewerProps) {
     document.addEventListener('keydown', handleKeyDown);
     
     // Prevent background scrolling
-    const originalStyle = window.getComputedStyle(document.body).overflow;
+    const originalBodyOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
     // Prevent Lenis scroll container from scrolling
     const scrollContainer = document.getElementById('smooth-scroll-container');
@@ -43,7 +43,7 @@ export default function ResumeViewer({ onCloseAction }: ResumeViewerProps) {
     return () => {
       clearTimeout(timer);
       document.removeEventListener('keydown', handleKeyDown);
-      document.body.style.overflow = originalStyle;
+      document.body.style.overflow = originalBodyOverflow;
       // Restore Lenis scroll container overflow
       if (scrollContainer) scrollContainer.style.overflow = originalContainerOverflow;
     };

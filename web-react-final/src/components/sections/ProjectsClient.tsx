@@ -5,7 +5,7 @@ import Image from 'next/image';
 import type { ProjectConfig } from '@/config/siteConfig';
 import { useCardTilt } from '@/hooks/useCardTilt';
 import { useCardGlare } from '@/hooks/useCardGlare';
-import { useSectionReveal, useStaggerReveal } from '@/hooks/useSectionReveal';
+import { useSectionReveal } from '@/hooks/useSectionReveal';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -33,15 +33,40 @@ export default function ProjectsClient({ projects }: ProjectsClientProps) {
     useState<(typeof categories)[number]['id']>('all');
   const headerRef = useSectionReveal<HTMLDivElement>({ direction: 'up' });
   const filterRef = useSectionReveal<HTMLDivElement>({ direction: 'up', delay: 0.08 });
-  const gridRef = useStaggerReveal<HTMLDivElement>('.project-card', {
-    direction: 'up',
-    stagger: 0.18,
-    start: 'top 75%',
-  });
   const accentRef = useRef<HTMLDivElement>(null);
+  // Refs for horizontal pin scroll
+  const sectionRef = useRef<HTMLElement>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
 
   gsap.registerPlugin(ScrollTrigger);
   const shouldReduceMotion = useReducedMotion();
+  // Pin and scrub horizontal scroll of project cards (responsive to resize)
+  useGSAP(() => {
+    if (!sectionRef.current || !trackRef.current || shouldReduceMotion) return;
+    const scrollerEl = document.getElementById('smooth-scroll-container') || undefined;
+
+    const computeDistance = () => {
+      if (!trackRef.current) return 0;
+      return Math.max(0, trackRef.current.scrollWidth - window.innerWidth);
+    };
+
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: sectionRef.current,
+        pin: sectionRef.current,
+        scrub: true,
+        start: 'top top',
+        end: () => `+=${Math.round(computeDistance() * 0.85)}`,
+        scroller: scrollerEl,
+        anticipatePin: 1,
+        invalidateOnRefresh: true,
+      },
+    });
+
+    tl.to(trackRef.current, { x: () => -Math.round(computeDistance() * 0.85), ease: 'power1.out' });
+
+    return tl;
+  }, { scope: sectionRef, dependencies: [shouldReduceMotion] });
 
   useGSAP(
     () => {
@@ -69,7 +94,7 @@ export default function ProjectsClient({ projects }: ProjectsClientProps) {
   }, [projects, selectedCategory]);
 
   return (
-    <section
+    <section ref={sectionRef}
       id="projects"
       className="relative bg-white/60 dark:bg-gray-900/60 backdrop-blur-[2px] py-16 transition-colors sm:py-20 overflow-hidden"
       aria-labelledby="projects-heading"
@@ -131,14 +156,17 @@ export default function ProjectsClient({ projects }: ProjectsClientProps) {
           </div>
         </div>
 
-        <div ref={gridRef} className="grid grid-cols-1 gap-6 sm:gap-8 md:grid-cols-2">
+        {/* Horizontal track of project cards - vertically centered */}
+        <div ref={trackRef} className="flex gap-6 px-4 lg:px-8 items-center min-h-[280px] sm:min-h-[320px]">
           {filteredProjects.length === 0 && (
-            <div className="col-span-full rounded-3xl border border-dashed border-gray-300/60 p-12 text-center text-gray-500 dark:border-gray-700/60 dark:text-gray-300">
+            <div className="flex-shrink-0 w-full rounded-3xl border border-dashed border-gray-300/60 p-12 text-center text-gray-500 dark:border-gray-700/60 dark:text-gray-300">
               New experiments are brewing. Check back soon.
             </div>
           )}
           {filteredProjects.map((project, index) => (
-            <ProjectCard key={project.id} project={project} featured={project.featured} priority={index < 2} />
+            <div key={project.id} className="flex-shrink-0 w-80 sm:w-96">
+              <ProjectCard project={project} featured={project.featured} priority={index < 2} />
+            </div>
           ))}
         </div>
 

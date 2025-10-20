@@ -50,11 +50,11 @@ export const useSmoothScroll = () => {
     const lenis = new Lenis({
       wrapper: document.getElementById('smooth-scroll-container') ?? undefined,
       content: document.getElementById('smooth-scroll-content') ?? undefined,
-      // Tweak for a premium, gentle feel
-      lerp: 0.09,
-      wheelMultiplier: 1,
+      // Tuned for a slightly snappier yet smooth feel
+      lerp: 0.12,
+      wheelMultiplier: 1.25,
       smoothWheel: true,
-      touchMultiplier: 2,
+      touchMultiplier: 1.8,
     });
 
   lenisRef.current = lenis;
