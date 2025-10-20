@@ -78,12 +78,24 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="scroll-smooth">
+      <head>
+        {/* Pre-hydration theme script to avoid flash and SSR/CSR drift */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(() => {
+  try {
+    var ls = localStorage.getItem('darkMode');
+    var shouldDark = ls === 'true' || (ls === null && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    var cn = document.documentElement.classList;
+    if (shouldDark) cn.add('dark'); else cn.remove('dark');
+  } catch (e) {}
+})();`,
+          }}
+        />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen`}
       >
-        <a href="#main-content" className="skip-link">
-          Skip to main content
-        </a>
         <ClientLayout>
           <Navigation />
           {children}

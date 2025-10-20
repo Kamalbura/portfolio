@@ -1,4 +1,5 @@
 import type { Config } from 'tailwindcss';
+import colors from 'tailwindcss/colors';
 
 const config: Config = {
   content: [
@@ -8,13 +9,7 @@ const config: Config = {
   ],
   theme: {
     extend: {
-      fontFamily: {
-        sans: ['var(--font-geist-sans)'],
-        mono: ['var(--font-geist-mono)'],
-      },
       colors: {
-        background: '#000000',
-        foreground: '#ffffff',
         primary: {
           DEFAULT: '#3B82F6',
           hover: '#2563EB',
@@ -43,6 +38,14 @@ const config: Config = {
           800: '#3730A3',
           900: '#312E81',
         },
+        background: '#000000',
+        foreground: '#ffffff',
+        yellow: colors.yellow,
+        blue: colors.blue,
+      },
+      fontFamily: {
+        sans: ['var(--font-geist-sans)'],
+        mono: ['var(--font-geist-mono)'],
       },
       animation: {
         'fade-in': 'fadeIn 0.5s ease-in-out',

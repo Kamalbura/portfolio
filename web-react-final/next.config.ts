@@ -36,50 +36,7 @@ const nextConfig: NextConfig = {
     scrollRestoration: true,
   },
 
-  // Bundle analysis and optimization
-  webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
-    // Optimize bundle splitting
-    config.optimization = {
-      ...config.optimization,
-      splitChunks: {
-        chunks: 'all',
-        cacheGroups: {
-          default: false,
-          vendors: false,
-          // Animation libraries bundle
-          animations: {
-            name: 'animations',
-            chunks: 'all',
-            test: /[\\/]node_modules[\\/](gsap|framer-motion|lenis)[\\/]/,
-            priority: 40,
-          },
-          // 3D libraries bundle
-          three: {
-            name: 'three',
-            chunks: 'all',
-            test: /[\\/]node_modules[\\/](@react-three|three)[\\/]/,
-            priority: 35,
-          },
-          // React bundle
-          react: {
-            name: 'react',
-            chunks: 'all',
-            test: /[\\/]node_modules[\\/](react|react-dom)[\\/]/,
-            priority: 30,
-          },
-          // Common vendor bundle
-          vendor: {
-            name: 'vendor',
-            chunks: 'all',
-            test: /[\\/]node_modules[\\/]/,
-            priority: 20,
-          },
-        },
-      },
-    };
-
-    return config;
-  },
+  // Avoid manual splitChunks overrides; let Next control chunking for stability
 
   // Headers for performance
   async headers() {

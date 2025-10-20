@@ -1,0 +1,63 @@
+CSS RUNTIME DIAGNOSIS (localhost:3000)
+Date: 2025-10-20
+
+Objective
+Identify why Tailwind CSS utilities appear not to load at runtime and document conclusive evidence and the fix, without modifying code.
+
+Runtime observations (via browser tools)
+- Stylesheet requests:
+  - /_next/static/css/app/layout.css — loaded (200). No additional Tailwind utility bundle detected.
+- Computed styles:
+  - body background is rgb(248, 245, 240) (from globals.css tokens: --surface), not from Tailwind utility.
+  - #home section:
+    - background-color: transparent; color: rgb(20, 20, 22). This suggests Tailwind classes on this section (e.g., bg-gray-950 text-white) are not taking effect.
+- Tailwind utility probe:
+  - Injected a test element at runtime with class "bg-gray-950 text-white p-4".
+  - Computed background was transparent and text color was rgb(20,20,22) (default), confirming Tailwind utility classes are not present in the compiled CSS.
+
+Network summary
+- CSS loaded: /_next/static/css/app/layout.css only.
+- No separate compiled Tailwind utility stylesheet observed, indicating @tailwind directives may not have been processed.
+
+Repository configuration checks
+- globals.css includes:
+  - @tailwind base; @tailwind components; @tailwind utilities; (correct)
+- tailwind.config.ts:
+  - content globs cover app/components/pages; animations and color extensions defined; OK.
+- postcss.config.mjs:
+  - Current:
+    export default {
+      plugins: ["@tailwindcss/postcss"],
+    };
+  - Issue:
+    Tailwind v4 expects a keyed plugin object, not a plain string array. With the current shape, the Tailwind PostCSS plugin is not actually invoked, so @tailwind directives are not expanded, resulting in missing utilities at runtime.
+
+Root cause
+PostCSS configuration shape is invalid for Tailwind v4. As a result, Tailwind's PostCSS plugin is not executed, and utility classes (e.g., bg-*, text-*, flex, etc.) are not present in the compiled CSS.
+
+Fix (do not apply here; for your action)
+- Update postcss.config.mjs to the supported Tailwind v4 shape:
+
+  // postcss.config.mjs
+  export default {
+    plugins: {
+      '@tailwindcss/postcss': {},
+    },
+  };
+
+- Then restart the dev server to trigger a clean rebuild.
+
+Verification steps after fix
+1) In DevTools Elements, append a new element with class="bg-gray-950 text-white p-4" and confirm:
+   - backgroundColor becomes rgb(3, 7, 18)
+   - color becomes rgb(255, 255, 255)
+2) Network tab shows a larger stylesheet (Tailwind utilities included) under /_next/static/css/.
+3) Page sections that rely on Tailwind classes (e.g., Hero "bg-gray-950 text-white") render with expected dark background and light text.
+
+Secondary notes (not blockers)
+- Dark mode: Dark styling depends on Tailwind dark: variants. Token-driven classes in globals.css (e.g., .surface-card) won’t auto-theme unless :root.dark overrides are added. Optional enhancement.
+- html { scroll-behavior: smooth } is redundant with Lenis but harmless.
+- Scrollbar styles are in ClientLayout via styled-jsx; can be moved to globals.css for consistency if desired.
+
+Conclusion
+The CSS not loading issue is not a loader or import path problem; it is a PostCSS configuration shape mismatch for Tailwind v4. Adjusting postcss.config.mjs to use a keyed plugin object and restarting the dev server should restore Tailwind utilities site-wide.

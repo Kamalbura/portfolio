@@ -1,0 +1,60 @@
+HELIOS PROTOCOL VERIFICATION REPORT (burakamal.site)
+Date: 2025-10-20
+
+Scope: Verify presence and wiring of blueprint items without modifying code. Report actual repository state.
+
+1) Typographic Ballet (useSplitText hook)
+- Status: PASS
+- Evidence: src/hooks/useSplitText.ts exists, splits into lines/words/chars, returns timeline via onAnimate callback. Used in Hero and About headings.
+
+2) Tactile Interface (MagneticButton, CustomCursor, Card Glare)
+- MagneticButton: PASS — src/components/ui/MagneticButton.tsx exists, elastic quickTo magnetism, hover-target class, accessible fallbacks.
+- CustomCursor: PASS — src/components/ui/CustomCursor.tsx present and dynamically imported in ClientLayout; respects reduced-motion and pointer-capability; renders dot/ring.
+- Card Glare: PASS — src/hooks/useCardGlare.ts present, sets CSS variables --glare-x/--glare-y with GSAP on mousemove.
+
+3) Overture (Hero rebuild, Plexus scene, split-text and parallax)
+- Hero: PASS — Hero.tsx uses useSplitText, staged subcopy/badges, gradient parallax via ScrollTrigger tied to Lenis scroller; CTA wiring to scroll/resume.
+- Plexus: PASS — src/components/ui/Plexus.tsx R3F point cloud + connecting lines, GSAP ScrollTrigger deconstruction/light motion with reduced-motion guard; used by HeroCanvas.
+- HeroCanvas: PASS — dynamic R3F Canvas with Suspense, reduced-motion gradient fallback.
+
+4) Sections choreography (About, Projects, Skills, Contact)
+- About: PASS — useSplitText on heading, reveal hooks, parallax accent with Lenis scroller.
+- ProjectsClient: PASS — staggered grid reveal, parallax accent, filters; card tilt + glare hooks integrated.
+- Skills: PASS — header/controls/tools reveals, parallax accent; mobile/touch-friendly tabs.
+- Contact (Coda): PASS — color wash + staggered elements via ScrollTrigger timeline, respects reduced motion; MagneticButton CTA.
+
+5) Smooth scroll system (Lenis + ScrollTrigger integration)
+- Status: PASS
+- Evidence: hooks/useSmoothScroll.ts sets wrapper/content ids, scrollerProxy, defaults, GSAP ticker sync, reduced-motion fallback; wrapped by ScrollProvider. Layout uses #smooth-scroll-container and #smooth-scroll-content.
+
+6) Scroll progress indicator and Navigation scrollspy
+- ScrollIndicator: PARTIAL — Component exists (src/components/ui/ScrollIndicator.tsx) and updates via ScrollTrigger. However, it is NOT mounted in ClientLayout (no import/render present), so not visible globally currently.
+- Scrollspy: FAIL — Navigation.tsx currently renders static links without active-section tracking; no IntersectionObserver/ScrollTrigger logic. Desktop/mobile behavior present but no aria-current updates.
+
+7) Preloader and Page Transitions
+- Preloader: FAIL — No dedicated preloader component detected in layout.
+- Transitions: PARTIAL — TransitionProvider exists but details of page transition overlay/curtain not verified here; Navigation uses TransitionProvider navigateWithTransition in earlier version but current Navigation has no such usage. Page transition refinement not evident.
+
+8) Testing and Quality Gates
+- Playwright config: FAIL — playwright.config.ts not found in repo.
+- Tests: FAIL — no tests directory found; no performance or visual tests.
+- Package scripts/devDependencies: FAIL — package.json has no Playwright or lighthouse audit deps/scripts.
+- Lint/build status: UNKNOWN in this verification (not executed here). Prior notes indicated PASS historically.
+
+9) Mandate Checklist
+- MANDATE_CHECKLIST.md: PASS — present at repo root with performance/accessibility/responsiveness items, though differs slightly from directive template; acceptable.
+
+10) Additional observations
+- MotionPreference: PASS — useReducedMotion used across key components.
+- Lenis container policy: PASS — sections use Lenis scroller in ScrollTrigger config.
+- Accessibility: PARTIAL — Focus states and aria labels present in places (Buttons/Links), but a full audit is outside scope; contrast appears acceptable with dark/light.
+
+Summary of Key Gaps vs Directive
+- Not mounted: ScrollIndicator (component exists but not in layout) — action needed: mount in ClientLayout above content.
+- Missing: Navigation scrollspy — add IntersectionObserver on #smooth-scroll-container to set active link + aria-current.
+- Missing: Preloader — tasteful first-load preloader not present.
+- Missing: Playwright setup (config + tests) and package scripts/devDependencies.
+- Page transitions: likely present via TransitionProvider, but Navigation no longer uses navigateWithTransition; refine if narrative transitions are required.
+
+Verdict
+Overall choreography, smooth scroll, and tactile UI are largely implemented to spec. The remaining items to reach the full Helios mandate are wiring the ScrollIndicator globally, implementing scrollspy, and adding the automated test guardrails (Playwright). Optional preloader and refined page transitions would complete the experience.

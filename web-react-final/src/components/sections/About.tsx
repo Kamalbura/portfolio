@@ -1,10 +1,49 @@
-'use client';
+"use client";
 
-import { useState, useEffect, useRef } from 'react';
+import { useRef } from 'react';
+import { useSectionReveal, useStaggerReveal } from '@/hooks/useSectionReveal';
+import { useSplitText } from '@/hooks/useSplitText';
+import { useGSAP } from '@gsap/react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useReducedMotion } from '@/context/MotionPreferenceContext';
 
 export default function About() {
-  const [isVisible, setIsVisible] = useState(false);
-  const sectionRef = useRef<HTMLDivElement>(null);
+  const sectionRef = useSectionReveal<HTMLElement>({ direction: 'up' });
+  const highlightsRef = useStaggerReveal<HTMLDivElement>('li', { direction: 'up', stagger: 0.18 });
+  const timelineRef = useStaggerReveal<HTMLDivElement>('li', { direction: 'up', stagger: 0.16, delay: 0.2 });
+  const headingRef = useRef<HTMLHeadingElement>(null);
+  const accentRef = useRef<HTMLDivElement>(null);
+  const shouldReduceMotion = useReducedMotion();
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  useSplitText(headingRef as unknown as React.RefObject<HTMLElement>, ['lines', 'words'], (els) => {
+    if (shouldReduceMotion) return;
+    const tl = gsap.timeline();
+    tl.fromTo(els, { yPercent: 100, autoAlpha: 0 }, { yPercent: 0, autoAlpha: 1, duration: 0.7, ease: 'power3.out', stagger: 0.05 });
+    return tl;
+  });
+
+  useGSAP(
+    () => {
+      if (shouldReduceMotion) return;
+      if (accentRef.current) {
+        gsap.to(accentRef.current, {
+          yPercent: 10,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: '#about',
+            start: 'top bottom',
+            end: 'bottom top',
+            scrub: true,
+            scroller: document.getElementById('smooth-scroll-container') || undefined,
+          },
+        });
+      }
+    },
+    { dependencies: [shouldReduceMotion] },
+  );
 
   const highlights = [
     {
@@ -47,38 +86,20 @@ export default function About() {
     },
   ];
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-        }
-      },
-      { threshold: 0.2 }
-    );
-
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
-    }
-
-    return () => observer.disconnect();
-  }, []);
-
   return (
-    <section 
-      id="about" 
+    <section
+      id="about"
       ref={sectionRef}
-      className="py-16 sm:py-20 bg-gray-50 dark:bg-gray-800 transition-colors"
+      className="relative py-16 sm:py-20 bg-gray-50 dark:bg-gray-800 transition-colors overflow-hidden"
     >
+      <div ref={accentRef} className="pointer-events-none absolute inset-0 bg-[radial-gradient(60%_40%_at_10%_20%,rgba(255,235,167,0.08),transparent_60%)]" aria-hidden="true" />
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className={`grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center transition-all duration-700 ${
-          isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-        }`}>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
           
           {/* Content */}
           <div className="space-y-6 sm:space-y-8">
             <div>
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-light text-gray-900 dark:text-white mb-4 sm:mb-6">
+              <h2 ref={headingRef} className="text-2xl sm:text-3xl md:text-4xl font-light text-gray-900 dark:text-white mb-4 sm:mb-6 overflow-hidden">
                 About Me
               </h2>
               <div className="w-20 h-px bg-gray-900 dark:bg-white"></div>
@@ -122,7 +143,10 @@ export default function About() {
           {/* Stats/Timeline */}
           <div className="space-y-6 sm:space-y-8 mt-6 lg:mt-0">
             <div className="space-y-4 sm:space-y-6">
-              <div className="bg-white dark:bg-gray-700 rounded-lg p-5 sm:p-6 shadow-sm">
+              <div
+                ref={highlightsRef}
+                className="bg-white dark:bg-gray-700 rounded-lg p-5 sm:p-6 shadow-sm"
+              >
                 <h3 className="text-lg sm:text-xl font-medium text-gray-900 dark:text-white mb-4">Highlights</h3>
                 <ul className="space-y-4">
                   {highlights.map((item) => (
@@ -138,7 +162,10 @@ export default function About() {
                 </ul>
               </div>
 
-              <div className="bg-white dark:bg-gray-700 rounded-lg p-5 sm:p-6 shadow-sm">
+              <div
+                ref={timelineRef}
+                className="bg-white dark:bg-gray-700 rounded-lg p-5 sm:p-6 shadow-sm"
+              >
                 <h3 className="text-lg sm:text-xl font-medium text-gray-900 dark:text-white mb-4">Timeline</h3>
                 <ol className="space-y-4">
                   {timeline.map((entry) => (

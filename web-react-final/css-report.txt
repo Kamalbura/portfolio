@@ -1,0 +1,86 @@
+CSS IMPLEMENTATION REPORT (burakamal.site)
+Date: 2025-10-20
+Scope: Post-fix audit of CSS/Tailwind v4 runtime with concrete, low-risk improvements.
+
+1) Architecture overview
+- Styling stack: Tailwind CSS v4 with a custom tailwind.config.ts and a global stylesheet at src/app/globals.css.
+- Import style: Migrated to Tailwind v4 import syntax (@import "tailwindcss"); PostCSS config uses { '@tailwindcss/postcss': {} } — verified working at runtime.
+- Strategy: Utility-first classes dominate in components; globals.css defines CSS variables (tokens), some component-level classes via @layer components, and custom utility classes via @layer utilities.
+- Dark mode: Controlled via HTML class 'dark' toggled in Navigation; dark variants widely used (dark:bg-*, dark:text-*). Tailwind v4 defaults to class mode — acceptable.
+
+2) Tokens and global variables (globals.css)
+- Color tokens defined under :root for gray scale (50–950), yellows (100–400), blue accents, and ink/surface semantic tokens:
+  - --surface, --surface-strong, --ink, --ink-muted, --ink-subtle, --accent, --accent-soft, --border-soft, --border-strong
+  - Radius tokens: --radius-lg (26px) and --radius-md (18px)
+- Usage: Custom classes (.surface-card, .muted-paragraph, .accent-pill) leverage tokens; utilities like .text-muted reuse vars.
+- Color-scheme: light declared on :root to hint UA styling; no separate :root.dark token overrides present (dark theme is primarily Tailwind variants).
+
+3) Base element styles
+- html: smooth scrolling enabled; -webkit-text-size-adjust set. Note: Lenis smooth scroll container overrides scrolling at #smooth-scroll-container; global smooth may be redundant for document.
+- body: background uses --surface; text uses --ink; sets GSUB-like font-feature-settings and system font fallback to var(--font-geist-sans). Responsive base font size drops to 15px at <=640px.
+- a: inherit color; hover color switches to --accent; underline handled via utility class .link-underline if needed.
+- ::selection: custom highlight background with readable contrast.
+- :focus-visible: global outline with offset (A11y positive).
+
+4) Component classes (@layer components)
+- .section-shell: content width clamp with side gutters — used to center content sections.
+- .accent-pill: badge styling with uppercase tracking.
+- .surface-card: neutral card with border/rounded/shadow using tokens.
+- .muted-paragraph: sets text to --ink-muted.
+- .link-underline: animated underline via ::after scaleX transition.
+
+5) Utility classes (@layer utilities)
+- .text-muted / .text-subtle: map to ink-muted/subtle tokens.
+- .border-soft: maps to border-soft token.
+- .rounded-hero: larger rounding via token math.
+- .grid-line: adds a subtle surrounding border grid via ::before.
+
+6) Project-specific effect styles
+- .project-card-glare: glare hover effect that uses CSS variables --glare-x / --glare-y; activated by useCardGlare hook. Uses radial-gradient with mix-blend-mode: screen and transitions opacity on hover.
+
+7) Tailwind configuration (tailwind.config.ts)
+- content globs cover app, components, and pages subtrees — appropriate for Next app router.
+- theme.extend:
+  - fontFamily binds to CSS custom properties from Next font loader variables (--font-geist-sans, --font-geist-mono).
+  - colors: defines primary/secondary palettes and background/foreground. Note: Tailwind v4 ships with a default palette; extending is fine, but ensure clashes with our custom CSS token vars are intentional.
+  - animation/keyframes: a set of generic, reusable animations (fade/slide/scale/bounce/float/pulseGlow). No plugin used, so classes like animate-fade-in are available.
+- plugins: [] — no extra Tailwind plugins registered.
+
+8) Dark mode behavior
+- Approach: class-based dark mode applied by toggling 'dark' on <html> in Navigation component.
+- Usage: Many sections use dark:* utilities; globals.css does not define token overrides for dark; body background is token-based (var(--surface)) and could mismatch Tailwind dark backgrounds (e.g., bg-gray-950). Observed components set their own bg in dark mode, so practical result still looks correct.
+- Recommendation: Consider adding :root.dark { --surface: <dark value>; --ink: <light text>; etc. } to align token usage with Tailwind variants where tokens are used.
+
+9) Performance and DX
+- Tailwind utilities are dominant; minimal bespoke CSS. Globals define a small number of reusable patterns.
+- Potential purge efficacy: content globs adequately cover typical Next file locations; no obvious dead-class bloat expected.
+- Keyframes: Reasonable; animation classes exist but project largely uses GSAP/ScrollTrigger for complex motion.
+
+10) Accessibility considerations
+- focus-visible outline present globally — good.
+- text contrast: Tokens yield dark ink on light surfaces; dark mode uses Tailwind classes. Ensure any text on yellow gradients maintains contrast (manual check advised in UI).
+- prefers-reduced-motion: Motion reduced via JS hooks; CSS animations are minimal and not gated via @media (prefers-reduced-motion). If any elements use animate-* classes for non-essential flair, consider adding reduced-motion guard if noticeable.
+
+11) Integration with Lenis
+- ClientLayout wraps content in #smooth-scroll-container (overflow hidden, Lenis manages scroll) and #smooth-scroll-content. Globals.css sets html smooth-scroll (could be redundant). Scrollbar styles live inline in ClientLayout via styled-jsx, not in globals.css.
+ - Scroll indicator mounted globally and uses ScrollTrigger + Lenis scroller. Navigation scrollspy is Lenis-aware via ScrollTrigger and smooth-scrolls using the ScrollContext (offset for navbar).
+
+12) Risks and inconsistencies
+- Token vs Tailwind overlap: Some components use Tailwind color utilities (e.g., bg-gray-950), while globals use token-based body background. This is acceptable but can lead to minor inconsistencies if tokens change.
+- Missing dark token overrides: Using Tailwind dark utilities ensures correctness, but token-based classes (.surface-card, .muted-paragraph) won’t auto-switch without explicit dark variants or a :root.dark override.
+- Global smooth-scroll vs Lenis: html { scroll-behavior: smooth } can be unnecessary and could conflict if native scroll is used in specific contexts (minor risk).
+
+13) Quick recommendations (non-disruptive)
+- Add dark token overrides in globals.css:
+  :root.dark { --surface: #0b0f1a; --surface-strong: #0f1422; --ink: #f3f4f6; --ink-muted: #9ca3af; --ink-subtle: #6b7280; --accent: #d6b44a; --accent-soft: rgba(214, 180, 74, 0.08); --border-soft: rgba(255,255,255,0.08); --border-strong: rgba(255,255,255,0.16); }
+- Consider moving the scrollbar CSS (currently in ClientLayout styled-jsx) to globals.css for consistency.
+- If using Tailwind animations on top of GSAP, gate non-essential CSS animations with @media (prefers-reduced-motion: reduce) { .animate-float { animation: none; } }
+- Evaluate removing html { scroll-behavior: smooth } if Lenis governs all page scroll interactions.
+- Token utilities bridge: add small utility classes that map tokens to tailwind-like names for coherence (optional):
+  @layer utilities { .bg-surface { background: var(--surface); } .text-ink { color: var(--ink); } }
+
+14) Overall assessment
+- The CSS system is clean, token-aware, and Tailwind-first. It aligns with the project’s animation-heavy JS layer (GSAP/Lenis) and keeps custom CSS small and purposeful. Dark mode is handled via class variants; adding dark token overrides would unify token-based components with the rest of the theme.
+ - Tailwind v4 is now correctly compiled at runtime. Utilities (e.g., bg-gray-950, text-white, p-4) resolve as expected.
+
+END OF REPORT

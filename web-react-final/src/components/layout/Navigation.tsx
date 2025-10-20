@@ -2,31 +2,70 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useScroll } from '@/context/ScrollContext';
+import dynamic from 'next/dynamic';
+
+gsap.registerPlugin(ScrollTrigger);
+
+const MotionToggle = dynamic(() => import('@/components/ui/MotionToggle'), { ssr: false });
 
 export default function Navigation() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isDark, setIsDark] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [activeId, setActiveId] = useState<string>('home');
   const menuRef = useRef<HTMLDivElement>(null);
+  const { scrollTo } = useScroll();
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
-    };
-
-    // Check for preferred color scheme or saved preference
+    // Initialize dark mode from preference or system setting
     const darkModePreference = localStorage.getItem('darkMode');
-    
-    if (darkModePreference === 'true' || (darkModePreference === null && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+    if (
+      darkModePreference === 'true' ||
+      (darkModePreference === null && window.matchMedia('(prefers-color-scheme: dark)').matches)
+    ) {
       setIsDark(true);
       document.documentElement.classList.add('dark');
     } else {
       setIsDark(false);
       document.documentElement.classList.remove('dark');
     }
+  }, []);
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+  // Header scrolled state tied to ScrollTrigger (works with Lenis transforms)
+  useEffect(() => {
+    const st = ScrollTrigger.create({
+      start: 0,
+      end: 'max',
+      onUpdate: (self) => {
+        const y = self.scroll();
+        setIsScrolled(y > 20);
+      },
+    });
+    return () => st.kill();
+  }, []);
+
+  // ScrollTrigger-based scrollspy (works with Lenis scrollerProxy)
+  useEffect(() => {
+    const ids = ['home', 'about', 'process', 'projects', 'skills', 'contact'];
+    const triggers: ScrollTrigger[] = [];
+
+    ids.forEach((id) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const t = ScrollTrigger.create({
+        trigger: el,
+        start: 'top center',
+        end: 'bottom center',
+        onEnter: () => setActiveId(id),
+        onEnterBack: () => setActiveId(id),
+      });
+      triggers.push(t);
+    });
+
+    return () => triggers.forEach((t) => t.kill());
   }, []);
 
   useEffect(() => {
@@ -66,7 +105,7 @@ export default function Navigation() {
   };
 
   const navItems = [
-    { label: 'Home', href: '/' },
+    { label: 'Home', href: '/#home' },
     { label: 'About', href: '/#about' },
     { label: 'Projects', href: '/#projects' },
     { label: 'Skills', href: '/#skills' },
@@ -92,28 +131,43 @@ export default function Navigation() {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-6 lg:space-x-8">
-            {navItems.map((item) => (
-              <Link
-                key={item.label}
-                href={item.href}
-                className={`text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white font-medium transition-colors relative group ${
-                  item.label === 'Pages' ? 'pages-link' : ''
-                }`}
-              >
-                {item.label}
-                {item.label === 'Pages' && (
-                  <div className="absolute left-1/2 -translate-x-1/2 top-full mt-2 w-52 px-4 py-3 bg-white dark:bg-gray-800 rounded-lg shadow-lg text-sm text-gray-700 dark:text-gray-300 opacity-0 group-hover:opacity-100 pointer-events-none z-10 before:content-[''] before:absolute before:left-1/2 before:-top-2 before:-translate-x-1/2 before:border-8 before:border-transparent before:border-b-white dark:before:border-b-gray-800 pages-tooltip">
-                    <p className="font-medium text-center">✨ Discover My Other Websites! </p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 text-center">Click to explore my other sites</p>
-                  </div>
-                )}
-                <span className="absolute inset-x-0 -bottom-px h-px bg-gray-900 dark:bg-white scale-x-0 group-hover:scale-x-100 transition-transform"></span>
-              </Link>
-            ))}
+            {navItems.map((item) => {
+              const isAnchor = item.href.startsWith('/#');
+              const id = isAnchor ? item.href.replace('/#', '') : '';
+              const isActive = id && id === activeId;
+              return (
+                <Link
+                  key={item.label}
+                  href={item.href}
+                  onClick={(e) => {
+                    if (isAnchor) {
+                      e.preventDefault();
+                      scrollTo(`#${id}`, { offset: -80 });
+                    }
+                  }}
+                  aria-current={isActive ? 'page' : undefined}
+                  className={`text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white font-medium transition-colors relative group ${
+                    item.label === 'Pages' ? 'pages-link' : ''
+                  } ${isActive ? 'text-gray-900 dark:text-white' : ''}`}
+                >
+                  {item.label}
+                  {item.label === 'Pages' && (
+                    <div className="absolute left-1/2 -translate-x-1/2 top-full mt-2 w-52 px-4 py-3 bg-white dark:bg-gray-800 rounded-lg shadow-lg text-sm text-gray-700 dark:text-gray-300 opacity-0 group-hover:opacity-100 pointer-events-none z-10 before:content-[''] before:absolute before:left-1/2 before:-top-2 before:-translate-x-1/2 before:border-8 before:border-transparent before:border-b-white dark:before:border-b-gray-800 pages-tooltip">
+                      <p className="font-medium text-center">✨ Discover My Other Websites! </p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 text-center">Click to explore my other sites</p>
+                    </div>
+                  )}
+                  <span className={`absolute inset-x-0 -bottom-px h-px bg-gray-900 dark:bg-white transition-transform ${
+                    isActive ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'
+                  }`}></span>
+                </Link>
+              );
+            })}
           </div>
 
           {/* Dark Mode Toggle & Mobile Menu Button */}
           <div className="flex items-center space-x-3">
+            <MotionToggle />
             <button
               onClick={toggleDarkMode}
               className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
@@ -181,8 +235,16 @@ export default function Navigation() {
                 <div key={item.label} className="relative">
                   <Link
                     href={item.href}
+                    onClick={(e) => {
+                      const isAnchor = item.href.startsWith('/#');
+                      const id = isAnchor ? item.href.replace('/#', '') : '';
+                      if (isAnchor) {
+                        e.preventDefault();
+                        scrollTo(`#${id}`, { offset: -80 });
+                      }
+                      setIsMobileMenuOpen(false);
+                    }}
                     className="py-3 text-lg font-medium text-gray-800 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white border-b border-gray-100 dark:border-gray-800 block"
-                    onClick={() => setIsMobileMenuOpen(false)}
                   >
                     {item.label}
                   </Link>

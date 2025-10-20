@@ -1,39 +1,51 @@
-'use client';
+"use client";
 
-import { useState, useEffect, useRef } from 'react';
+import { useRef, useState } from 'react';
+import { useSectionReveal, useStaggerReveal } from '@/hooks/useSectionReveal';
+import { useGSAP } from '@gsap/react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useReducedMotion } from '@/context/MotionPreferenceContext';
 
 export default function Skills() {
-  const [isVisible, setIsVisible] = useState(false);
   const [activeTab, setActiveTab] = useState(0);
-  const sectionRef = useRef<HTMLDivElement>(null);
-  // Remove unused scrollPosition
-  // const [scrollPosition, setScrollPosition] = useState(0);
+  const sectionRef = useSectionReveal<HTMLElement>({ direction: 'up' });
+  const headerRef = useSectionReveal<HTMLDivElement>({ direction: 'up', delay: 0.05 });
+  const controlsRef = useSectionReveal<HTMLDivElement>({ direction: 'up', delay: 0.15 });
+  const gridRef = useStaggerReveal<HTMLDivElement>('.skill-card', {
+    direction: 'up',
+    stagger: 0.12,
+    start: 'top 75%',
+  });
+  const toolsRef = useStaggerReveal<HTMLDivElement>('.tool-card', {
+    direction: 'up',
+    stagger: 0.1,
+    delay: 0.2,
+  });
+  const accentRef = useRef<HTMLDivElement>(null);
+  const shouldReduceMotion = useReducedMotion();
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-        }
-      },
-      { threshold: 0.1 }
-    );
+  gsap.registerPlugin(ScrollTrigger);
 
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
-    }
-
-    // Remove scroll position tracking as it's not used
-    // const handleScroll = () => {
-    //   setScrollPosition(window.scrollY);
-    // };
-
-    // window.addEventListener('scroll', handleScroll);
-    return () => {
-      observer.disconnect();
-      // window.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
+  useGSAP(
+    () => {
+      if (shouldReduceMotion) return;
+      if (accentRef.current) {
+        gsap.to(accentRef.current, {
+          yPercent: -8,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: '#skills',
+            start: 'top bottom',
+            end: 'bottom top',
+            scrub: true,
+            scroller: document.getElementById('smooth-scroll-container') || undefined,
+          },
+        });
+      }
+    },
+    { dependencies: [shouldReduceMotion] },
+  );
 
   const skills = [
     {
@@ -96,16 +108,15 @@ export default function Skills() {
   ];
 
   return (
-    <section 
-      id="skills" 
+    <section
+      id="skills"
       ref={sectionRef}
-      className="py-12 sm:py-16 md:py-20 bg-gray-50 dark:bg-gray-800 transition-colors overflow-hidden"
+      className="relative py-12 sm:py-16 md:py-20 bg-gray-50 dark:bg-gray-800 transition-colors overflow-hidden"
     >
+      <div ref={accentRef} className="pointer-events-none absolute inset-0 bg-[radial-gradient(60%_40%_at_20%_10%,rgba(255,235,167,0.07),transparent_60%)]" aria-hidden="true" />
       <div className="max-w-6xl mx-auto px-3 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div className={`text-center mb-8 sm:mb-10 md:mb-16 transition-all duration-700 ${
-          isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-        }`}>
+        <div ref={headerRef} className="text-center mb-8 sm:mb-10 md:mb-16">
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-light text-gray-900 dark:text-white mb-4 sm:mb-6 md:mb-8">
             Technical Skills
           </h2>
@@ -117,9 +128,7 @@ export default function Skills() {
         </div>
 
         {/* Skills Tabs - Further optimized for mobile */}
-        <div className={`mb-6 sm:mb-8 transition-all duration-700 delay-100 ${
-          isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-        }`}>
+        <div ref={controlsRef} className="mb-6 sm:mb-8">
           <div className="flex justify-center">
             <div
               className="flex overflow-x-auto max-w-full pb-2 hide-scrollbar"
@@ -149,9 +158,7 @@ export default function Skills() {
         </div>
 
         {/* Skills Content - Improved grid spacing for mobile */}
-        <div className={`transition-all duration-700 delay-200 ${
-          isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-        }`}>
+        <div ref={gridRef}>
           {skills.map((category, index) => (
             <div
               key={category.id}
@@ -163,9 +170,9 @@ export default function Skills() {
             >
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2 sm:gap-3 md:gap-4">
                 {category.items.map((skill) => (
-                  <div 
+                  <div
                     key={skill.name}
-                    className="flex flex-col items-center p-2 sm:p-3 md:p-4 bg-white dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600 hover:shadow-md transition-all duration-300"
+                    className="skill-card flex flex-col items-center p-2 sm:p-3 md:p-4 bg-white dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600 hover:shadow-md transition-all duration-300"
                   >
                     <div className="text-lg sm:text-xl md:text-2xl mb-2 sm:mb-3">
                       {skill.icon}
@@ -185,16 +192,14 @@ export default function Skills() {
         </div>
 
         {/* Tools & Technologies Grid - Improved for mobile */}
-        <div className={`mt-10 sm:mt-14 md:mt-20 transition-all duration-700 delay-300 ${
-          isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-        }`}>
+        <div ref={toolsRef} className="mt-10 sm:mt-14 md:mt-20">
           <h3 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white text-center mb-6 sm:mb-8 md:mb-10">Tools & Technologies</h3>
           
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2 sm:gap-3 md:gap-5">
             {tools.map((tool) => (
-              <div 
+              <div
                 key={tool.name}
-                className="flex flex-col items-center p-2 sm:p-3 md:p-5 bg-white dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600 hover:shadow-md transition-all duration-300"
+                className="tool-card flex flex-col items-center p-2 sm:p-3 md:p-5 bg-white dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600 hover:shadow-md transition-all duration-300"
               >
                 <div className="text-xl sm:text-2xl md:text-3xl mb-2 sm:mb-3 md:mb-4">{tool.icon}</div>
                 <span className="text-[10px] sm:text-xs md:text-sm font-medium text-gray-700 dark:text-gray-300 mt-1 sm:mt-2">{tool.name}</span>
