@@ -1,0 +1,287 @@
+@import "tailwindcss";
+
+/* Move theme tokens into :root so linters and PostCSS understand them */
+/* Color tokens used by Tailwind utilities */
+:root {
+  --color-white: #ffffff;
+  --color-black: #000000;
+
+  --color-gray-50: #f9fafb;
+  --color-gray-100: #f3f4f6;
+  --color-gray-200: #e5e7eb;
+  --color-gray-300: #d1d5db;
+  --color-gray-400: #9ca3af;
+  --color-gray-500: #6b7280;
+  --color-gray-600: #4b5563;
+  --color-gray-700: #374151;
+  --color-gray-800: #1f2937;
+  --color-gray-900: #111827;
+  --color-gray-950: #030712;
+
+  --color-yellow-100: #fef3c7;
+  --color-yellow-200: #fef08a;
+  --color-yellow-300: #fde047;
+  --color-yellow-400: #facc15;
+
+  --color-blue-50: #eff6ff;
+  --color-blue-500: #3b82f6;
+  --color-blue-600: #2563eb;
+  --color-blue-900: #1e3a8a;
+
+  --color-stone-900: #0c1d39;
+}
+
+:root {
+  --surface: #f8f5f0;
+  --surface-strong: #ffffff;
+  --ink: #141416;
+  --ink-muted: #52535b;
+  --ink-subtle: #6f6f78;
+  --accent: #1d2b47;
+  --accent-soft: rgba(29, 43, 71, 0.08);
+  --border-soft: rgba(20, 20, 22, 0.08);
+  --border-strong: rgba(20, 20, 22, 0.16);
+  --radius-lg: 26px;
+  --radius-md: 18px;
+  color-scheme: light;
+}
+
+/* Dark theme tokens (toggled via <html class="dark"> from Navigation) */
+:root.dark {
+  --surface: #0b0f1a;
+  --surface-strong: #0f172a;
+  --ink: #e5e7eb;
+  --ink-muted: #c0c5cf;
+  --ink-subtle: #94a3b8;
+  --accent: #93c5fd;
+  --accent-soft: rgba(147, 197, 253, 0.1);
+  --border-soft: rgba(229, 231, 235, 0.12);
+  --border-strong: rgba(229, 231, 235, 0.22);
+  color-scheme: dark;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background: var(--surface);
+  color: var(--ink);
+  font-family: var(--font-geist-sans, 'Inter', sans-serif);
+  font-feature-settings: 'liga' 1, 'calt' 1, 'ss01' 1;
+  font-size: 16px;
+  line-height: 1.6;
+  letter-spacing: -0.01em;
+  min-height: 100vh;
+}
+
+body.cursor-hidden {
+  cursor: none !important;
+}
+
+body.cursor-hidden * {
+  cursor: none !important;
+}
+
+main {
+  display: block;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--accent);
+}
+
+::selection {
+  background-color: rgba(29, 43, 71, 0.18);
+  color: var(--ink);
+}
+
+:focus-visible {
+  outline: 2px solid rgba(29, 43, 71, 0.4);
+  outline-offset: 4px;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid var(--border-soft);
+  margin: 3rem 0;
+}
+
+@layer components {
+  .section-shell {
+    width: min(1120px, calc(100vw - 3rem));
+    margin-inline: auto;
+  }
+
+  .accent-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    border-radius: 999px;
+    padding: 0.35rem 0.9rem;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    color: var(--ink-muted);
+    background: rgba(20, 20, 22, 0.04);
+  }
+
+  .surface-card {
+    background: var(--surface-strong);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-soft);
+    box-shadow: 0 12px 40px rgba(17, 24, 39, 0.06);
+  }
+
+  .muted-paragraph {
+    color: var(--ink-muted);
+  }
+
+  .link-underline {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .link-underline::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -0.15rem;
+    width: 100%;
+    height: 1px;
+    background: currentColor;
+    transform-origin: left;
+    transform: scaleX(0.4);
+    transition: transform 0.25s ease;
+  }
+
+  .link-underline:hover::after {
+    transform: scaleX(1);
+  }
+}
+
+@layer utilities {
+  .text-muted {
+    color: var(--ink-muted);
+  }
+
+  .text-subtle {
+    color: var(--ink-subtle);
+  }
+
+  .border-soft {
+    border-color: var(--border-soft);
+  }
+
+  .rounded-hero {
+    border-radius: calc(var(--radius-lg) + 8px);
+  }
+
+  .grid-line {
+    position: relative;
+  }
+
+  .grid-line::before {
+    content: '';
+    position: absolute;
+    inset: -1.5rem;
+    border-radius: calc(var(--radius-lg) + 12px);
+    border: 1px solid rgba(20, 20, 22, 0.05);
+    z-index: -1;
+  }
+}
+
+@media (max-width: 640px) {
+  body {
+    font-size: 15px;
+  }
+
+  .section-shell {
+    width: calc(100vw - 2.5rem);
+  }
+}
+
+.project-card-glare {
+  position: relative;
+  overflow: hidden;
+  --glare-x: 50%;
+  --glare-y: 50%;
+}
+
+.project-card-glare::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle 220px at var(--glare-x) var(--glare-y),
+    rgba(255, 255, 255, 0.22),
+    rgba(255, 255, 255, 0)
+  );
+  mix-blend-mode: screen;
+  opacity: 0;
+  transition: opacity 0.4s ease-out;
+  pointer-events: none;
+}
+
+.project-card-glare:hover::before {
+  opacity: 1;
+}
+
+/* Lenis container and scrollbar styling moved from ClientLayout to avoid hydration drift */
+#smooth-scroll-container {
+  /* Default: native document scroll, container does not trap scrolling */
+  height: auto;
+  overflow: visible;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(107, 114, 128, 0.6) transparent; /* gray-500 with 60% opacity */
+}
+.lenis-active #smooth-scroll-container {
+  /* When Lenis is ready, it manages the scroll */
+  height: 100dvh;
+  overflow: hidden;
+}
+html[data-motion-preference='reduce'] #smooth-scroll-container {
+  height: auto;
+  overflow: auto;
+}
+#smooth-scroll-content {
+  min-height: 100%;
+}
+.lenis-active #smooth-scroll-content {
+  will-change: transform;
+}
+html[data-motion-preference='reduce'] #smooth-scroll-content {
+  min-height: auto;
+  will-change: auto;
+  transform: none !important;
+}
+#smooth-scroll-container::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+  background: transparent;
+}
+#smooth-scroll-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+#smooth-scroll-container::-webkit-scrollbar-thumb {
+  background: rgba(107, 114, 128, 0.6); /* gray-500 with 60% opacity */
+  border-radius: 4px;
+}
+@media (max-width: 768px) {
+  #smooth-scroll-container::-webkit-scrollbar {
+    width: 2px;
+  }
+}

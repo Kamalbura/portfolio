@@ -1,0 +1,45 @@
+TODO LIST (Updated - Oct 20, 2025)
+=================================
+
+Completed (context):
+- Lenis + GSAP ScrollTrigger integration (wrapper/content, scrollerProxy, defaults, sync)
+- Hero split-text + parallax accent; About/Projects/Skills parallax accents; Process pinned vignette
+- Reusable reveal hooks (useSectionReveal/useStaggerReveal) and useSplitText
+- Mobile nav static links, Custom Cursor, Magnetic Button, Card Tilt/Glare
+- Lint/build PASS; runtime stable after cache reset
+
+High-priority gaps vs gentlerain.ai (next up):
+1) Scroll progress indicator (top bar)
+   - Add UI component that tracks scroll progress via Lenis/ScrollTrigger; respects reduced motion.
+   - Files: src/components/ui/ScrollIndicator.tsx; wire into ClientLayout.
+
+2) Active section highlighting (scrollspy)
+   - Desktop nav highlights current section (Hero/About/Process/Projects/Skills/Contact).
+   - Files: src/components/layout/Navigation.tsx (IO/ScrollTrigger batch).
+
+3) First-load preloader (tasteful, <1s)
+   - Minimal fade/scale entrance and accent morph; skip on subsequent loads (sessionStorage flag).
+   - Files: src/components/ui/Preloader.tsx; mount in ClientLayout.
+
+4) Page transition refinement
+   - Replace simple overlay with curtain/mask slide + slight content parallax; fast and unobtrusive.
+   - Files: src/context/TransitionContext.tsx (+ CSS accents in globals.css).
+
+5) Orchestrated storyline handoffs
+   - Coordinate overlap between sections for one continuous narrative feel.
+   - Files: section components timelines; tune ScrollTrigger start/end.
+
+6) Performance tune-ups
+   - Fix image preload warnings (sizes/priority); ensure HeroCanvas mounted efficiently.
+   - Verify LCP/CLS; aim 95+ Lighthouse. Add reduced data paths if needed.
+
+Backlog (nice-to-have):
+- Advanced text masks/gradients on key headings (gentle accent usage)
+- Scroll-based ambient gradient morphs across major sections
+- Gooey nav hover effect (only if budget allows)
+
+Acceptance criteria:
+- Smooth, choreographed scroll with clear progress feedback
+- Nav reflects reading position; transitions feel premium yet subtle
+- Reduced-motion users get simplified, accessible experience
+- Build/lint PASS; Lighthouse >=95; no animation leaks on route changes
