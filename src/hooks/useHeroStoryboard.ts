@@ -16,6 +16,7 @@ type HeroStoryboardRefs = {
   ctaRef: RefObject<HTMLDivElement | null>;
   gradientRef: RefObject<HTMLDivElement | null>;
   indicatorRef?: RefObject<HTMLDivElement | null>;
+  mantraRef?: RefObject<HTMLDivElement | null>;
 };
 
 function collectChildren(node?: HTMLElement | null) {
@@ -33,6 +34,7 @@ export function useHeroStoryboard(refs: HeroStoryboardRefs) {
     ctaRef,
     gradientRef,
     indicatorRef,
+    mantraRef,
   } = refs;
 
   useLayoutEffect(() => {
@@ -51,6 +53,11 @@ export function useHeroStoryboard(refs: HeroStoryboardRefs) {
       immediateTargets.push(...collectChildren(badgesRef.current));
       immediateTargets.push(...collectChildren(ctaRef.current));
       if (indicatorRef?.current) immediateTargets.push(indicatorRef.current);
+      if (mantraRef?.current) {
+        mantraRef.current.querySelectorAll('[data-word]').forEach((node) => {
+          immediateTargets.push(node as HTMLElement);
+        });
+      }
       if (gradientRef.current) immediateTargets.push(gradientRef.current);
 
       immediateTargets.forEach((el) => {
@@ -140,11 +147,42 @@ export function useHeroStoryboard(refs: HeroStoryboardRefs) {
           "intro+=1.1",
         );
       }
+
+      if (mantraRef?.current) {
+        const mantraWords = Array.from(
+          mantraRef.current.querySelectorAll<HTMLElement>('[data-word]'),
+        );
+        mantraWords.forEach((word, index) => {
+          const enterLabel = `mantra-${index}`;
+          timeline.addLabel(enterLabel, `intro+=${1.2 + index * 0.5}`);
+          timeline.fromTo(
+            word,
+            { y: 20, autoAlpha: 0 },
+            { y: 0, autoAlpha: 1, duration: 0.6 },
+            enterLabel,
+          );
+          timeline.to(
+            word,
+            { autoAlpha: 0, y: -16, duration: 0.5, ease: 'power2.inOut' },
+            `${enterLabel}+=0.45`,
+          );
+        });
+      }
     }, sectionEl);
 
     return () => {
       ctx.revert();
       split?.revert();
     };
-  }, [shouldReduceMotion, sectionRef, headingRef, subCopyRef, badgesRef, ctaRef, gradientRef, indicatorRef]);
+  }, [
+    shouldReduceMotion,
+    sectionRef,
+    headingRef,
+    subCopyRef,
+    badgesRef,
+    ctaRef,
+    gradientRef,
+    indicatorRef,
+    mantraRef,
+  ]);
 }

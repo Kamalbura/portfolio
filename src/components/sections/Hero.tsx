@@ -9,6 +9,7 @@ import { useHeroStoryboard } from '@/hooks/useHeroStoryboard';
 
 
 const SKILLS = ['React', 'Node.js', 'Python', 'IoT', 'Edge ML', 'Firebase'];
+const MANTRA = ['Kamal', 'Bura'];
 
 export default function Hero() {
   const { scrollTo } = useScroll();
@@ -19,6 +20,7 @@ export default function Hero() {
   const gradientRef = useRef<HTMLDivElement>(null);
   const ctaRef = useRef<HTMLDivElement>(null);
   const indicatorRef = useRef<HTMLDivElement>(null);
+  const mantraRef = useRef<HTMLDivElement>(null);
   const sectionRef = useRef<HTMLElement>(null);
 
   useHeroStoryboard({
@@ -29,6 +31,7 @@ export default function Hero() {
     ctaRef,
     gradientRef,
     indicatorRef,
+    mantraRef,
   });
 
   const handleResumeClick = (event: MouseEvent<HTMLButtonElement>) => {
@@ -81,6 +84,19 @@ export default function Hero() {
               confidence.
             </p>
           </div>
+
+          <div
+            ref={mantraRef}
+            className="relative flex items-center justify-center gap-8 pt-2 text-[0.65rem] sm:text-xs tracking-[0.5em] uppercase text-yellow-200/80"
+            aria-hidden="true"
+          >
+            {MANTRA.map((word) => (
+              <span key={word} data-word className="opacity-0">
+                {word}
+              </span>
+            ))}
+          </div>
+          <span className="sr-only">Kamal Bura</span>
 
           <div ref={badgesRef} className="flex flex-wrap justify-center gap-1.5 sm:gap-2.5 md:gap-3.5">
             {SKILLS.map((skill) => (
