@@ -9,10 +9,17 @@ import { useReducedMotion } from '@/context/MotionPreferenceContext';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const PARTICLE_COUNT = 220;
-const LINE_THRESHOLD = 0.28; // slightly tighter connections for a softer look
+const PARTICLE_COUNT = 680;
+const LINE_THRESHOLD = 0.28; // gentle network before lettering locks
 const BASE_RADIUS = 2.4; // expand radius for a more spacious hero
-const WORD_SEQUENCE = ['KAMAL', 'BURA'];
+const WORDS = ['KAMAL', 'BURA'];
+const WORD_CANVAS_WIDTH = 1600;
+const WORD_CANVAS_HEIGHT = 320;
+const WORD_SPACING = 140;
+const GLYPH_SAMPLE_STEP = 2;
+const MORPH_REVEAL_START = 0.25;
+const MORPH_REVEAL_END = 0.85;
+const MORPH_SCROLL_DISTANCE = 260; // percentage of scroll span for the morph timeline
 
 export default function Plexus() {
   const groupRef = useRef<THREE.Group>(null);
@@ -44,8 +51,8 @@ export default function Plexus() {
   }, []);
 
   const workingPositions = useMemo(() => new Float32Array(PARTICLE_COUNT * 3), []);
-  const morphTargets = useMemo(
-    () => WORD_SEQUENCE.map((word) => generateTextPointCloud(word, PARTICLE_COUNT)),
+  const wordTarget = useMemo(
+    () => generateWordSequencePointCloud(WORDS, PARTICLE_COUNT),
     [],
   );
   const linePositionBuffer = useMemo(
@@ -71,40 +78,27 @@ export default function Plexus() {
     const { positions, offsets } = basePositions;
     const pointPositions = points.geometry.attributes.position.array as Float32Array;
 
-    const morphMix = morphState.current.progress;
-    const totalStages = Math.max(1, morphTargets.length - 1);
-    const scaled = THREE.MathUtils.clamp(morphMix, 0, morphTargets.length - Number.EPSILON);
-    const baseIndex = Math.min(totalStages, Math.floor(scaled));
-    const nextIndex = Math.min(totalStages, baseIndex + 1);
-    const betweenWords = THREE.MathUtils.clamp(scaled - baseIndex, 0, 1);
-    const currentTarget = morphTargets[baseIndex] ?? basePositions.positions;
-    const nextTarget = morphTargets[nextIndex] ?? currentTarget;
-    const shapeStrength = totalStages > 0 ? THREE.MathUtils.clamp(morphMix / totalStages, 0, 1) : 0;
-    const mixFactor = 0.25 + 0.75 * shapeStrength;
+    const morphMix = THREE.MathUtils.clamp(morphState.current.progress, 0, 1);
+    const shapeStrength = THREE.MathUtils.smoothstep(
+      MORPH_REVEAL_START,
+      MORPH_REVEAL_END,
+      morphMix,
+    );
+    const wobbleDampen = THREE.MathUtils.lerp(1, 0.3, shapeStrength);
+    const mixFactor = THREE.MathUtils.lerp(0.12, 0.98, shapeStrength);
+    const lineFade = THREE.MathUtils.lerp(1, 0.25, shapeStrength);
 
     for (let i = 0; i < PARTICLE_COUNT; i++) {
-      // slower, softer wave motion
-      const wave = Math.sin(time * 0.35 + offsets[i]) * 0.08;
+      // slower, softer wave motion that relaxes as the word locks in
+      const wave = Math.sin(time * 0.35 + offsets[i]) * 0.1 * wobbleDampen;
       const index = i * 3;
       const wobbleX = positions[index] * (1 + wave * 0.08);
       const wobbleY = positions[index + 1] * (1 + wave * 0.08);
       const wobbleZ = positions[index + 2] * (1 + wave * 0.08);
 
-      const targetX = THREE.MathUtils.lerp(
-        currentTarget[index] ?? wobbleX,
-        nextTarget[index] ?? wobbleX,
-        betweenWords,
-      );
-      const targetY = THREE.MathUtils.lerp(
-        currentTarget[index + 1] ?? wobbleY,
-        nextTarget[index + 1] ?? wobbleY,
-        betweenWords,
-      );
-      const targetZ = THREE.MathUtils.lerp(
-        currentTarget[index + 2] ?? wobbleZ,
-        nextTarget[index + 2] ?? wobbleZ,
-        betweenWords,
-      );
+      const targetX = wordTarget[index] ?? wobbleX;
+      const targetY = wordTarget[index + 1] ?? wobbleY;
+      const targetZ = wordTarget[index + 2] ?? wobbleZ;
 
       workingPositions[index] = THREE.MathUtils.lerp(wobbleX, targetX, mixFactor);
       workingPositions[index + 1] = THREE.MathUtils.lerp(wobbleY, targetY, mixFactor);
@@ -118,7 +112,7 @@ export default function Plexus() {
     let lineVertex = 0;
     let colorIndex = 0;
     let connectionCount = 0;
-    const currentThreshold = THREE.MathUtils.lerp(LINE_THRESHOLD, 0.18, shapeStrength);
+    const currentThreshold = THREE.MathUtils.lerp(LINE_THRESHOLD, 0.12, shapeStrength);
 
     for (let i = 0; i < PARTICLE_COUNT; i++) {
       const x1 = workingPositions[i * 3];
@@ -132,7 +126,7 @@ export default function Plexus() {
         const distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
 
         if (distance < currentThreshold) {
-          const alpha = (1 - distance / currentThreshold) * 0.85; // reduce overall line alpha
+          const alpha = (1 - distance / currentThreshold) * 0.85 * lineFade; // fade networks once letters lock
 
           linePositionBuffer[lineVertex++] = x1;
           linePositionBuffer[lineVertex++] = y1;
@@ -173,24 +167,23 @@ export default function Plexus() {
     if (!heroSection) return;
 
     const scroller = document.getElementById('smooth-scroll-container') || undefined;
-    const totalStages = Math.max(1, morphTargets.length - 1);
 
     const ctx = gsap.context(() => {
       gsap.to(morphState.current, {
-        progress: totalStages,
+        progress: 1,
         ease: 'none',
         scrollTrigger: {
           trigger: heroSection,
           start: 'top top',
-          end: '+=160%',
-          scrub: 1.2,
+          end: `+=${MORPH_SCROLL_DISTANCE}%`,
+          scrub: 1.35,
           scroller,
         },
       });
     }, heroSection);
 
     return () => ctx.revert();
-  }, [shouldReduceMotion, morphTargets.length]);
+  }, [shouldReduceMotion]);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -221,7 +214,7 @@ export default function Plexus() {
         <bufferGeometry>
           <bufferAttribute attach="attributes-position" args={[basePositions.positions, 3]} />
         </bufferGeometry>
-        <pointsMaterial size={0.04} color="#d6f7ff" sizeAttenuation depthWrite={false} transparent opacity={0.95} />
+        <pointsMaterial size={0.032} color="#d6f7ff" sizeAttenuation depthWrite={false} transparent opacity={0.95} />
       </points>
 
       <lineSegments ref={linesRef}>
@@ -235,14 +228,14 @@ export default function Plexus() {
   );
 }
 
-function generateTextPointCloud(text: string, count: number) {
+function generateWordSequencePointCloud(words: string[], count: number) {
   if (typeof window === 'undefined') {
     return new Float32Array(count * 3);
   }
 
   const canvas = document.createElement('canvas');
-  canvas.width = 640;
-  canvas.height = 220;
+  canvas.width = WORD_CANVAS_WIDTH;
+  canvas.height = WORD_CANVAS_HEIGHT;
   const ctx = canvas.getContext('2d');
   if (!ctx) {
     return new Float32Array(count * 3);
@@ -250,17 +243,23 @@ function generateTextPointCloud(text: string, count: number) {
 
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.fillStyle = '#fff';
-  ctx.textAlign = 'center';
+  ctx.textAlign = 'left';
   ctx.textBaseline = 'middle';
-  ctx.font = '700 200px "Space Grotesk", sans-serif';
-  ctx.fillText(text, canvas.width / 2, canvas.height / 2);
+  ctx.font = '700 220px "Space Grotesk", sans-serif';
+
+  let cursorX = 120;
+  words.forEach((rawWord) => {
+    const word = rawWord.toUpperCase();
+    ctx.fillText(word, cursorX, canvas.height / 2);
+    const metrics = ctx.measureText(word);
+    cursorX += (metrics.width || 0) + WORD_SPACING;
+  });
 
   const image = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
   const candidates: Array<[number, number]> = [];
-  const step = 4;
 
-  for (let y = 0; y < canvas.height; y += step) {
-    for (let x = 0; x < canvas.width; x += step) {
+  for (let y = 0; y < canvas.height; y += GLYPH_SAMPLE_STEP) {
+    for (let x = 0; x < canvas.width; x += GLYPH_SAMPLE_STEP) {
       const alpha = image[(y * canvas.width + x) * 4 + 3];
       if (alpha > 150) {
         candidates.push([x, y]);
@@ -275,14 +274,16 @@ function generateTextPointCloud(text: string, count: number) {
   const positions = new Float32Array(count * 3);
 
   for (let i = 0; i < count; i++) {
-    const sample = candidates[Math.floor((i / count) * candidates.length)] ?? candidates[Math.floor(Math.random() * candidates.length)];
+    const sample =
+      candidates[Math.floor((i / count) * candidates.length)] ??
+      candidates[Math.floor(Math.random() * candidates.length)];
     const [px, py] = sample;
     const normX = (px / canvas.width) * 2 - 1;
     const normY = 1 - (py / canvas.height) * 2;
 
-    positions[i * 3] = normX * 1.6;
-    positions[i * 3 + 1] = normY * 0.9;
-    positions[i * 3 + 2] = (Math.random() - 0.5) * 0.5;
+    positions[i * 3] = normX * 1.9;
+    positions[i * 3 + 1] = normY * 1.05;
+    positions[i * 3 + 2] = (Math.random() - 0.5) * 0.18;
   }
 
   return positions;

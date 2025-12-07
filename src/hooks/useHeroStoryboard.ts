@@ -81,8 +81,8 @@ export function useHeroStoryboard(refs: HeroStoryboardRefs) {
         scrollTrigger: {
           trigger: sectionEl,
           start: "top top",
-          end: "+=140%",
-          scrub: 1.2,
+          end: "+=220%",
+          scrub: 1.3,
           pin: true,
           anticipatePin: 1,
           scroller,
@@ -152,21 +152,22 @@ export function useHeroStoryboard(refs: HeroStoryboardRefs) {
         const mantraWords = Array.from(
           mantraRef.current.querySelectorAll<HTMLElement>('[data-word]'),
         );
-        mantraWords.forEach((word, index) => {
-          const enterLabel = `mantra-${index}`;
-          timeline.addLabel(enterLabel, `intro+=${1.2 + index * 0.5}`);
+
+        if (mantraWords.length === 1) {
           timeline.fromTo(
-            word,
+            mantraWords[0],
             { y: 20, autoAlpha: 0 },
-            { y: 0, autoAlpha: 1, duration: 0.6 },
-            enterLabel,
+            { y: 0, autoAlpha: 1, duration: 0.8 },
+            'intro+=1.2',
           );
-          timeline.to(
-            word,
-            { autoAlpha: 0, y: -16, duration: 0.5, ease: 'power2.inOut' },
-            `${enterLabel}+=0.45`,
+        } else {
+          timeline.fromTo(
+            mantraWords,
+            { y: 20, autoAlpha: 0 },
+            { y: 0, autoAlpha: 1, duration: 0.8, stagger: 0.08 },
+            'intro+=1.2',
           );
-        });
+        }
       }
     }, sectionEl);
 
