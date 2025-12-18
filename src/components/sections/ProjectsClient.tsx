@@ -40,33 +40,71 @@ export default function ProjectsClient({ projects }: ProjectsClientProps) {
 
   gsap.registerPlugin(ScrollTrigger);
   const shouldReduceMotion = useReducedMotion();
-  // Pin and scrub horizontal scroll of project cards (responsive to resize)
+
+  // Compute filtered projects FIRST before using in useGSAP
+  const filteredProjects = useMemo(() => {
+    if (selectedCategory === 'all') return projects;
+    return projects.filter((project) => project.category === selectedCategory);
+  }, [projects, selectedCategory]);
+
+  // FIX #1: Refresh ScrollTrigger when filtered projects change to recalculate scroll distance
   useGSAP(() => {
-    if (!sectionRef.current || !trackRef.current || shouldReduceMotion) return;
-    const scrollerEl = document.getElementById('smooth-scroll-container') || undefined;
+    if (shouldReduceMotion) return;
+    ScrollTrigger.refresh();
+  }, { dependencies: [filteredProjects] });
 
-    const computeDistance = () => {
-      if (!trackRef.current) return 0;
-      return Math.max(0, trackRef.current.scrollWidth - window.innerWidth);
-    };
+  // Pin and scrub horizontal scroll of project cards (responsive to resize)
+  // FIX #2: Disable pinning on mobile devices for better UX
+  useGSAP(
+    () => {
+      if (!sectionRef.current || !trackRef.current || shouldReduceMotion) return;
+      const scrollerEl = document.getElementById('smooth-scroll-container') || undefined;
 
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: sectionRef.current,
-        pin: sectionRef.current,
-        scrub: true,
-        start: 'top top',
-        end: () => `+=${Math.round(computeDistance() * 0.85)}`,
-        scroller: scrollerEl,
-        anticipatePin: 1,
-        invalidateOnRefresh: true,
-      },
-    });
+      const computeDistance = () => {
+        if (!trackRef.current) return 0;
+        return Math.max(0, trackRef.current.scrollWidth - window.innerWidth);
+      };
 
-    tl.to(trackRef.current, { x: () => -Math.round(computeDistance() * 0.85), ease: 'power1.out' });
+      // Use matchMedia for responsive behavior
+      const mm = gsap.matchMedia();
 
-    return tl;
-  }, { scope: sectionRef, dependencies: [shouldReduceMotion] });
+      mm.add('(min-width: 768px)', () => {
+        // Desktop: Pin and horizontal scroll
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            pin: sectionRef.current,
+            scrub: true,
+            start: 'top top',
+            end: () => `+=${Math.round(computeDistance() * 0.85)}`,
+            scroller: scrollerEl,
+            anticipatePin: 1,
+            invalidateOnRefresh: true,
+          },
+        });
+
+        tl.to(trackRef.current, { x: () => -Math.round(computeDistance() * 0.85), ease: 'power1.out' });
+
+        return () => {
+          tl.kill();
+          ScrollTrigger.getAll()
+            .filter((st) => st.trigger === sectionRef.current)
+            .forEach((st) => st.kill());
+        };
+      });
+
+      mm.add('(max-width: 767px)', () => {
+        // Mobile: No pinning, natural scroll flow
+        // Kill any existing ScrollTriggers on this section
+        ScrollTrigger.getAll()
+          .filter((st) => st.trigger === sectionRef.current)
+          .forEach((st) => st.kill());
+      });
+
+      return () => mm.revert();
+    },
+    { scope: sectionRef, dependencies: [shouldReduceMotion, filteredProjects] },
+  );
 
   useGSAP(
     () => {
@@ -87,11 +125,6 @@ export default function ProjectsClient({ projects }: ProjectsClientProps) {
     },
     { dependencies: [shouldReduceMotion] },
   );
-
-  const filteredProjects = useMemo(() => {
-    if (selectedCategory === 'all') return projects;
-    return projects.filter((project) => project.category === selectedCategory);
-  }, [projects, selectedCategory]);
 
   return (
     <section ref={sectionRef}
@@ -157,7 +190,7 @@ export default function ProjectsClient({ projects }: ProjectsClientProps) {
         </div>
 
         {/* Horizontal track of project cards - vertically centered */}
-        <div ref={trackRef} className="flex gap-6 px-4 lg:px-8 items-center min-h-[280px] sm:min-h-[320px]">
+        <div ref={trackRef} className="flex gap-6 px-4 lg:px-8 items-center min-h-[280px] sm:min-h-[320px] pr-[10vw]">
           {filteredProjects.length === 0 && (
             <div className="flex-shrink-0 w-full rounded-3xl border border-dashed border-gray-300/60 p-12 text-center text-gray-500 dark:border-gray-700/60 dark:text-gray-300">
               New experiments are brewing. Check back soon.

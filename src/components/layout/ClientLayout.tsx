@@ -7,6 +7,7 @@ import { MotionPreferenceProvider } from '@/context/MotionPreferenceContext';
 import dynamic from 'next/dynamic';
 import { Canvas } from '@react-three/fiber';
 import HeroScene from '@/components/scene/HeroScene';
+import Plexus from '@/components/ui/Plexus';
 import CameraController from '@/components/scene/CameraController';
 import ParticleBackground from '@/components/scene/ParticleBackground';
 import GrainOverlay from '@/components/ui/GrainOverlay';
@@ -33,6 +34,9 @@ const Preloader = dynamic(
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
   // Ensure client-only widgets mount after hydration to avoid any SSR/client tree drift
   const [mounted, setMounted] = useState(false);
+  // Intro animation state: Plexus plays, then HeroScene takes over
+  const [introComplete, setIntroComplete] = useState(false);
+
   // Trigger reflow of ScrollTrigger on mount and after all resources load
   useEffect(() => {
     setMounted(true);
@@ -43,6 +47,14 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
     window.addEventListener('load', onLoad);
     return () => window.removeEventListener('load', onLoad);
   }, []);
+
+  // Timer: Plexus animates for approx 5 seconds (scroll-mapped morph),
+  // then transition to HeroScene. This allows the pinned scroll animation to complete.
+  useEffect(() => {
+    if (introComplete) return;
+    const timer = setTimeout(() => setIntroComplete(true), 5000);
+    return () => clearTimeout(timer);
+  }, [introComplete]);
   // Reduced-motion fallback: ensure simple fades when prefers-reduced-motion
   useEffect(() => {
     const mm = gsap.matchMedia();
@@ -81,17 +93,28 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
             } catch {}
           }}
         >
-          {/* 3D background scene */}
+          {/* 3D background scene: Intro with Plexus particle animation, then main HeroScene */}
           <ambientLight intensity={0.5} />
           <ParticleBackground />
-          <HeroScene />
           <CameraController />
+          {/* Conditional render: Plexus intro → HeroScene main scene */}
+          {!introComplete ? (
+            <Plexus />
+          ) : (
+            <HeroScene />
+          )}
         </Canvas>
         <GrainOverlay />
         <TransitionProvider>
           <ScrollProvider>
             {/* Lenis wrapper: must contain a dedicated content node for proper transforms */}
-            <div id="smooth-scroll-container" className="relative z-10">
+            {/* Fade in content only after intro animation completes */}
+            <div
+              id="smooth-scroll-container"
+              className={`relative z-10 transition-opacity duration-1000 ease-in ${
+                introComplete ? 'opacity-100' : 'opacity-0'
+              }`}
+            >
               <div id="smooth-scroll-content">{children}</div>
             </div>
             {mounted && (
