@@ -58,6 +58,7 @@ export default function ProjectsClient({ projects }: ProjectsClientProps) {
   useGSAP(
     () => {
       if (!sectionRef.current || !trackRef.current || shouldReduceMotion) return;
+      if (typeof window !== 'undefined' && window.innerWidth < 768) return; // no pinning on mobile
       const scrollerEl = document.getElementById('smooth-scroll-container') || undefined;
 
       const computeDistance = () => {
@@ -103,7 +104,7 @@ export default function ProjectsClient({ projects }: ProjectsClientProps) {
 
       return () => mm.revert();
     },
-    { scope: sectionRef, dependencies: [shouldReduceMotion, filteredProjects] },
+    { scope: sectionRef, dependencies: [shouldReduceMotion, filteredProjects, selectedCategory] },
   );
 
   useGSAP(

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useLayoutEffect, useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { RootState, useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import gsap from 'gsap';
@@ -19,9 +19,12 @@ const WORD_SPACING = 140;
 const GLYPH_SAMPLE_STEP = 2;
 const MORPH_REVEAL_START = 0.25;
 const MORPH_REVEAL_END = 0.85;
-const MORPH_SCROLL_DISTANCE = 260; // percentage of scroll span for the morph timeline
 
-export default function Plexus() {
+type PlexusProps = {
+  onAnimationComplete?: () => void;
+};
+
+export default function Plexus({ onAnimationComplete }: PlexusProps) {
   const groupRef = useRef<THREE.Group>(null);
   const pointsRef = useRef<THREE.Points>(null);
   const linesRef = useRef<THREE.LineSegments>(null);
@@ -159,54 +162,26 @@ export default function Plexus() {
     lines.geometry.attributes.color.needsUpdate = true;
   });
 
-  useLayoutEffect(() => {
-    if (typeof window === 'undefined') return;
-    if (shouldReduceMotion) return;
-
-    const heroSection = document.getElementById('home');
-    if (!heroSection) return;
-
-    const scroller = document.getElementById('smooth-scroll-container') || undefined;
-
-    const ctx = gsap.context(() => {
-      gsap.to(morphState.current, {
-        progress: 1,
-        ease: 'none',
-        scrollTrigger: {
-          trigger: heroSection,
-          start: 'top top',
-          end: `+=${MORPH_SCROLL_DISTANCE}%`,
-          scrub: 1.35,
-          scroller,
-        },
-      });
-    }, heroSection);
-
-    return () => ctx.revert();
-  }, [shouldReduceMotion]);
-
+  // Time-based intro morph: dots -> name, then signal completion
   useEffect(() => {
     if (typeof window === 'undefined') return;
-    if (!groupRef.current) return;
-    if (shouldReduceMotion) return;
+    if (shouldReduceMotion) {
+      morphState.current.progress = 1;
+      onAnimationComplete?.();
+      return;
+    }
 
-    const timeline = gsap.timeline({
-      scrollTrigger: {
-        trigger: document.body,
-        start: 'top top',
-        end: 'bottom 15%',
-        scrub: 1,
-      },
+    const tl = gsap.timeline({
+      defaults: { ease: 'power2.inOut' },
+      onComplete: () => onAnimationComplete?.(),
     });
 
-    // Lower-amplitude rotations for a gentler, more pastoral motion
-    timeline.to(groupRef.current.rotation, { x: Math.PI / 12, y: Math.PI / 3.2, duration: 1 });
-    timeline.to(groupRef.current.position, { z: -0.9, duration: 1 }, '<');
+    tl.to(morphState.current, { progress: 1, duration: 4.5 });
 
     return () => {
-      timeline.kill();
+      tl.kill();
     };
-  }, [shouldReduceMotion]);
+  }, [onAnimationComplete, shouldReduceMotion]);
 
   return (
     <group ref={groupRef}>

@@ -8,13 +8,17 @@ import { useReducedMotion } from '@/context/MotionPreferenceContext';
 // Fullscreen particle sheet that subtly reacts to pointer and scroll velocity.
 // Kept lightweight: ~10-15k points with small shader math and manual decay on velocity.
 export default function ParticleBackground({ count = 12000 }: { count?: number }) {
+  const effectiveCount = useMemo(() => {
+    if (typeof window === 'undefined') return count;
+    return window.innerWidth < 768 ? 3000 : count;
+  }, [count]);
   const geometry = useMemo(() => {
     const geom = new THREE.BufferGeometry();
-    const positions = new Float32Array(count * 3);
-    const grid = Math.ceil(Math.sqrt(count));
+    const positions = new Float32Array(effectiveCount * 3);
+    const grid = Math.ceil(Math.sqrt(effectiveCount));
     let i = 0;
     for (let y = 0; y < grid; y++) {
-      for (let x = 0; x < grid && i < count; x++) {
+      for (let x = 0; x < grid && i < effectiveCount; x++) {
         const nx = (x / grid - 0.5) * 2.4;
         const ny = (y / grid - 0.5) * 2.4;
         positions[i * 3] = nx;
@@ -25,7 +29,7 @@ export default function ParticleBackground({ count = 12000 }: { count?: number }
     }
     geom.setAttribute('position', new THREE.BufferAttribute(positions, 3));
     return geom;
-  }, [count]);
+  }, [effectiveCount]);
 
   const materialRef = useRef<THREE.ShaderMaterial | null>(null);
   const mouse = useRef(new THREE.Vector2(0, 0));

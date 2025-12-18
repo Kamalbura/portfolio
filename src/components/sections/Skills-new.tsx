@@ -72,16 +72,7 @@ export default function Skills() {
     return () => observer.disconnect();
   }, []);
 
-  useEffect(() => {
-    if (!isVisible) return;
-
-    // Auto-rotate through orbits with a longer interval for smooth effect
-    const interval = setInterval(() => {
-      setActiveOrbit((prev) => (prev + 1) % techOrbits.length);
-    }, 6000); // Slower rotation (6 seconds)
-
-    return () => clearInterval(interval);
-  }, [isVisible, techOrbits.length]);
+  // Removed interval-based rotation to avoid unnecessary re-renders; users can click to explore orbits.
 
   return (
     <section 

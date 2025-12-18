@@ -6,7 +6,6 @@ import { TransitionProvider } from '@/context/TransitionContext';
 import { MotionPreferenceProvider } from '@/context/MotionPreferenceContext';
 import dynamic from 'next/dynamic';
 import { Canvas } from '@react-three/fiber';
-import HeroScene from '@/components/scene/HeroScene';
 import Plexus from '@/components/ui/Plexus';
 import CameraController from '@/components/scene/CameraController';
 import ParticleBackground from '@/components/scene/ParticleBackground';
@@ -34,7 +33,7 @@ const Preloader = dynamic(
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
   // Ensure client-only widgets mount after hydration to avoid any SSR/client tree drift
   const [mounted, setMounted] = useState(false);
-  // Intro animation state: Plexus plays, then HeroScene takes over
+  // Intro animation state: Plexus plays, then site fades in
   const [introComplete, setIntroComplete] = useState(false);
 
   // Trigger reflow of ScrollTrigger on mount and after all resources load
@@ -48,11 +47,10 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
     return () => window.removeEventListener('load', onLoad);
   }, []);
 
-  // Timer: Plexus animates for approx 5 seconds (scroll-mapped morph),
-  // then transition to HeroScene. This allows the pinned scroll animation to complete.
+  // Fallback timer: ensure the intro ends even if callback isn't fired
   useEffect(() => {
     if (introComplete) return;
-    const timer = setTimeout(() => setIntroComplete(true), 5000);
+    const timer = setTimeout(() => setIntroComplete(true), 6000);
     return () => clearTimeout(timer);
   }, [introComplete]);
   // Reduced-motion fallback: ensure simple fades when prefers-reduced-motion
@@ -93,15 +91,13 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
             } catch {}
           }}
         >
-          {/* 3D background scene: Intro with Plexus particle animation, then main HeroScene */}
+          {/* 3D background scene: keep subtle particles only */}
           <ambientLight intensity={0.5} />
           <ParticleBackground />
           <CameraController />
-          {/* Conditional render: Plexus intro → HeroScene main scene */}
-          {!introComplete ? (
-            <Plexus />
-          ) : (
-            <HeroScene />
+          {/* Intro dots story */}
+          {!introComplete && (
+            <Plexus onAnimationComplete={() => setIntroComplete(true)} />
           )}
         </Canvas>
         <GrainOverlay />
