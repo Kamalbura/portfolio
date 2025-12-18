@@ -34,7 +34,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
   // Ensure client-only widgets mount after hydration to avoid any SSR/client tree drift
   const [mounted, setMounted] = useState(false);
   // Intro animation state: Plexus plays, then site fades in
-  const [introComplete, setIntroComplete] = useState(false);
+  const [showIntro, setShowIntro] = useState(true);
 
   // Trigger reflow of ScrollTrigger on mount and after all resources load
   useEffect(() => {
@@ -47,12 +47,11 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
     return () => window.removeEventListener('load', onLoad);
   }, []);
 
-  // Fallback timer: ensure the intro ends even if callback isn't fired
+  // Timer aligned with Plexus morph duration to reveal the page
   useEffect(() => {
-    if (introComplete) return;
-    const timer = setTimeout(() => setIntroComplete(true), 6000);
+    const timer = setTimeout(() => setShowIntro(false), 4500);
     return () => clearTimeout(timer);
-  }, [introComplete]);
+  }, []);
   // Reduced-motion fallback: ensure simple fades when prefers-reduced-motion
   useEffect(() => {
     const mm = gsap.matchMedia();
@@ -96,8 +95,8 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           <ParticleBackground />
           <CameraController />
           {/* Intro dots story */}
-          {!introComplete && (
-            <Plexus onAnimationComplete={() => setIntroComplete(true)} />
+          {showIntro && (
+            <Plexus onAnimationComplete={() => setShowIntro(false)} />
           )}
         </Canvas>
         <GrainOverlay />
@@ -108,7 +107,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
             <div
               id="smooth-scroll-container"
               className={`relative z-10 transition-opacity duration-1000 ease-in ${
-                introComplete ? 'opacity-100' : 'opacity-0'
+                showIntro ? 'opacity-0' : 'opacity-100'
               }`}
             >
               <div id="smooth-scroll-content">{children}</div>

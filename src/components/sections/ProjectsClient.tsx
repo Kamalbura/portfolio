@@ -57,8 +57,8 @@ export default function ProjectsClient({ projects }: ProjectsClientProps) {
   // FIX #2: Disable pinning on mobile devices for better UX
   useGSAP(
     () => {
-      if (!sectionRef.current || !trackRef.current || shouldReduceMotion) return;
       if (typeof window !== 'undefined' && window.innerWidth < 768) return; // no pinning on mobile
+      if (!sectionRef.current || !trackRef.current || shouldReduceMotion) return;
       const scrollerEl = document.getElementById('smooth-scroll-container') || undefined;
 
       const computeDistance = () => {
