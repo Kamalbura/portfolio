@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect, useMemo, useRef } from 'react';
-import { RootState, useFrame } from '@react-three/fiber';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { RootState, useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -9,14 +9,17 @@ import { useReducedMotion } from '@/context/MotionPreferenceContext';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const PARTICLE_COUNT = 680;
-const LINE_THRESHOLD = 0.28; // gentle network before lettering locks
+const PARTICLE_COUNT = 600; // Increased for clearer text, optimized loop handles this fine
+const LINE_THRESHOLD = 0.25;
+const TEXT_LINE_THRESHOLD = 0.06; // Very tight connections for sharp text
 const BASE_RADIUS = 2.4; // expand radius for a more spacious hero
+const INTERACTION_RADIUS = 1.2; // Mouse repulsion radius
+const INTERACTION_FORCE = 0.5; // Mouse repulsion strength
 const WORDS = ['KAMAL', 'BURA'];
 const WORD_CANVAS_WIDTH = 1600;
 const WORD_CANVAS_HEIGHT = 320;
 const WORD_SPACING = 140;
-const GLYPH_SAMPLE_STEP = 2;
+const GLYPH_SAMPLE_STEP = 4; // Sample step balanced for 600 particles
 const MORPH_REVEAL_START = 0.25;
 const MORPH_REVEAL_END = 0.85;
 
@@ -30,8 +33,29 @@ export default function Plexus({ onAnimationComplete }: PlexusProps) {
   const linesRef = useRef<THREE.LineSegments>(null);
   const morphState = useRef({ progress: 0 });
   const shouldReduceMotion = useReducedMotion();
+  const { viewport } = useThree();
+  
+  // Global mouse tracking for interaction even if canvas has pointer-events: none
+  const mouseRef = useRef({ x: 9999, y: 9999 });
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      // Normalize mouse to -1..1 range relative to window
+      mouseRef.current.x = (e.clientX / window.innerWidth) * 2 - 1;
+      mouseRef.current.y = -(e.clientY / window.innerHeight) * 2 + 1;
+    };
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
 
   const basePositions = useMemo(() => {
+    if (typeof window === 'undefined') {
+      return {
+        positions: new Float32Array(PARTICLE_COUNT * 3),
+        offsets: new Float32Array(PARTICLE_COUNT),
+      };
+    }
+
     const positions = new Float32Array(PARTICLE_COUNT * 3);
     const offsets = new Float32Array(PARTICLE_COUNT);
 
@@ -81,31 +105,67 @@ export default function Plexus({ onAnimationComplete }: PlexusProps) {
     const { positions, offsets } = basePositions;
     const pointPositions = points.geometry.attributes.position.array as Float32Array;
 
+    // Calculate mouse position in world space (at z=0)
+    // viewport.width/height is the size of the canvas in world units at z=0
+    const mouseX = mouseRef.current.x * (viewport.width / 2);
+    const mouseY = mouseRef.current.y * (viewport.height / 2);
+
     const morphMix = THREE.MathUtils.clamp(morphState.current.progress, 0, 1);
     const shapeStrength = THREE.MathUtils.smoothstep(
       MORPH_REVEAL_START,
       MORPH_REVEAL_END,
       morphMix,
     );
-    const wobbleDampen = THREE.MathUtils.lerp(1, 0.3, shapeStrength);
-    const mixFactor = THREE.MathUtils.lerp(0.12, 0.98, shapeStrength);
+    
+    // Easing for the transition: Start slow, snap to text
+    const mixFactor = THREE.MathUtils.lerp(0, 1, Math.pow(shapeStrength, 3)); 
     const lineFade = THREE.MathUtils.lerp(1, 0.25, shapeStrength);
+    
+    // Galaxy Rotation (only affects base sphere state)
+    const rotationAngle = time * 0.15;
+    const cosR = Math.cos(rotationAngle);
+    const sinR = Math.sin(rotationAngle);
 
     for (let i = 0; i < PARTICLE_COUNT; i++) {
-      // slower, softer wave motion that relaxes as the word locks in
-      const wave = Math.sin(time * 0.35 + offsets[i]) * 0.1 * wobbleDampen;
       const index = i * 3;
-      const wobbleX = positions[index] * (1 + wave * 0.08);
-      const wobbleY = positions[index + 1] * (1 + wave * 0.08);
-      const wobbleZ = positions[index + 2] * (1 + wave * 0.08);
+      
+      // 1. Base State: Rotating Galaxy (No random wobble)
+      const bx = positions[index];
+      const by = positions[index + 1];
+      const bz = positions[index + 2];
+      
+      // Rotate around Y axis for galaxy feel
+      const rotatedX = bx * cosR - bz * sinR;
+      const rotatedZ = bx * sinR + bz * cosR;
 
-      const targetX = wordTarget[index] ?? wobbleX;
-      const targetY = wordTarget[index + 1] ?? wobbleY;
-      const targetZ = wordTarget[index + 2] ?? wobbleZ;
+      const targetX = wordTarget[index] ?? rotatedX;
+      const targetY = wordTarget[index + 1] ?? by;
+      const targetZ = wordTarget[index + 2] ?? rotatedZ;
 
-      workingPositions[index] = THREE.MathUtils.lerp(wobbleX, targetX, mixFactor);
-      workingPositions[index + 1] = THREE.MathUtils.lerp(wobbleY, targetY, mixFactor);
-      workingPositions[index + 2] = THREE.MathUtils.lerp(wobbleZ, targetZ, mixFactor);
+      // 2. Interpolate
+      let px = THREE.MathUtils.lerp(rotatedX, targetX, mixFactor);
+      let py = THREE.MathUtils.lerp(by, targetY, mixFactor);
+      let pz = THREE.MathUtils.lerp(rotatedZ, targetZ, mixFactor);
+
+      // 3. Mouse Interaction (Repulsion) - Only when text is forming/formed
+      if (shapeStrength > 0.5) {
+        const dx = px - mouseX;
+        const dy = py - mouseY;
+        const distSq = dx * dx + dy * dy;
+        
+        if (distSq < INTERACTION_RADIUS * INTERACTION_RADIUS) {
+          const dist = Math.sqrt(distSq);
+          const force = (1 - dist / INTERACTION_RADIUS) * INTERACTION_FORCE * shapeStrength;
+          const angle = Math.atan2(dy, dx);
+          
+          px += Math.cos(angle) * force;
+          py += Math.sin(angle) * force;
+        }
+      }
+
+      workingPositions[index] = px;
+      workingPositions[index + 1] = py;
+      workingPositions[index + 2] = pz;
 
       pointPositions[index] = workingPositions[index];
       pointPositions[index + 1] = workingPositions[index + 1];
@@ -115,7 +175,8 @@ export default function Plexus({ onAnimationComplete }: PlexusProps) {
     let lineVertex = 0;
     let colorIndex = 0;
     let connectionCount = 0;
-    const currentThreshold = THREE.MathUtils.lerp(LINE_THRESHOLD, 0.12, shapeStrength);
+    const currentThreshold = THREE.MathUtils.lerp(LINE_THRESHOLD, TEXT_LINE_THRESHOLD, shapeStrength);
+    const thresholdSq = currentThreshold * currentThreshold; // Optimization: compare squared distances
 
     for (let i = 0; i < PARTICLE_COUNT; i++) {
       const x1 = workingPositions[i * 3];
@@ -126,10 +187,11 @@ export default function Plexus({ onAnimationComplete }: PlexusProps) {
         const dx = x1 - workingPositions[j * 3];
         const dy = y1 - workingPositions[j * 3 + 1];
         const dz = z1 - workingPositions[j * 3 + 2];
-        const distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
+        const distSq = dx * dx + dy * dy + dz * dz;
 
-        if (distance < currentThreshold) {
-          const alpha = (1 - distance / currentThreshold) * 0.85 * lineFade; // fade networks once letters lock
+        if (distSq < thresholdSq) {
+          const distance = Math.sqrt(distSq);
+          const alpha = (1 - distance / currentThreshold) * 0.6 * lineFade; // cleaner lines
 
           linePositionBuffer[lineVertex++] = x1;
           linePositionBuffer[lineVertex++] = y1;
@@ -220,7 +282,7 @@ function generateWordSequencePointCloud(words: string[], count: number) {
   ctx.fillStyle = '#fff';
   ctx.textAlign = 'left';
   ctx.textBaseline = 'middle';
-  ctx.font = '700 220px "Space Grotesk", sans-serif';
+  ctx.font = '900 240px "Inter", "Space Grotesk", sans-serif'; // Even larger for clarity
 
   let cursorX = 120;
   words.forEach((rawWord) => {
@@ -258,7 +320,7 @@ function generateWordSequencePointCloud(words: string[], count: number) {
 
     positions[i * 3] = normX * 1.9;
     positions[i * 3 + 1] = normY * 1.05;
-    positions[i * 3 + 2] = (Math.random() - 0.5) * 0.18;
+    positions[i * 3 + 2] = 0; // Flatten Z-axis for sharp text
   }
 
   return positions;

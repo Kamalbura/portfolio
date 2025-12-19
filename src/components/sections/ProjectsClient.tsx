@@ -53,12 +53,12 @@ export default function ProjectsClient({ projects }: ProjectsClientProps) {
     ScrollTrigger.refresh();
   }, { dependencies: [filteredProjects] });
 
-  // Pin and scrub horizontal scroll of project cards (responsive to resize)
-  // FIX #2: Disable pinning on mobile devices for better UX
+  // Pin and scrub horizontal scroll of project cards; disable on mobile to avoid freezes
   useGSAP(
     () => {
-      if (typeof window !== 'undefined' && window.innerWidth < 768) return; // no pinning on mobile
+      if (typeof window !== 'undefined' && window.innerWidth < 768) return; // Disable pinning on mobile
       if (!sectionRef.current || !trackRef.current || shouldReduceMotion) return;
+
       const scrollerEl = document.getElementById('smooth-scroll-container') || undefined;
 
       const computeDistance = () => {
@@ -66,45 +66,29 @@ export default function ProjectsClient({ projects }: ProjectsClientProps) {
         return Math.max(0, trackRef.current.scrollWidth - window.innerWidth);
       };
 
-      // Use matchMedia for responsive behavior
-      const mm = gsap.matchMedia();
-
-      mm.add('(min-width: 768px)', () => {
-        // Desktop: Pin and horizontal scroll
-        const tl = gsap.timeline({
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            pin: sectionRef.current,
-            scrub: true,
-            start: 'top top',
-            end: () => `+=${Math.round(computeDistance() * 0.85)}`,
-            scroller: scrollerEl,
-            anticipatePin: 1,
-            invalidateOnRefresh: true,
-          },
-        });
-
-        tl.to(trackRef.current, { x: () => -Math.round(computeDistance() * 0.85), ease: 'power1.out' });
-
-        return () => {
-          tl.kill();
-          ScrollTrigger.getAll()
-            .filter((st) => st.trigger === sectionRef.current)
-            .forEach((st) => st.kill());
-        };
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          pin: sectionRef.current,
+          scrub: true,
+          start: 'top top',
+          end: () => `+=${Math.round(computeDistance() * 0.85)}`,
+          scroller: scrollerEl,
+          anticipatePin: 1,
+          invalidateOnRefresh: true,
+        },
       });
 
-      mm.add('(max-width: 767px)', () => {
-        // Mobile: No pinning, natural scroll flow
-        // Kill any existing ScrollTriggers on this section
+      tl.to(trackRef.current, { x: () => -Math.round(computeDistance() * 0.85), ease: 'power1.out' });
+
+      return () => {
+        tl.kill();
         ScrollTrigger.getAll()
           .filter((st) => st.trigger === sectionRef.current)
           .forEach((st) => st.kill());
-      });
-
-      return () => mm.revert();
+      };
     },
-    { scope: sectionRef, dependencies: [shouldReduceMotion, filteredProjects, selectedCategory] },
+    { scope: sectionRef, dependencies: [shouldReduceMotion, selectedCategory, filteredProjects] },
   );
 
   useGSAP(

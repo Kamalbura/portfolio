@@ -6,14 +6,11 @@ import { TransitionProvider } from '@/context/TransitionContext';
 import { MotionPreferenceProvider } from '@/context/MotionPreferenceContext';
 import dynamic from 'next/dynamic';
 import { Canvas } from '@react-three/fiber';
-import Plexus from '@/components/ui/Plexus';
 import CameraController from '@/components/scene/CameraController';
 import ParticleBackground from '@/components/scene/ParticleBackground';
 import GrainOverlay from '@/components/ui/GrainOverlay';
-import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-
-// Keep using useSmoothScroll inside the provider; provider will call the hook.
+import Plexus from '@/components/ui/Plexus';
 
 const CustomCursor = dynamic(
   () => import('@/components/ui/CustomCursor').then((mod) => mod.default),
@@ -31,50 +28,16 @@ const Preloader = dynamic(
 );
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
-  // Ensure client-only widgets mount after hydration to avoid any SSR/client tree drift
   const [mounted, setMounted] = useState(false);
-  // Intro animation state: Plexus plays, then site fades in
-  const [showIntro, setShowIntro] = useState(true);
+  const [introDone, setIntroDone] = useState(false);
 
-  // Trigger reflow of ScrollTrigger on mount and after all resources load
   useEffect(() => {
     setMounted(true);
-    // refresh immediately
     try { ScrollTrigger.refresh(); } catch {}
-    // refresh after window load to account for images/fonts
-    const onLoad = () => ScrollTrigger.refresh();
-    window.addEventListener('load', onLoad);
-    return () => window.removeEventListener('load', onLoad);
-  }, []);
 
-  // Timer aligned with Plexus morph duration to reveal the page
-  useEffect(() => {
-    const timer = setTimeout(() => setShowIntro(false), 4500);
+    // Safety Valve: Force intro to finish after 4.5s even if animation callback fails
+    const timer = setTimeout(() => setIntroDone(true), 4500);
     return () => clearTimeout(timer);
-  }, []);
-  // Reduced-motion fallback: ensure simple fades when prefers-reduced-motion
-  useEffect(() => {
-    const mm = gsap.matchMedia();
-    mm.add('(prefers-reduced-motion: reduce)', () => {
-      // Kill existing ScrollTriggers
-      ScrollTrigger.getAll().forEach((st) => st.kill());
-      // Fade in sections on scroll
-      document.querySelectorAll('section').forEach((el) => {
-        gsap.fromTo(
-          el,
-          { autoAlpha: 0 },
-          {
-            autoAlpha: 1,
-            scrollTrigger: {
-              trigger: el,
-              start: 'top 80%',
-              scroller: document.getElementById('smooth-scroll-container') || undefined,
-            },
-          },
-        );
-      });
-      return () => mm.revert();
-    });
   }, []);
 
   return (
@@ -84,39 +47,29 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', zIndex: -1, pointerEvents: 'none' }}
           shadows
           gl={{ alpha: true, antialias: true }}
-          onCreated={({ gl }) => {
-            try {
-              gl.setClearColor(0x000000, 0);
-            } catch {}
-          }}
+          onCreated={({ gl }) => { try { gl.setClearColor(0x000000, 0); } catch {} }}
         >
-          {/* 3D background scene: keep subtle particles only */}
           <ambientLight intensity={0.5} />
           <ParticleBackground />
+
+          {/* Render dots, but don't let them block the site in safety mode */}
+          {!introDone && <Plexus onAnimationComplete={() => setIntroDone(true)} />}
+
           <CameraController />
-          {/* Intro dots story */}
-          {showIntro && (
-            <Plexus onAnimationComplete={() => setShowIntro(false)} />
-          )}
         </Canvas>
+
         <GrainOverlay />
+
         <TransitionProvider>
           <ScrollProvider>
-            {/* Lenis wrapper: must contain a dedicated content node for proper transforms */}
-            {/* Fade in content only after intro animation completes */}
-            <div
-              id="smooth-scroll-container"
-              className={`relative z-10 transition-opacity duration-1000 ease-in ${
-                showIntro ? 'opacity-0' : 'opacity-100'
-              }`}
-            >
+            {/* Force visibility while keeping smooth-scroll structure intact */}
+            <div id="smooth-scroll-container" className={`relative z-10 transition-opacity duration-1000 ${introDone ? 'opacity-100' : 'opacity-0'}`}>
               <div id="smooth-scroll-content">{children}</div>
             </div>
+
             {mounted && (
               <>
-                {/* Global scroll progress bar */}
                 <ScrollIndicator />
-                {/* First-load splash */}
                 <Preloader />
                 <CustomCursor />
               </>
@@ -127,4 +80,3 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
     </>
   );
 }
-

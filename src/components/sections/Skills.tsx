@@ -6,6 +6,7 @@ export default function Skills() {
   const [isVisible, setIsVisible] = useState(false);
   const [activeOrbit, setActiveOrbit] = useState(0);
   const sectionRef = useRef<HTMLDivElement>(null);
+  const [particles, setParticles] = useState<Array<React.CSSProperties>>([]);
 
   // Tech stacks with modern logos and colors
   const techOrbits = [
@@ -56,6 +57,14 @@ export default function Skills() {
   ];
 
   useEffect(() => {
+    // Generate particles on client-side only to prevent hydration mismatch
+    setParticles([...Array(30)].map(() => ({
+      left: `${Math.random() * 100}%`,
+      top: `${Math.random() * 100}%`,
+      animationDelay: `${Math.random() * 3}s`,
+      animationDuration: `${2 + Math.random() * 3}s`
+    })));
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -84,16 +93,11 @@ export default function Skills() {
       <div className="absolute inset-0">
         <div className="absolute inset-0 bg-gradient-to-r from-blue-600/5 via-purple-600/5 to-cyan-600/5 animate-pulse"></div>
         {/* Floating particles */}
-        {[...Array(30)].map((_, i) => (
+        {particles.map((style, i) => (
           <div
             key={i}
             className="absolute w-1 h-1 bg-blue-400 rounded-full opacity-30 animate-pulse"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 3}s`,
-              animationDuration: `${2 + Math.random() * 3}s`
-            }}
+            style={style}
           />
         ))}
       </div>
